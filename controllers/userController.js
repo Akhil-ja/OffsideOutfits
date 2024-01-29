@@ -22,6 +22,7 @@ const insertUser=async(req,res)=>{
       if (userData) {
         res.render("loginRegister");
         console.log("registration Success!");
+        console.log(req.body.fullname);
       } else console.log("Registratin not success");
     } catch (error) {
       console.log(error.message);
