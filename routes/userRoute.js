@@ -18,5 +18,9 @@ const userController=require("../controllers/userController");
 userRoute.get("/register",userController.loadlogin);
 userRoute.post("/register", userController.insertUser);
 
+userRoute.post("/login", userController.verifyLogin);
+
+userRoute.get("/home", userController.loadHome);
+
 
 module.exports= userRoute;
