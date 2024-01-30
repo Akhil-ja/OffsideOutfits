@@ -22,5 +22,6 @@ userRoute.post("/login", userController.verifyLogin);
 
 userRoute.get("/home", userController.loadHome);
 
+userRoute.get("/", userController.loadLanding);
 
 module.exports= userRoute;

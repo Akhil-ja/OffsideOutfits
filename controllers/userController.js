@@ -87,9 +87,18 @@ const loadHome = async (req, res) => {
   }
 };
 
+const loadLanding=async(eq,res)=>{
+  try {
+    res.render("landing")
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 module.exports = {
   loadlogin,
   insertUser,
   loadHome,
   verifyLogin,
+  loadLanding,
 };
