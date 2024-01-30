@@ -24,4 +24,8 @@ userRoute.get("/home", userController.loadHome);
 
 userRoute.get("/", userController.loadLanding);
 
+userRoute.get("/category", userController.loadCategory);
+
+userRoute.get("/product", userController.loadProduct);
+
 module.exports= userRoute;

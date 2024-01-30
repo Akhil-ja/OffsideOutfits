@@ -95,10 +95,28 @@ const loadLanding=async(eq,res)=>{
   }
 }
 
+const loadCategory=async(req,res)=>{
+  try {
+    res.render("category")
+  } catch (error) {
+    error.message;
+  }
+}
+
+const loadProduct=async(req,res)=>{
+  try {
+    res.render("product");
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 module.exports = {
   loadlogin,
   insertUser,
   loadHome,
   verifyLogin,
   loadLanding,
+  loadCategory,
+  loadProduct,
 };

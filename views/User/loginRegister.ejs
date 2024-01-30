@@ -36,26 +36,8 @@
             <div class="header-top">
                 <div class="container">
                     <div class="header-left">
-                        <div class="header-dropdown">
-                            <a href="#">Usd</a>
-                            <div class="header-menu">
-                                <ul>
-                                    <li><a href="#">Eur</a></li>
-                                    <li><a href="#">Usd</a></li>
-                                </ul>
-                            </div><!-- End .header-menu -->
-                        </div><!-- End .header-dropdown -->
+                        
 
-                        <div class="header-dropdown">
-                            <a href="#">Eng</a>
-                            <div class="header-menu">
-                                <ul>
-                                    <li><a href="#">English</a></li>
-                                    <li><a href="#">French</a></li>
-                                    <li><a href="#">Spanish</a></li>
-                                </ul>
-                            </div><!-- End .header-menu -->
-                        </div><!-- End .header-dropdown -->
                     </div><!-- End .header-left -->
 
                     <div class="header-right">
@@ -64,8 +46,6 @@
                                 <a href="#">Links</a>
                                 <ul>
                                     <li><a href="tel:#"><i class="icon-phone"></i>Call: +0123 456 789</a></li>
-                                    <li><a href="wishlist.html"><i class="icon-heart-o"></i>Wishlist
-                                            <span>(3)</span></a></li>
                                     <li><a href="about.html">About Us</a></li>
                                     <li><a href="contact.html">Contact Us</a></li>
                                     <li><a href="#signin-modal" data-toggle="modal"><i class="icon-user"></i>Login</a>
@@ -115,36 +95,7 @@
                         </nav><!-- End .main-nav -->
                     </div><!-- End .header-left -->
 
-                    <div class="header-right">
-                        <div class="header-search">
-                            <a href="#" class="search-toggle" role="button" title="Search"><i
-                                    class="icon-search"></i></a>
-                            <form action="#" method="get">
-                                <div class="header-search-wrapper">
-                                    <label for="q" class="sr-only">Search</label>
-                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search in..."
-                                        required>
-                                </div><!-- End .header-search-wrapper -->
-                            </form>
-                        </div><!-- End .header-search -->
-                        <div class="compare-dropdown">
-                            <a href="#" class="dropdown-toggle" role="button">
-                                <i class="icon-heart-o"></i></a>
-                            </a>
-
-                            
-                        </div><!-- End .compare-dropdown -->
-
-                        <div class="cart-dropdown">
-                            <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false" data-display="static">
-                                <i class="icon-shopping-cart"></i>
-                                <!-- <span class="cart-count">2</span> -->
-                            </a>
-
-                            
-                        </div><!-- End .cart-dropdown -->
-                    </div><!-- End .header-right -->
+                   
                 </div><!-- End .container -->
             </div><!-- End .header-middle -->
         </header><!-- End .header -->
@@ -554,6 +505,12 @@
     <script src="assets/js/owl.carousel.min.js"></script>
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
+    <script>
+        // Scroll down when the page loads
+        window.onload = function () {
+            window.scroll(0, window.innerHeight/2.5);  // Adjust the scroll position as needed
+        };
+    </script>
 </body>
 
 
