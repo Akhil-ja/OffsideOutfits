@@ -6,8 +6,11 @@ const app=express();
 
 const path =require("path");
 
-const userRoute=require("./routes/userRoute")
-app.use("/",userRoute)
+const userRoute = require("./routes/userRoute");
+app.use("/", userRoute);
+
+const adminRoute = require("./routes/adminRoute");
+app.use("/admin", adminRoute);
 
 app.use("/static", express.static(path.join(__dirname, "public")));
 app.use("/static", express.static(path.join(__dirname, "lib")));
