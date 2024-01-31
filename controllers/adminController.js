@@ -1,4 +1,16 @@
     const User = require("../models/userModel");
+    const Product=require("../models/productModel");
+
+const bcrypt = require("bcrypt");
+
+const securePassword = async (password) => {
+  try {
+    const passwordHash = await bcrypt.hash(password, 10);
+    return passwordHash;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
     const loadAdminLog = async (req, res) => {
       try {
@@ -70,11 +82,13 @@
 
     const add_User = async (req, res) => {
       try {
+
+         const spassword = await securePassword(req.body.password);
         const newUser = new User({
           name: req.body.name,
           email: req.body.email,
           phone: req.body.mobile,
-          password: req.body.password,
+          password: spassword,
           is_admin: 0,
           is_verified: req.body.verified,
           address: req.body.address,
@@ -154,6 +168,32 @@ const delete_User = async (req, res) => {
 };
 
 
+const add_Product=async (req, res) => {
+  try {
+    // Extract data from the request body
+    const { pname, price, description, sizes, category, is_listed } = req.body;
+
+    // Create a new product instance
+    const newProduct = new Product({
+      pname,
+      price,
+      description,
+      sizes,
+      category,
+      is_listed,
+    });
+
+    // Save the product to the database
+    await newProduct.save();
+
+    // Redirect to a success page or any other page as needed
+    res.redirect("/admin/products");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+}
+
 
 
 
@@ -172,4 +212,5 @@ const delete_User = async (req, res) => {
       add_User,
       edit_User,
       delete_User,
+      add_Product,
     };

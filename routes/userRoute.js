@@ -13,6 +13,7 @@ userRoute.use(bodyParser.urlencoded({ extended: true }));
 userRoute.set("view engine","ejs");
 userRoute.set("views","./views/User");
 
+
 const userController=require("../controllers/userController");
 
 userRoute.get("/register",userController.loadlogin);

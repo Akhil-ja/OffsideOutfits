@@ -10,6 +10,7 @@ adminRoute.use(bodyParser.urlencoded({ extended: true }));
 adminRoute.set("view engine", "ejs");
 adminRoute.set("views", "./views/admin");
 
+
 const adminController = require("../controllers/adminController");
     
 
@@ -26,11 +27,12 @@ adminRoute.get("/category", adminController.viewCategory);
 adminRoute.get("/users/delete", adminController.delete_User);
 
 
-adminRoute.post("/users/edit", adminController.edit_User);
+adminRoute.post("/users/edit", adminController.edit_User)
 
 
 
 
+adminRoute.post("/add-product", adminController.add_Product)
 
 
 
