@@ -1,6 +1,6 @@
 const mongoose=require("mongoose");
 
-const userSchema= new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -23,7 +23,6 @@ const userSchema= new mongoose.Schema({
 
   image: {
     type: String,
-   
   },
 
   is_admin: {
@@ -33,9 +32,13 @@ const userSchema= new mongoose.Schema({
 
   is_verified: {
     type: String,
-    default:0
+    default: 0,
   },
 
+  is_active: {
+    type: String,
+    default: 1,
+  },
 });
 
 module.exports= mongoose.model('User',userSchema)

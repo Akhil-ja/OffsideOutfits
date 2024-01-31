@@ -17,7 +17,7 @@
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
-    <link href="admin-assets/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="/admin/static/admin-assets/CSS/main.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
@@ -35,7 +35,7 @@
         <nav>
             <ul class="menu-aside">
                 <li class="menu-item">
-                    <a class="menu-link" href="/dashboard"> <i class="icon material-icons md-home"></i>
+                    <a class="menu-link" href="/admin/dashboard"> <i class="icon material-icons md-home"></i>
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
@@ -48,10 +48,16 @@
                 </li>
 
                 <li class="menu-item">
-                    <a class="menu-link" href="/users"> <i class="icon material-icons md-person"></i>
+                    <a class="menu-link" href="/admin/users"> <i class="icon material-icons md-person"></i>
                         <span class="text">Users</span>
                     </a>
                 </li>
+
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/category"> <i class="icon material-icons md-stars"></i>
+                        <span class="text">category</span> </a>
+                </li>
+                
                 <li class="menu-item has-submenu ">
                     <a class="menu-link" href="page-orders-1.html"> <i class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Orders</span>
@@ -99,10 +105,7 @@
                     <a class="menu-link" href="#"> <i class="icon material-icons md-settings"></i>
                         <span class="text">Settings</span>
                     </a>
-                    <div class="submenu">
-                        <a href="page-settings-1.html">Setting sample 1</a>
-                        <a href="page-settings-2.html">Setting sample 2</a>
-                    </div>
+                    
                 </li>
                 <li class="menu-item">
                     <a class="menu-link" href="page-blank.html"> <i class="icon material-icons md-local_offer"></i>
@@ -123,12 +126,7 @@
                         <button class="btn btn-light bg" type="button"> <i
                                 class="material-icons md-search"></i></button>
                     </div>
-                    <datalist id="search_terms">
-                        <option value="Products">
-                        <option value="New orders">
-                        <option value="Apple iphone">
-                        <option value="Ahmed Hassan">
-                    </datalist>
+                   
                 </form>
             </div>
             <div class="col-nav">
@@ -192,9 +190,8 @@
                     <p>Lorem ipsum dolor sit amet.</p>
                 </div>
                 <div>
-                    <a href="#" class="btn btn-light rounded font-md">Export</a>
-                    <a href="#" class="btn btn-light rounded  font-md">Import</a>
-                    <a href="#" class="btn btn-primary btn-sm rounded">Create new</a>
+                  
+                    <a href="/admin/products/add-product" class="btn btn-primary btn-sm rounded">Create new</a>
                 </div>
             </div>
             <div class="card mb-4">
@@ -228,7 +225,7 @@
                                 <div class="info-wrap">
                                     <a href="#" class="title text-truncate">Just another product name</a>
                                     <div class="price mb-2">$179.00</div> <!-- price.// -->
-                                    <a href="#" class="btn btn-sm font-sm rounded btn-brand">
+                                    <a href="/admin/products/edit-product" class="btn btn-sm font-sm rounded btn-brand">
                                         <i class="material-icons md-edit"></i> Edit
                                     </a>
                                     <a href="#" class="btn btn-sm font-sm btn-light rounded">
