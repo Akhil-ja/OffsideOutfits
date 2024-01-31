@@ -189,7 +189,7 @@
                         <h6 class="mb-0">
                             <%= user.name %>
                         </h6>
-                        <span>
+                        <span class="text-secondary">
                             <%= user.email %>
                         </span>
                     </div>
@@ -202,7 +202,7 @@
                         <span class="badge rounded-pill alert-danger">Blocked</span>
                         <% } %>
             </div>
-            <div class="col-lg-1 col-sm-2 col-4 col-date">
+            <div class="col-lg-1 col-sm-2 col-4 col-date"hidden>
                 <span>Current Time</span>
             </div>
             <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
@@ -212,7 +212,7 @@
 </a>
 
                     <% if (user.is_verified !=="1" ) { %>
-                    <a href="#" class="btn btn-sm font-sm btn-light rounded delete-btn">
+                    <a href="/admin/users/delete?id=<%= user._id %>" class="btn btn-sm font-sm btn-light rounded delete-btn">
                         <i class="material-icons md-delete_forever"></i> Delete
                     </a>
                     <% } %>

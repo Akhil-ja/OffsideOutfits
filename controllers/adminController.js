@@ -108,6 +108,53 @@
       }
     };
 
+const edit_User = async (req, res) => {
+  try {
+    // Extract the user ID from the query parameter
+    const id = req.query.id;
+
+    // Update the user details based on the data in req.body
+    const updatedUser = await User.findByIdAndUpdate(id, {
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.mobile,
+      password: req.body.password,
+      address: req.body.address,
+      is_verified: req.body.verified,
+      is_active: req.body.status,
+    });
+
+    // Redirect to the user details page or render a success message
+    res.redirect(`/admin/users`);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
+
+const delete_User = async (req, res) => {
+  try {
+    const id = req.query.id;
+
+    // Find and delete the user by ID
+    const deletedUser = await User.findByIdAndDelete(id);
+
+    if (!deletedUser) {
+      return res.status(404).send("User not found");
+    }
+
+    // Redirect to the user list page or render a success message
+    res.redirect("/admin/users");
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
+
 
 
 
@@ -123,5 +170,6 @@
       editProduct,
       viewCategory,
       add_User,
-      
+      edit_User,
+      delete_User,
     };
