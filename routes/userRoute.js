@@ -17,13 +17,15 @@ userRoute.set("views","./views/User");
 const userController=require("../controllers/userController");
 
 userRoute.get("/register",userController.loadlogin);
-userRoute.post("/register", userController.insertUser);
+// userRoute.post("/register", userController.insertUser);
 
 userRoute.post("/login", userController.verifyLogin);
 
 userRoute.get("/home", userController.loadHome);
 
-// userRoute.get("/", userController.loadLanding);
+userRoute.post("/register", userController.initialSignUp);
+
+userRoute.post("/verify-otp", userController.insertUser);
 
 userRoute.get("/products", userController.loadCategory);
 

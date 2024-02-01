@@ -1,7 +1,8 @@
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
-
+const sendEmail = require("../services/sendEmail");
 const bcrypt = require("bcrypt");
+const { generateOTP } = require("../services/generateOTP");
 
 const securePassword = async (password) => {
   try {
@@ -20,29 +21,70 @@ const loadlogin = async (req, res) => {
   }
 };
 
-const insertUser = async (req, res) => {
+const generateRandomCode = () => {
+  return Math.floor(1000 + Math.random() * 9000).toString(); // Generates a random number between 1000 and 9999 as a string
+};
+
+const initialSignUp = async (req, res) => {
   try {
     const spassword = await securePassword(req.body.password);
-    const user = new User({
-      name: req.body.fullname,
+
+    const randomCode = generateRandomCode();
+
+    req.session.tempUserDetails = {
+      fullname: req.body.fullname,
       email: req.body.email,
       phone: req.body.phone,
       password: spassword,
       is_admin: 0,
-      is_verified:0,
-    });
+      is_verified: 0,
+      otp: randomCode, // Store the generated OTP in the session
+    };
 
-    const userData = await user.save();
-
-    if (userData) {
-      res.render("loginRegister");
-      console.log("registration Success!");
-      console.log(req.body.fullname);
-    } else console.log("Registratin not success");
+    if (req.session.tempUserDetails) {
+      const subject = "Welcome to YourApp";
+      console.log(randomCode);
+      const text = `Your verification code is: ${randomCode}`;
+      await sendEmail(req.body.email, subject, text);
+      console.log(req.session.tempUserDetails);
+      res.render("OTPpage");
+    } else {
+      console.log("Registration not successful");
+    }
   } catch (error) {
     console.log(error.message);
   }
 };
+
+const insertUser = async (req, res) => {
+  try {
+    if (req.body.otp === req.session.tempUserDetails.otp) {
+      const spassword = await securePassword(
+        req.session.tempUserDetails.password
+      );
+
+      const user = new User({
+        name: req.session.tempUserDetails.fullname,
+        email: req.session.tempUserDetails.email,
+        phone: req.session.tempUserDetails.phone,
+        password: spassword,
+        is_admin: 0,
+        is_verified: 0,
+      });
+
+      const userData = await user.save();
+
+      res.redirect("/home");
+    } else {
+      console.log("Invalid OTP");
+      // Handle the case where OTP is invalid
+      res.redirect("/invalid-otp");
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 
 const verifyLogin = async (req, res) => {
   try {
@@ -89,23 +131,14 @@ const loadHome = async (req, res) => {
   }
 };
 
-// const loadLanding=async(eq,res)=>{
-//   try {
-//     res.render("landing")
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// }
-
-const loadCategory=async(req,res)=>{
+const loadCategory = async (req, res) => {
   try {
-
     const products = await Product.find();
     res.render("products", { products });
   } catch (error) {
     error.message;
   }
-}
+};
 
 const loadProduct = async (req, res) => {
   try {
@@ -123,7 +156,6 @@ const loadProduct = async (req, res) => {
   }
 };
 
-
 module.exports = {
   loadlogin,
   insertUser,
@@ -131,4 +163,5 @@ module.exports = {
   verifyLogin,
   loadCategory,
   loadProduct,
+  initialSignUp,
 };
