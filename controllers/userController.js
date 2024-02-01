@@ -1,4 +1,5 @@
 const User = require("../models/userModel");
+const Product = require("../models/productModel");
 
 const bcrypt = require("bcrypt");
 
@@ -81,23 +82,26 @@ const verifyLogin = async (req, res) => {
 
 const loadHome = async (req, res) => {
   try {
-    res.render("home");
+    const products = await Product.find();
+    res.render("home", { products });
   } catch (error) {
     console.log(error.message);
   }
 };
 
-const loadLanding=async(eq,res)=>{
-  try {
-    res.render("landing")
-  } catch (error) {
-    console.log(error.message);
-  }
-}
+// const loadLanding=async(eq,res)=>{
+//   try {
+//     res.render("landing")
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// }
 
 const loadCategory=async(req,res)=>{
   try {
-    res.render("category")
+
+    const products = await Product.find();
+    res.render("products", { products });
   } catch (error) {
     error.message;
   }
@@ -105,7 +109,12 @@ const loadCategory=async(req,res)=>{
 
 const loadProduct=async(req,res)=>{
   try {
-    res.render("product");
+    const productId = req.params.productId;
+    const product = await Product.find({ productId });
+    if (!product) {
+      return res.status(404).send("Product not found");
+    }
+    res.render("ViewProduct", { product });
   } catch (error) {
     console.log(error.message);
   }
@@ -116,7 +125,6 @@ module.exports = {
   insertUser,
   loadHome,
   verifyLogin,
-  loadLanding,
   loadCategory,
   loadProduct,
 };

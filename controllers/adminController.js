@@ -30,7 +30,9 @@ const securePassword = async (password) => {
 
     const loadProducts=async(req,res)=>{
       try {
-        res.render("products")
+
+     const allProducts = await Product.find();
+        res.render("products", { allProducts });
       } catch (error) {
         error.message
       }
@@ -63,13 +65,7 @@ const securePassword = async (password) => {
       }
     };
 
-    const editProduct = async (req, res) => {
-      try {
-        res.render("editProduct");
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
+   
 
     const viewCategory = async (req, res) => {
       try {
@@ -122,6 +118,8 @@ const securePassword = async (password) => {
       }
     };
 
+
+
 const edit_User = async (req, res) => {
   try {
     // Extract the user ID from the query parameter
@@ -169,7 +167,8 @@ const delete_User = async (req, res) => {
 
 const add_Product = async (req, res) => {
   try {
-    // Extract data from the request body
+    const images = req.files.map((file) => file.filename);
+
     const newProduct = new Product({
       pname: req.body.ProductName,
       price: req.body.ProductPrice,
@@ -178,14 +177,17 @@ const add_Product = async (req, res) => {
       category: req.body.productCategory,
       is_listed: req.body.listed,
       brand: req.body.ProductBrand,
-      images: req.body.ProductImages,
+      images: images
     });
 
     
     await newProduct.save();
     console.log(newProduct);
-    console.log(newProduct);
+    
+  
+
     res.redirect("/admin/products");
+
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
@@ -193,7 +195,75 @@ const add_Product = async (req, res) => {
   }
 };
 
+const deleteProduct = async (req, res) => {
+  try {
+    const productId = req.params.productId;
 
+    // Find the product by ID and remove it
+    const result = await Product.deleteOne({_id:productId});
+
+    if (result) {
+      res.redirect("/admin/products");
+    } else {
+      res.status(404).send("Product not found");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+const editProduct = async (req, res) => {
+  try {
+    const id = req.query.id;
+    const product = await Product.findById(id);
+
+    if (!product) {
+      // Handle the case where the product is not found
+      return res.status(404).send("Product not found");
+    }
+
+    res.render("editProduct", { product });
+  } 
+  
+  catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
+
+ 
+
+
+
+
+
+ const edit_product=async (req, res) => {
+    try {
+      // Extract the user ID from the query parameter
+      const id = req.query.id;
+     
+
+      // Update the user details based on the data in req.body
+      const updatedProduct = await Product.findByIdAndUpdate(id, {
+        pname: req.body.ProductName,
+        price: req.body.ProductPrice,
+        description: req.body.ProductDetails,
+        sizes: req.body.pname,
+        category: req.body.productCategory,
+        is_listed: req.body.listed,
+        brand: req.body.ProductBrand,
+        images: req.body.ProductImages,
+      });
+
+      res.redirect("/admin/products");
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+};
 
 
 
@@ -211,4 +281,6 @@ const add_Product = async (req, res) => {
       edit_User,
       delete_User,
       add_Product,
+      deleteProduct,
+      edit_product,
     };

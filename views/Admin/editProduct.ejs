@@ -167,136 +167,159 @@
                 </ul>
             </div>
         </header>
-        <section class="content-main">
-            <div class="row">
-                <div class="col-9">
-                    <div class="content-header">
-                        <h2 class="content-title">Edit Product</h2>
-                        <div>
-                            <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">
-                                Save to draft
-                            </button>
-                            <button class="btn btn-md rounded font-sm hover-up">
-                                Publish
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="mb-4">
-                                <label for="product_title" class="form-label">Product title</label>
-                                <input type="text" placeholder="Type here" class="form-control" id="product_title" />
-                            </div>
-                            <div class="row gx-3"></div>
-
-                            <div class="mb-4">
-                                <label for="product_brand" class="form-label">Brand</label>
-                                <input type="text" placeholder="Type here" class="form-control" id="product_brand" />
-                            </div>
-                        </div>
-                    </div>
-                    <!-- card end// -->
-                    <div class="card mb-4">
-                        <div class="card-body">
+        <form action="/admin/products/edit-product?id=<%=product._id%>" method="post">
+            <section class="content-main">
+                <div class="row">
+                    <div class="col-9">
+                        <div class="content-header">
+                            <h2 class="content-title">Edit Product</h2>
                             <div>
-                                <label class="form-label">Description</label>
-                                <textarea placeholder="Type here" class="form-control" rows="4"></textarea>
+                                <button type="submit" class="btn btn-md rounded font-sm hover-up">
+                                    EDIT
+                                </button>
                             </div>
                         </div>
                     </div>
-                    <!-- card end// -->
-                    <div class="card mb-4">
-                        <div class="card-body">
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="mb-4">
+                                    <label for="product_title" class="form-label">Product title</label>
+                                    <input type="text" placeholder="Type here" class="form-control" name="ProductName" value="<%=product.pname%>" 
+                                        required />
+                                </div>
+                                <div class="row gx-3"></div>
+        
+                                <div class="mb-4">
+                                    <label for="product_brand" class="form-label">Brand</label>
+                                    <input type="text" placeholder="Type here" class="form-control" name="ProductBrand" value="<%=product.brand%>"
+                                        required />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- card end// -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div>
+                                        <label class="form-label">Description</label>
+                                        <textarea placeholder="Type here" class="form-control" name="ProductDetails"
+                                            rows="4"><%=product.description%></textarea>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            </div>
+                        </div>
+                        <!-- card end// -->
+                        <div class="card mb-4">
+                            <div class="card-body">
                             <div>
                                 <label class="form-label">Images</label>
-                                <input class="form-control" type="file" multiple />
+                                <input class="form-control" type="file" multiple name="ProductImage" id="fileInput" />
+                                <label id="fileInputLabel">Current Image: <%= product.images[0] %></label>
+                            </div>
+                            </div>
+                        </div>
+                        <!-- card end// -->
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="mb-4">
+                                    <label class="form-label">Price</label>
+                                    <input type="text" placeholder="Type here" name="ProductPrice" class="form-control" value="<%=product.price%>"
+                                        required />
+                                </div>
+        
+                                <!-- Status -->
+                                <h5 class="mb-3">Status</h5>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="listed" id="status1" value="0" <%=product.is_listed==="0"
+                                        ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="status1">Draft</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="listed" id="status2" value="1" <%=product.is_listed==="1"
+                                        ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="status2">Published</label>
+                                </div>
+                                
+                                <br>
+                                
+                                <!-- Categories -->
+                                <h5 class="mb-3">Categories</h5>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="productCategory" id="category" value="none"
+                                        <%=product.category==='none' ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="category">None</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="productCategory" id="category1" value="option1"
+                                        <%=product.category==='option1' ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="category1">Category 1</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="productCategory" id="category2" value="option2"
+                                        <%=product.category==='option2' ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="category2">Category 2</label>
+                                </div>
+
+        
+                            </div>
+                        </div>
+        
+        
+                    </div>
+                    <div class="card ">
+                        <div class="card-body" style="display: flex;flex-direction: column;flex-wrap: wrap;">
+                            <label class="form-label">Sizes and Stock</label>
+        
+                            <div class="row gx-3">
+                                <div class="col-md-4 mb-2">
+                                    <label for="size_xs" class="form-label">XS</label>
+                                    <input type="number" placeholder="Stock" id="size_xs" class="form-control"
+                                        style="width: 6rem;">
+                                </div>
+        
+                                <div class="col-md-4 mb-2">
+                                    <label for="size_s" class="form-label">S</label>
+                                    <input type="number" placeholder="Stock" id="size_s" class="form-control"
+                                        style="width: 6rem;">
+                                </div>
+        
+                                <div class="col-md-4 mb-2">
+                                    <label for="size_m" class="form-label">M</label>
+                                    <input type="number" placeholder="Stock" id="size_m" class="form-control"
+                                        style="width: 6rem;">
+                                </div>
+        
+                                <div class="col-md-4 mb-2">
+                                    <label for="size_l" class="form-label">L</label>
+                                    <input type="number" placeholder="Stock" id="size_l" class="form-control"
+                                        style="width: 6rem;">
+                                </div>
+        
+                                <div class="col-md-4 mb-2">
+                                    <label for="size_xl" class="form-label">XL</label>
+                                    <input type="number" placeholder="Stock" id="size_xl" class="form-control"
+                                        style="width: 6rem;">
+                                </div>
+        
+                                <div class="col-md-4 mb-2">
+                                    <label for="size_xxl" class="form-label">XXL</label>
+                                    <input type="number" placeholder="Stock" id="size_xxl" class="form-control"
+                                        style="width: 6rem;">
+                                </div>
+                                <!-- Add more size fields as needed -->
                             </div>
                         </div>
                     </div>
-                    <!-- card end// -->
-                </div>
-                <div class="col-lg-3">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="mb-4">
-                                <label class="form-label">Price</label>
-                                <input type="text" placeholder="Type here" class="form-control" />
-                            </div>
-                            <div class="mb-4">
-                                <label class="form-label">Status</label>
-                                <select class="form-select">
-                                    <option>Published</option>
-                                    <option>Draft</option>
-                                </select>
-                            </div>
-
-                            <hr />
-                            <h5 class="mb-3">Categories</h5>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="category" id="category1"
-                                    value="option1">
-                                <label class="form-check-label" for="category1">Category 1</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="category" id="category2"
-                                    value="option2">
-                                <label class="form-check-label" for="category2">Category 2</label>
-                            </div>
-                            <!-- Add more radio buttons for categories as needed -->
-                        </div>
-                    </div>
-
-
-                </div>
-                <div class="card ">
-                    <div class="card-body" style="display: flex;flex-direction: column;flex-wrap: wrap;">
-                        <label class="form-label">Sizes and Stock</label>
-
-                        <div class="row gx-3">
-                            <div class="col-md-4 mb-2">
-                                <label for="size_xs" class="form-label">XS</label>
-                                <input type="number" placeholder="Stock" id="size_xs" class="form-control"
-                                    style="width: 6rem;">
-                            </div>
-
-                            <div class="col-md-4 mb-2">
-                                <label for="size_s" class="form-label">S</label>
-                                <input type="number" placeholder="Stock" id="size_s" class="form-control"
-                                    style="width: 6rem;">
-                            </div>
-
-                            <div class="col-md-4 mb-2">
-                                <label for="size_m" class="form-label">M</label>
-                                <input type="number" placeholder="Stock" id="size_m" class="form-control"
-                                    style="width: 6rem;">
-                            </div>
-
-                            <div class="col-md-4 mb-2">
-                                <label for="size_l" class="form-label">L</label>
-                                <input type="number" placeholder="Stock" id="size_l" class="form-control"
-                                    style="width: 6rem;">
-                            </div>
-
-                            <div class="col-md-4 mb-2">
-                                <label for="size_xl" class="form-label">XL</label>
-                                <input type="number" placeholder="Stock" id="size_xl" class="form-control"
-                                    style="width: 6rem;">
-                            </div>
-
-                            <div class="col-md-4 mb-2">
-                                <label for="size_xxl" class="form-label">XXL</label>
-                                <input type="number" placeholder="Stock" id="size_xxl" class="form-control"
-                                    style="width: 6rem;">
-                            </div>
-                            <!-- Add more size fields as needed -->
-                        </div>
-                    </div>
-                </div>
-
-        </section>
-
+        
+            </section>
+        </form>
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
                 <div class="col-sm-6">
@@ -318,6 +341,7 @@
     <script src="/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
     <!-- Main Script -->
     <script src="/admin-assets/js/main.js" type="text/javascript"></script>
+    
 </body>
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:32 GMT -->

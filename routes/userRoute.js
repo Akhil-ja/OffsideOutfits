@@ -23,10 +23,10 @@ userRoute.post("/login", userController.verifyLogin);
 
 userRoute.get("/home", userController.loadHome);
 
-userRoute.get("/", userController.loadLanding);
+// userRoute.get("/", userController.loadLanding);
 
-userRoute.get("/category", userController.loadCategory);
+userRoute.get("/products", userController.loadCategory);
 
-userRoute.get("/product", userController.loadProduct);
+userRoute.get("/products/:productId", userController.loadProduct);
 
 module.exports= userRoute;
