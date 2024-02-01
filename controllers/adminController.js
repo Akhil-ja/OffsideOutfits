@@ -167,33 +167,31 @@ const delete_User = async (req, res) => {
   }
 };
 
-
-const add_Product=async (req, res) => {
+const add_Product = async (req, res) => {
   try {
     // Extract data from the request body
-    const { pname, price, description, sizes, category, is_listed } = req.body;
-
-    // Create a new product instance
     const newProduct = new Product({
-      pname,
-      price,
-      description,
-      sizes,
-      category,
-      is_listed,
+      pname: req.body.ProductName,
+      price: req.body.ProductPrice,
+      description: req.body.ProductDetails,
+      sizes: req.body.pname,
+      category: req.body.productCategory,
+      is_listed: req.body.listed,
+      brand: req.body.ProductBrand,
+      images: req.body.ProductImages,
     });
 
-    // Save the product to the database
+    
     await newProduct.save();
-
-    // Redirect to a success page or any other page as needed
+    console.log(newProduct);
+    console.log(newProduct);
     res.redirect("/admin/products");
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
+        
   }
-}
-
+};
 
 
 

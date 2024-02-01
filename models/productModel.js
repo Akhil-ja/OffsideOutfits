@@ -15,6 +15,20 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  images: [
+    {
+      type: String, 
+    },
+  ],
+  category: {
+    type: String,
+    required: true,
+  },
+
+  brand: {
+    type: String,
+    required: true,
+  },
 
   sizes: [
     {
@@ -29,16 +43,10 @@ const productSchema = new mongoose.Schema({
     },
   ],
 
-  category: {
-    type: String,
-    required: true,
-  },
-
   is_listed: {
-    type: Number,
-    required: true,
+    type: String,
+    default: 1,
   },
-
 });
 
 module.exports = mongoose.model("Product", productSchema);

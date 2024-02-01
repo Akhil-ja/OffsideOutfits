@@ -170,7 +170,7 @@
                 </ul>
             </div>
         </header>
-        <form action="">
+        <form action="/admin/add-product" method="post">
         <section class="content-main">
             <div class="row">
                 <div class="col-9">
@@ -188,13 +188,13 @@
                         <div class="card-body">
                             <div class="mb-4">
                                 <label for="product_title" class="form-label">Product title</label>
-                                <input type="text" placeholder="Type here" class="form-control" id="product_title"required />
+                                <input type="text" placeholder="Type here" class="form-control" name="ProductName" required />
                             </div>
                             <div class="row gx-3"></div>
 
                             <div class="mb-4">
                                 <label for="product_brand" class="form-label">Brand</label>
-                                <input type="text" placeholder="Type here" class="form-control" id="product_brand"required />
+                                <input type="text" placeholder="Type here" class="form-control"  name="ProductBrand" required />
                             </div>
                         </div>
                     </div>
@@ -203,7 +203,7 @@
                         <div class="card-body">
                             <div>
                                 <label class="form-label">Description</label>
-                                <textarea placeholder="Type here" class="form-control" rows="4"></textarea>
+                                <textarea placeholder="Type here" class="form-control"  name="ProductDetails" rows="4"></textarea>
                             </div>
                         </div>
                     </div>
@@ -212,7 +212,7 @@
                         <div class="card-body">
                             <div>
                                 <label class="form-label">Images</label>
-                                <input class="form-control" type="file" multiple />
+                                <input class="form-control" type="file" multiple  name="ProductImages" />
                             </div>
                         </div>
                     </div>
@@ -223,29 +223,36 @@
                         <div class="card-body">
                             <div class="mb-4">
                                 <label class="form-label">Price</label>
-                                <input type="text" placeholder="Type here" class="form-control" />
+                                <input type="text" placeholder="Type here" name="ProductPrice" class="form-control" required />
                             </div>
-                            <div class="mb-4">
-                                <label class="form-label">Status</label>
-                                <select class="form-select">
-                                    <option>Published</option>
-                                    <option>Draft</option>
-                                </select>
+                           
+                            <h5 class="mb-3">Status</h5>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="listed" id="status1" value="0" checked>
+                                <label class="form-check-label" for="status1">Draft</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="listed" id="status2" value="1">
+                                <label class="form-check-label" for="status2">Published</label>
                             </div>
 
-                            <hr />
+                            <br>    
+
+                            
                             <h5 class="mb-3">Categories</h5>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="category" id="category1"
-                                    value="option1">
+                                <input class="form-check-input" type="radio" name="productCategory" id="category" value="none"checked >
+                                <label class="form-check-label" for="category">None</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="productCategory" id="category1" value="option1">
                                 <label class="form-check-label" for="category1">Category 1</label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="category" id="category2"
-                                    value="option2">
+                                <input class="form-check-input" type="radio" name="productCategory" id="category2" value="option2">
                                 <label class="form-check-label" for="category2">Category 2</label>
                             </div>
-                            <!-- Add more radio buttons for categories as needed -->
+                            
                         </div>
                     </div>
 
