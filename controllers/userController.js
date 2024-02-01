@@ -47,7 +47,7 @@ const initialSignUp = async (req, res) => {
       const text = `Your verification code is: ${randomCode}`;
       await sendEmail(req.body.email, subject, text);
       console.log(req.session.tempUserDetails);
-      res.render("OTPpage");
+      res.render("OTPpage", { errorMessage:null });
     } else {
       console.log("Registration not successful");
     }
@@ -58,6 +58,8 @@ const initialSignUp = async (req, res) => {
 
 const insertUser = async (req, res) => {
   try {
+    let errorMessage = ""; // Declare errorMessage variable
+
     if (req.body.otp === req.session.tempUserDetails.otp) {
       const spassword = await securePassword(
         req.session.tempUserDetails.password
@@ -76,56 +78,52 @@ const insertUser = async (req, res) => {
 
       res.redirect("/home");
     } else {
-      console.log("Invalid OTP");
-      // Handle the case where OTP is invalid
-      res.redirect("/invalid-otp");
+      
+    
+
+    res.render("OTPpage", { errorMessage:"Not valid OTP" });
     }
   } catch (error) {
     console.log(error.message);
   }
 };
+
 
 
 const verifyLogin = async (req, res) => {
   try {
     const email = req.body.email;
     const password = req.body.password;
-
-    // Find the user based on the provided email
     const userData = await User.findOne({ email: email });
 
     if (userData) {
-      // Compare the entered password with the hashed password in the database
       const passwordMatch = await bcrypt.compare(password, userData.password);
 
       if (passwordMatch) {
-        // Check if the user is verified
         if (userData.is_verified === "0") {
-          // Redirect to the registration page if not verified
-          res.render("loginRegister");
+          res.render("loginRegister", {
+            errorMessage: "Account not verified yet.",
+          });
         } else {
-          // Redirect to the home page if verified
           res.redirect("/home");
         }
       } else {
-        // Redirect to the registration page if password doesn't match
-        res.render("loginRegister");
+        res.render("loginRegister", { errorMessage: "Incorrect password." });
       }
     } else {
-      // Redirect to the registration page if user not found
-      res.render("loginRegister");
+      res.render("loginRegister", { errorMessage: "User does not exist." });
     }
   } catch (error) {
     console.log(error.message);
-    // Handle other errors if needed
-    res.render("errorPage"); // Render an error page or handle it as appropriate
+    res.render("errorPage");
   }
 };
+
 
 const loadHome = async (req, res) => {
   try {
     const products = await Product.find();
-    res.render("home", { products });
+    res.render("home", { products,errorMessage:" " });
   } catch (error) {
     console.log(error.message);
   }

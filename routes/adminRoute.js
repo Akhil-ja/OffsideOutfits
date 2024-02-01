@@ -22,6 +22,7 @@ const adminController = require("../controllers/adminController");
 
 
 adminRoute.get("/login", adminController.loadAdminLog);
+adminRoute.post("/login", adminController.adminLogin);
 adminRoute.get("/dashboard", adminController.loadDashboard);
 adminRoute.get("/products", adminController.loadProducts);
 adminRoute.get("/users", adminController.loadUsers);

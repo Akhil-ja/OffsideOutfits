@@ -14,12 +14,32 @@ const securePassword = async (password) => {
 };
 
     const loadAdminLog = async (req, res) => {
-      try {
-        res.render("login");
-      } catch (error) {
+    try {
+        const errorMessage = req.query.error || req.session.errorMessage
+        req.session.errorMessage = null;
+
+        res.render("login", { errorMessage });
+    } catch (error) {
         console.log(error.message);
-      }
-    };
+    }
+};
+
+
+const adminLogin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (email === "admin@gmail.com" && password === "123") {
+      res.redirect("/admin/products");
+    } else if (email === "admin@gmail.com") {
+      res.render("login", { errorMessage: "Invalid password" });
+    } else {
+      res.render("login", { errorMessage: "Invalid Credentials" });
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 
     const loadDashboard=async(req,res)=>{
       try {
@@ -52,7 +72,9 @@ const securePassword = async (password) => {
 
     const addUser=async(req,res)=>{
       try {
-        res.render("addUser")
+        res.render("addUser", {
+          errorMessage: null,
+        });
       } catch (error) {
        console.log(error.message);
       }
@@ -83,6 +105,16 @@ const securePassword = async (password) => {
 
     const add_User = async (req, res) => {
       try {
+
+         const existingUser = await User.findOne({
+           $or: [{ email: req.body.email }, { phone: req.body.mobile }],
+         });
+
+         if (existingUser) {
+           return res.render("addUser", {
+             errorMessage: "Email or mobile number already exists.",
+           })
+         }
 
          const spassword = await securePassword(req.body.password);
         const newUser = new User({
@@ -116,7 +148,7 @@ const securePassword = async (password) => {
           return res.status(404).send("User not found.");
         }
 
-        res.render("editUser", { userDetails });
+        res.render("editUser", { userDetails, errorMessage:null });
       } catch (error) {
         console.log(error.message);
         res.status(500).send("Internal Server Error");
@@ -129,6 +161,28 @@ const edit_User = async (req, res) => {
   try {
     // Extract the user ID from the query parameter
     const id = req.query.id;
+
+    // Retrieve the existing user details
+    const existingUser = await User.findById(id);
+
+    if (!existingUser) {
+      return res.status(404).send("User not found.");
+    }
+
+    // Check if the email or mobile is being updated to an existing value
+    if (
+      (req.body.email &&
+        req.body.email !== existingUser.email &&
+        (await User.findOne({ email: req.body.email }))) ||
+      (req.body.mobile &&
+        req.body.mobile !== existingUser.phone &&
+        (await User.findOne({ phone: req.body.mobile })))
+    ) {
+      return res.render("editUser", {
+        userDetails: existingUser,
+        errorMessage: "Email or mobile number already exists.",
+      });
+    }
 
     // Update the user details based on the data in req.body
     const updatedUser = await User.findByIdAndUpdate(id, {
@@ -148,6 +202,7 @@ const edit_User = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 
 
@@ -295,6 +350,7 @@ const createCategory= async (req, res) => {
 
     module.exports = {
       loadAdminLog,
+      adminLogin,
       loadDashboard,
       loadProducts,
       loadUsers,

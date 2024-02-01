@@ -35,23 +35,33 @@
                                 </li>
                             </ul>
                             <div class="tab-content">
-                                <div class="tab-pane fade show active" id="otp-entry" role="tabpanel"
-                                    aria-labelledby="otp-entry-tab">
-                                    <form action="/verify-otp" method="post">
+                                <div class="tab-pane fade show active" id="otp-entry" role="tabpanel" aria-labelledby="otp-entry-tab">
+                                    <form action="/verify-otp" method="post" id="otpForm">
                                         <div class="form-group">
                                             <label for="otp">Enter OTP *</label>
                                             <input type="text" class="form-control" id="otp" name="otp" required>
                                         </div><!-- End .form-group -->
-
-                                        <div class="form-footer">
-                                            <button type="submit" class="btn btn-outline-primary-2">
-                                                <span>Submit OTP</span>
-                                                <i class="icon-long-arrow-right"></i>
-                                            </button>
-                                        </div><!-- End .form-footer -->
+                                    
+                                        <% if (errorMessage) { %>
+                                            <p class="error-message">
+                                                <%= errorMessage %>
+                                            </p>
+                                            <% } %>
+                                    
+                                                <div class="form-footer">
+                                                    <button type="submit" class="btn btn-outline-primary-2" id="submitOTP">
+                                                        <span>Submit OTP</span>
+                                                        <i class="icon-long-arrow-right"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-secondary" id="resendOTP" onclick="resendOTP()" disabled>
+                                                        <span>Resend OTP</span>
+                                                    </button>
+                                                </div><!-- End .form-footer -->
                                     </form>
+
                                 </div>
                             </div>
+
                         </div><!-- End .form-tab -->
                     </div><!-- End .form-box -->
                 </div><!-- End .container -->
@@ -71,6 +81,38 @@
     <script src="assets/js/superfish.min.js"></script>
     <script src="assets/js/owl.carousel.min.js"></script>
     <script src="assets/js/main.js"></script>
+
+    <script>
+        // Variables to control OTP resend
+        let canResend = true;
+        let resendTimeout;
+
+        // Function to handle OTP resend
+        function resendOTP() {
+            if (canResend) {
+                // Perform OTP resend logic here (e.g., send a new OTP)
+
+                // Disable the Resend button
+                document.getElementById('resendOTP').disabled = true;
+
+                // Set a timeout to enable the Resend button after one minute
+                resendTimeout = setTimeout(() => {
+                    canResend = true;
+                    document.getElementById('resendOTP').disabled = false;
+                }, 60000); // 60000 milliseconds = 1 minute
+
+                // Update canResend status
+                canResend = false;
+            }
+        }
+
+        // Attach a submit event listener to the form
+        document.getElementById('otpForm').addEventListener('submit', function (event) {
+            // Clear the timeout if the form is submitted
+            clearTimeout(resendTimeout);
+        });
+    </script>
+
 </body>
 
 </html>

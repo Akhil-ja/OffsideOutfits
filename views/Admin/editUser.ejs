@@ -170,7 +170,7 @@
                 </ul>
             </div>
         </header>
-        <form action="/admin/users/edit?id=<%= userDetails._id %>" method="post">
+        <form action="/admin/users/edit?id=<%= userDetails._id %>" method="post"onsubmit="return validateForm()"">
             <section class="content-main">
                 <div class="row">
                     <div class="col-9">
@@ -204,11 +204,17 @@
                                 <input value="<%=userDetails.password%>" type="password" id="password" name="password" placeholder="Type here"
                                     class="form-control" required />
                             </div>
-                            <div class="col-md-7 mb-2">
+
+                            <% if (errorMessage) { %>
+                                <p class="error-message">
+                                    <%= errorMessage %>
+                                </p>
+                                <% } %>
+                            <!-- <div class="col-md-7 mb-2">
                                 <label class="form-label" for="address">Detailed Address</label>
                                 <textarea value="<%=userDetails.address%>" id="address" name="address" placeholder="Type here" class="form-control"
                                     rows="4"></textarea>
-                            </div>
+                            </div> -->
                             <div class="mb-3">
                                 <label for="verificationStatus">Verification Status:</label>
                                 <div class="form-check">
@@ -267,6 +273,40 @@
     <script src="/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
     <!-- Main Script -->
     <script src="/admin-assets/js/main.js" type="text/javascript"></script>
+     <script>
+        function validateForm() {
+            var name = document.getElementById("name").value;
+            var email = document.getElementById("email").value;
+            var mobile = document.getElementById("mobile").value;
+            var password = document.getElementById("password").value;
+
+            var nameRegex = /^[a-zA-Z\s]+$/;
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            var mobileRegex = /^\d{10}$/;
+
+            // Validate Name
+            if (!nameRegex.test(name)) {
+                alert("Name should contain only letters and spaces.");
+                return false;
+            }
+
+            // Validate Email
+            if (!emailRegex.test(email)) {
+                alert("Invalid email address.");
+                return false;
+            }
+
+            // Validate Mobile Number
+            if (!mobileRegex.test(mobile)) {
+                alert("Mobile Number should have 10 digits.");
+                return false;
+            }
+
+            // Add more validations as needed
+
+            return true;
+        }
+    </script>
 </body>
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:32 GMT -->
