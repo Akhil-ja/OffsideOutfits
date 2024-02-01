@@ -1,5 +1,6 @@
     const User = require("../models/userModel");
     const Product=require("../models/productModel");
+    const Category = require("../models/categoryModel");
 
 const bcrypt = require("bcrypt");
 
@@ -69,12 +70,16 @@ const securePassword = async (password) => {
 
     const viewCategory = async (req, res) => {
       try {
-        res.render("category");
+        const categories = await Category.find();
+        res.render("category",{categories});
+         
       } catch (error) {
         console.log(error.message);
       }
     };
 
+
+   
 
     const add_User = async (req, res) => {
       try {
@@ -265,6 +270,27 @@ const editProduct = async (req, res) => {
     }
 };
 
+const createCategory= async (req, res) => {
+  try {
+    
+    const newCategory = new Category({
+      cName:req.body.categoryName,
+      description:req.body.description
+    });
+
+    // Save the new category to the database
+    const savedCategory = await newCategory.save();
+
+    // Redirect to a success page or do something else
+    res.redirect("/admin/category");
+  } catch (error) {
+    // Handle errors, you might want to render an error page
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
 
 
     module.exports = {
@@ -283,4 +309,5 @@ const editProduct = async (req, res) => {
       add_Product,
       deleteProduct,
       edit_product,
+      createCategory,
     };

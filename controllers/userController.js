@@ -107,18 +107,22 @@ const loadCategory=async(req,res)=>{
   }
 }
 
-const loadProduct=async(req,res)=>{
+const loadProduct = async (req, res) => {
   try {
     const productId = req.params.productId;
-    const product = await Product.find({ productId });
+    const product = await Product.findById(productId);
+
     if (!product) {
       return res.status(404).send("Product not found");
     }
+
     res.render("ViewProduct", { product });
   } catch (error) {
     console.log(error.message);
+    res.status(500).send("Internal Server Error");
   }
-}
+};
+
 
 module.exports = {
   loadlogin,

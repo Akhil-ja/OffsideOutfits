@@ -63,5 +63,6 @@ adminRoute.post(
   adminController.add_Product
 );
 
+adminRoute.post("/category", adminController.createCategory);
 
 module.exports = adminRoute;
