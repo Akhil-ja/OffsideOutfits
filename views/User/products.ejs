@@ -181,7 +181,7 @@
                         <% if (product.is_listed==="1" ) { %>
                             <div class="col-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
                                 <div class="product">
-                                    <figure class="product-media"style="height: 400px;">
+                                    <figure class="product-media"style="height: 280px;">
                                         <a href="/products/<%= product._id %>"">
                                             <img src="/productAssets/<%= product.images[0] %>" alt="Product image" class="product-image">
                                         </a>
@@ -200,7 +200,7 @@
                                         </div><!-- End .product-cat -->
                                         <h3 class="product-title">
                                             <a href="/product/<%= product._id %>">
-                                                <%= product.name %>
+                                                <%= product.pname %>
                                             </a>
                                         </h3><!-- End .product-title -->
                                         <div class="product-price">
