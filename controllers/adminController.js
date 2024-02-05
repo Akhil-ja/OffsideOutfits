@@ -82,7 +82,8 @@ const adminLogin = async (req, res) => {
 
     const addProduct = async (req, res) => {
       try {
-        res.render("addProduct");
+        const categories = await getCategories();
+        res.render("addProduct",{categories});
       } catch (error) {
         console.log(error.message);
       }
@@ -133,6 +134,9 @@ const adminLogin = async (req, res) => {
         console.log(error.message);
       }
     };
+
+
+
   
     const editUser = async (req, res) => {
       try {
@@ -147,8 +151,8 @@ const adminLogin = async (req, res) => {
         if (!userDetails) {
           return res.status(404).send("User not found.");
         }
-
-        res.render("editUser", { userDetails, errorMessage:null });
+       
+        res.render("editUser", { userDetails, errorMessage:null});
       } catch (error) {
         console.log(error.message);
         res.status(500).send("Internal Server Error");
@@ -225,6 +229,9 @@ const delete_User = async (req, res) => {
   }
 };
 
+
+
+
 const add_Product = async (req, res) => {
   try {
     const images = req.files.map((file) => file.filename);
@@ -239,19 +246,12 @@ const add_Product = async (req, res) => {
       brand: req.body.ProductBrand,
       images: images
     });
-
-    
     await newProduct.save();
     console.log(newProduct);
-    
-  
-
     res.redirect("/admin/products");
-
   } catch (error) {
     console.error(error);
-    res.status(500).send("Internal Server Error");
-        
+    res.status(500).send("Internal Server Error");     
   }
 };
 
@@ -273,6 +273,9 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+
+
+
 const editProduct = async (req, res) => {
   try {
     const id = req.query.id;
@@ -283,15 +286,29 @@ const editProduct = async (req, res) => {
       return res.status(404).send("Product not found");
     }
 
-    res.render("editProduct", { product });
-  } 
-  
-  catch (error) {
+    const categories = await getCategories();
+    const selectedCategory = product.category; // Assuming the category is stored in the 'category' field of the product
+
+    res.render("editProduct", { product, categories, selectedCategory });
+  } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
 };
 
+
+
+
+
+const getCategories = async () => {
+  try {
+    const categories = await Category.find({}, "cName"); // Assuming 'Category' is your mongoose model
+    return categories;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 
 
  
@@ -317,13 +334,16 @@ const editProduct = async (req, res) => {
         brand: req.body.ProductBrand,
         images: req.body.ProductImages,
       });
-
-      res.redirect("/admin/products");
+     
+      const selectedCategory = req.body.productCategory;
+       res.redirect(`/admin/products?selectedCategory=${selectedCategory}`);
     } catch (error) {
       console.error(error);
       res.status(500).send("Internal Server Error");
     }
 };
+
+
 
 const createCategory= async (req, res) => {
   try {
@@ -340,6 +360,24 @@ const createCategory= async (req, res) => {
     res.redirect("/admin/category");
   } catch (error) {
     // Handle errors, you might want to render an error page
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
+const deleteCategory = async (req, res) => {
+  try {
+    const categoryId = req.query.id; 
+   if (!categoryId) {
+      return res.status(400).send("Invalid category ID");
+    }
+    const deletedCategory = await Category.findByIdAndDelete(categoryId);
+    if (!deletedCategory) {
+      return res.status(404).send("Category not found");
+    }
+    res.redirect("/admin/category"); 
+  } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
@@ -366,4 +404,6 @@ const createCategory= async (req, res) => {
       deleteProduct,
       edit_product,
       createCategory,
+      deleteCategory 
+
     };

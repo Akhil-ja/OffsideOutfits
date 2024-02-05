@@ -41,6 +41,9 @@ adminRoute.post("/users/edit", adminController.edit_User);
 
 adminRoute.get("/delete-product/:productId", adminController.deleteProduct);
 
+adminRoute.get("/category/delete", adminController.deleteCategory);
+
+
 
 
 
