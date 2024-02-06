@@ -4,6 +4,15 @@ const Category = require("../models/categoryModel");
 
 const bcrypt = require("bcrypt");
 
+const securePassword = async (password) => {
+  try {
+    const passwordHash = await bcrypt.hash(password, 10);
+    return passwordHash;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 const loadAdminLog = async (req, res) => {
   try {
     const errorMessage = req.query.error || req.session.errorMessage;
@@ -24,6 +33,7 @@ const adminLogin = async (req, res) => {
     if (userData) {
 
       const passwordMatch = await bcrypt.compare(password, userData.password);
+
       console.log(password);
       console.log(userData.password);
 

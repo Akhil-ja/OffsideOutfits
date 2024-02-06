@@ -46,7 +46,7 @@ const initialSignUp = async (req, res) => {
      body("fullname").trim().notEmpty().withMessage("Full name is required"),
      body("email").trim().isEmail().withMessage("Invalid email address"),
      body("phone").trim().isMobilePhone().withMessage("Invalid phone number"), // Assuming you want to validate as a mobile phone number
-     
+
      (req, res, next) => {
        const errors = validationResult(req);
        if (!errors.isEmpty()) {
@@ -132,7 +132,6 @@ const verifyLogin = async (req, res) => {
     }
   } catch (error) {
     console.log(error.message);
-    res.render("errorPage");
   }
 };
 
