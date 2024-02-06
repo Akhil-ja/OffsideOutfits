@@ -1,165 +1,155 @@
-    const User = require("../models/userModel");
-    const Product=require("../models/productModel");
-    const Category = require("../models/categoryModel");
+const User = require("../models/userModel");
+const Product = require("../models/productModel");
+const Category = require("../models/categoryModel");
 
 const bcrypt = require("bcrypt");
 
-const securePassword = async (password) => {
+const loadAdminLog = async (req, res) => {
   try {
-    const passwordHash = await bcrypt.hash(password, 10);
-    return passwordHash;
+    const errorMessage = req.query.error || req.session.errorMessage;
+    req.session.errorMessage = null;
+
+    res.render("login", { errorMessage });
   } catch (error) {
     console.log(error.message);
   }
-};
-
-    const loadAdminLog = async (req, res) => {
-    try {
-        const errorMessage = req.query.error || req.session.errorMessage
-        req.session.errorMessage = null;
-
-        res.render("login", { errorMessage });
-    } catch (error) {
-        console.log(error.message);
-    }
 };
 
 
 const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (email === "admin@gmail.com" && password === "123") {
-      res.redirect("/admin/products");
-    } else if (email === "admin@gmail.com") {
-      res.render("login", { errorMessage: "Invalid password" });
+    const userData = await User.findOne({ email: email });
+
+    if (userData) {
+
+      const passwordMatch = await bcrypt.compare(password, userData.password);
+      console.log(password);
+      console.log(userData.password);
+
+      if (passwordMatch && userData.is_admin === "1") {
+        res.redirect("/admin/products");
+      } else if (userData.is_admin === "0") {
+        res.render("login", {
+          errorMessage: "You do not have permission to access the admin panel.",
+        });
+      } else {
+        res.render("login", {
+          errorMessage: "Incorrect password or invalid credentials.",
+        });
+      }
     } else {
-      res.render("login", { errorMessage: "Invalid Credentials" });
+      res.render("login", { errorMessage: "User does not exist." });
     }
   } catch (error) {
     console.log(error.message);
   }
 };
 
+const loadDashboard = async (req, res) => {
+  try {
+    res.render("dashboard");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
-    const loadDashboard=async(req,res)=>{
-      try {
-        res.render("dashboard")
-      } catch (error) {
-        console.log(error.message);
-      }
+const loadProducts = async (req, res) => {
+  try {
+    const allProducts = await Product.find();
+    res.render("products", { allProducts });
+  } catch (error) {
+    error.message;
+  }
+};
+
+const loadUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    res.render("users", { users });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const addUser = async (req, res) => {
+  try {
+    res.render("addUser", {
+      errorMessage: null,
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const addProduct = async (req, res) => {
+  try {
+    const categories = await getCategories();
+    res.render("addProduct", { categories });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const viewCategory = async (req, res) => {
+  try {
+    const categories = await Category.find();
+    res.render("category", { categories });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+const add_User = async (req, res) => {
+  try {
+    const existingUser = await User.findOne({
+      $or: [{ email: req.body.email }, { phone: req.body.mobile }],
+    });
+
+    if (existingUser) {
+      return res.render("addUser", {
+        errorMessage: "Email or mobile number already exists.",
+      });
     }
 
-    const loadProducts=async(req,res)=>{
-      try {
+    const spassword = await securePassword(req.body.password);
+    const newUser = new User({
+      name: req.body.name,
+      email: req.body.email,
+      phone: req.body.mobile,
+      password: spassword,
+      is_admin: 0,
+      is_verified: req.body.verified,
+      address: req.body.address,
+      is_active: req.body.status,
+    });
+    const savedUser = await newUser.save();
+    res.redirect("/admin/users");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
-     const allProducts = await Product.find();
-        res.render("products", { allProducts });
-      } catch (error) {
-        error.message
-      }
+const editUser = async (req, res) => {
+  try {
+    const id = req.query.id;
+
+    if (!id) {
+      return res.status(400).send("User ID is missing in the request.");
     }
 
-  const loadUsers = async (req, res) => {
-    try {
-      const users = await User.find();
-      res.render("users", { users });
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+    const userDetails = await User.findById(id);
 
- 
-
-    const addUser=async(req,res)=>{
-      try {
-        res.render("addUser", {
-          errorMessage: null,
-        });
-      } catch (error) {
-       console.log(error.message);
-      }
+    if (!userDetails) {
+      return res.status(404).send("User not found.");
     }
 
-    const addProduct = async (req, res) => {
-      try {
-        const categories = await getCategories();
-        res.render("addProduct",{categories});
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-
-   
-
-    const viewCategory = async (req, res) => {
-      try {
-        const categories = await Category.find();
-        res.render("category",{categories});
-         
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-
-
-   
-
-    const add_User = async (req, res) => {
-      try {
-
-         const existingUser = await User.findOne({
-           $or: [{ email: req.body.email }, { phone: req.body.mobile }],
-         });
-
-         if (existingUser) {
-           return res.render("addUser", {
-             errorMessage: "Email or mobile number already exists.",
-           })
-         }
-
-         const spassword = await securePassword(req.body.password);
-        const newUser = new User({
-          name: req.body.name,
-          email: req.body.email,
-          phone: req.body.mobile,
-          password: spassword,
-          is_admin: 0,
-          is_verified: req.body.verified,
-          address: req.body.address,
-          is_active: req.body.status,
-        });
-        const savedUser = await newUser.save();
-       res.redirect("/admin/users");
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-
-
-
-  
-    const editUser = async (req, res) => {
-      try {
-        const id = req.query.id;
-
-        if (!id) {
-          return res.status(400).send("User ID is missing in the request.");
-        }
-
-        const userDetails = await User.findById(id);
-
-        if (!userDetails) {
-          return res.status(404).send("User not found.");
-        }
-       
-        res.render("editUser", { userDetails, errorMessage:null});
-      } catch (error) {
-        console.log(error.message);
-        res.status(500).send("Internal Server Error");
-      }
-    };
-
-
+    res.render("editUser", { userDetails, errorMessage: null });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
 
 const edit_User = async (req, res) => {
   try {
@@ -207,9 +197,6 @@ const edit_User = async (req, res) => {
   }
 };
 
-
-
-
 const delete_User = async (req, res) => {
   try {
     const id = req.query.id;
@@ -229,9 +216,6 @@ const delete_User = async (req, res) => {
   }
 };
 
-
-
-
 const add_Product = async (req, res) => {
   try {
     const images = req.files.map((file) => file.filename);
@@ -244,14 +228,14 @@ const add_Product = async (req, res) => {
       category: req.body.productCategory,
       is_listed: req.body.listed,
       brand: req.body.ProductBrand,
-      images: images
+      images: images,
     });
     await newProduct.save();
     console.log(newProduct);
     res.redirect("/admin/products");
   } catch (error) {
     console.error(error);
-    res.status(500).send("Internal Server Error");     
+    res.status(500).send("Internal Server Error");
   }
 };
 
@@ -260,7 +244,7 @@ const deleteProduct = async (req, res) => {
     const productId = req.params.productId;
 
     // Find the product by ID and remove it
-    const result = await Product.deleteOne({_id:productId});
+    const result = await Product.deleteOne({ _id: productId });
 
     if (result) {
       res.redirect("/admin/products");
@@ -272,9 +256,6 @@ const deleteProduct = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
-
-
-
 
 const editProduct = async (req, res) => {
   try {
@@ -296,10 +277,6 @@ const editProduct = async (req, res) => {
   }
 };
 
-
-
-
-
 const getCategories = async () => {
   try {
     const categories = await Category.find({}, "cName"); // Assuming 'Category' is your mongoose model
@@ -310,47 +287,36 @@ const getCategories = async () => {
   }
 };
 
+const edit_product = async (req, res) => {
+  try {
+    // Extract the user ID from the query parameter
+    const id = req.query.id;
 
- 
+    // Update the user details based on the data in req.body
+    const updatedProduct = await Product.findByIdAndUpdate(id, {
+      pname: req.body.ProductName,
+      price: req.body.ProductPrice,
+      description: req.body.ProductDetails,
+      sizes: req.body.pname,
+      category: req.body.productCategory,
+      is_listed: req.body.listed,
+      brand: req.body.ProductBrand,
+      images: req.body.ProductImages,
+    });
 
-
-
-
-
- const edit_product=async (req, res) => {
-    try {
-      // Extract the user ID from the query parameter
-      const id = req.query.id;
-     
-
-      // Update the user details based on the data in req.body
-      const updatedProduct = await Product.findByIdAndUpdate(id, {
-        pname: req.body.ProductName,
-        price: req.body.ProductPrice,
-        description: req.body.ProductDetails,
-        sizes: req.body.pname,
-        category: req.body.productCategory,
-        is_listed: req.body.listed,
-        brand: req.body.ProductBrand,
-        images: req.body.ProductImages,
-      });
-     
-      const selectedCategory = req.body.productCategory;
-       res.redirect(`/admin/products?selectedCategory=${selectedCategory}`);
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Internal Server Error");
-    }
+    const selectedCategory = req.body.productCategory;
+    res.redirect(`/admin/products?selectedCategory=${selectedCategory}`);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
 };
 
-
-
-const createCategory= async (req, res) => {
+const createCategory = async (req, res) => {
   try {
-    
     const newCategory = new Category({
-      cName:req.body.categoryName,
-      description:req.body.description
+      cName: req.body.categoryName,
+      description: req.body.description,
     });
 
     // Save the new category to the database
@@ -365,45 +331,40 @@ const createCategory= async (req, res) => {
   }
 };
 
-
 const deleteCategory = async (req, res) => {
   try {
-    const categoryId = req.query.id; 
-   if (!categoryId) {
+    const categoryId = req.query.id;
+    if (!categoryId) {
       return res.status(400).send("Invalid category ID");
     }
     const deletedCategory = await Category.findByIdAndDelete(categoryId);
     if (!deletedCategory) {
       return res.status(404).send("Category not found");
     }
-    res.redirect("/admin/category"); 
+    res.redirect("/admin/category");
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
 };
 
-
-
-
-    module.exports = {
-      loadAdminLog,
-      adminLogin,
-      loadDashboard,
-      loadProducts,
-      loadUsers,
-      editUser,
-      addUser,
-      addProduct,
-      editProduct,
-      viewCategory,
-      add_User,
-      edit_User,
-      delete_User,
-      add_Product,
-      deleteProduct,
-      edit_product,
-      createCategory,
-      deleteCategory 
-
-    };
+module.exports = {
+  loadAdminLog,
+  adminLogin,
+  loadDashboard,
+  loadProducts,
+  loadUsers,
+  editUser,
+  addUser,
+  addProduct,
+  editProduct,
+  viewCategory,
+  add_User,
+  edit_User,
+  delete_User,
+  add_Product,
+  deleteProduct,
+  edit_product,
+  createCategory,
+  deleteCategory,
+};

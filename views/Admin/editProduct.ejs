@@ -146,7 +146,8 @@
                 </ul>
             </div>
         </header>
-        <form action="/admin/products/edit-product?id=<%=product._id%>" method="post">
+    <form action="/admin/products/edit-product?id=<%= product._id %>" method="post" enctype="multipart/form-data">
+        <!-- Other form fields -->
             <section class="content-main">
                 <div class="row">
                     <div class="col-9">
@@ -193,15 +194,31 @@
                             </div>
                         </div>
                         <!-- card end// -->
-                        <div class="card mb-4">
-                            <div class="card-body">
+                    <div class="card mb-4">
+                        <div class="card-body">
                             <div>
                                 <label class="form-label">Images</label>
-                                <input class="form-control" type="file" multiple name="ProductImage" id="fileInput" />
-                                <label id="fileInputLabel">Current Image: <%= product.images[0] %></label>
-                            </div>
+                                <!-- Display current images -->
+                                <% product.images.forEach(image=> { %>
+                                    <div>
+                                        <img src="/productAssets/<%= image %>" alt="<%= image %>">
+                                        <label>Current Image: <%= image %></label>
+                                        <!-- Add a checkbox to mark images for removal -->
+                                        <input type="checkbox" name="removeImage" value="<%= image %>">
+                                        <label>Remove</label>
+                                    </div>
+                                    <% }); %>
+                    
+                                        <!-- Allow user to upload new images -->
+                                        <input class="form-control" type="file" multiple name="newImages" accept="image/*">
                             </div>
                         </div>
+                    </div>
+                    
+                    <!-- Other form fields -->
+                    
+                   
+                    </form>
                         <!-- card end// -->
                     </div>
                     <div class="col-lg-3">

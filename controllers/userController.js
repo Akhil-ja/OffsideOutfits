@@ -3,6 +3,7 @@ const Product = require("../models/productModel");
 const sendEmail = require("../services/sendEmail");
 const bcrypt = require("bcrypt");
 const { generateOTP } = require("../services/generateOTP");
+const { body, validationResult } = require("express-validator");
 
 const securePassword = async (password) => {
   try {
@@ -40,6 +41,22 @@ const initialSignUp = async (req, res) => {
       is_verified: 0,
       otp: randomCode, // Store the generated OTP in the session
     };
+
+   const validateSignup = [
+     body("fullname").trim().notEmpty().withMessage("Full name is required"),
+     body("email").trim().isEmail().withMessage("Invalid email address"),
+     body("phone").trim().isMobilePhone().withMessage("Invalid phone number"), // Assuming you want to validate as a mobile phone number
+     
+     (req, res, next) => {
+       const errors = validationResult(req);
+       if (!errors.isEmpty()) {
+         // If there are validation errors, return response with 400 status and error messages
+         return res.status(400).json({ errors: errors.array() });
+       }
+       next();
+     },
+   ];
+
 
     if (req.session.tempUserDetails) {
       const subject = "Welcome to YourApp";

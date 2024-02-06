@@ -61,6 +61,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+
+
+
 adminRoute.post(
   "/add-product",
   upload.array("ProductImage", 5),

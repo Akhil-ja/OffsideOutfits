@@ -3,6 +3,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 mongoose.connect("mongodb://localhost:27017/OffsideOutfits");
 
+const expressValidator = require("express-validator");
 const express = require("express");
 const session = require("express-session");
 const app = express();
@@ -15,6 +16,8 @@ app.use(
     cookie: { secure: false }, // Set secure to true if using HTTPS
   })
 );
+
+
 
 const path = require("path");
 

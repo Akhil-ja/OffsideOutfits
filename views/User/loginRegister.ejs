@@ -22,81 +22,15 @@
 
 <body>
     <div class="page-wrapper">
-        <header class="header">
-            <div class="header-top">
-                <div class="container">
-                    <div class="header-left">
-                        
 
-                    </div><!-- End .header-left -->
-
-                    <div class="header-right">
-                        <ul class="top-menu">
-                            <li>
-                                <a href="#">Links</a>
-                                <ul>
-                                    <li><a href="tel:#"><i class="icon-phone"></i>Call: +0123 456 789</a></li>
-                                    <li><a href="about.html">About Us</a></li>
-                                    <li><a href="contact.html">Contact Us</a></li>
-                                    <li><a href="#signin-modal" data-toggle="modal"><i class="icon-user"></i>Login</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul><!-- End .top-menu -->
-                    </div><!-- End .header-right -->
-                </div><!-- End .container -->
-            </div><!-- End .header-top -->
-
-            <div class="header-middle sticky-header">
-                <div class="container">
-                    <div class="header-left">
-                        <button class="mobile-menu-toggler">
-                            <span class="sr-only">Toggle mobile menu</span>
-                            <i class="icon-bars"></i>
-                        </button>
-
-                        <a href="/home" class="logo">
-                            <img src="assets/images/logo.png" alt="Molla Logo" width="105" height="25">
-                        </a>
-
-                        <nav class="main-nav">
-                            <ul class="menu sf-arrows">
-                                <li class="megamenu-container active">
-                                    <a href="index.html" class="sf-with-ul">Home</a>
-
-                                </li>
-                                <li>
-                                    <a href="category.html" class="sf-with-ul">Shop</a>
-
-                                </li>
-                                <li>
-                                    <a href="product.html" class="sf-with-ul">Product</a>
-
-                                    
-                                </li>
-                                <li>
-                                    <a href="#" class="sf-with-ul">Pages</a>
-
-                            
-                                </li>
-                               
-                                
-                            </ul><!-- End .menu -->
-                        </nav><!-- End .main-nav -->
-                    </div><!-- End .header-left -->
-
-                   
-                </div><!-- End .container -->
-            </div><!-- End .header-middle -->
-        </header><!-- End .header -->
 
         <main class="main">
             <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
-               
+
             </nav>
 
             <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17"
-                style="background-image: url('assets/images/backgrounds/login-bg.jpg')">
+                style="background-image: url('/assets/images/login/Football-rack1.jpeg')">
                 <div class="container">
                     <div class="form-box">
                         <div class="form-tab">
@@ -112,13 +46,13 @@
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane fade" id="signin-2" role="tabpanel" aria-labelledby="signin-tab-2">
-                                  
-                                  
+
+
                                     <form action="/login" method="post">
                                         <div class="form-group">
                                             <label for="singin-email-2">Email Address *</label>
-                                            <input type="text" class="form-control" id="singin-email-2"
-                                                name="email" required>
+                                            <input type="text" class="form-control" id="singin-email-2" name="email"
+                                                required>
                                         </div><!-- End .form-group -->
 
                                         <div class="form-group">
@@ -135,298 +69,158 @@
 
 
                                         </div>
-                    
+
                                     </form>
 
                                 </div>
 
-<div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
-<form action="/register" method="post" onsubmit="return validateForm()">
-    <div class="form-group">
-        <label for="fullname">Full Name *</label>
-        <input type="text" class="form-control" id="register-fullname" name="fullname" required>
-        <p id="fullname-error" class="error-message"></p>
-    </div>
+                                <div class="tab-pane fade show active" id="register-2" role="tabpanel"
+                                    aria-labelledby="register-tab-2">
 
-    <div class="form-group">
-        <label for="email-2">Your email address *</label>
-        <input type="email" class="form-control" id="register-email-2" name="email" required>
-        <p id="email-error" class="error-message"></p>
-    </div>
+                                        <form action="/register" method="post"  id="register">
+                                            <p id="main-error" class="error-message" style="color: red;"></p>
+                                            <div class="form-group">
+                                                <label for="fullname">Full Name *</label>
+                                                <p id="fullname-error" class="error-message" style="color: red;"></p>
+                                                <input type="text" class="form-control" id="register-fullname"
+                                                    name="fullname" required>
+                                                
+                                            </div>
 
-    <div class="form-group">
-        <label for="phone">Phone Number *</label>
-        <div class="input-group">
-            <input type="tel" class="form-control" id="register-phone" name="phone" required>
-            <p id="phone-error" class="error-message"></p>
-        </div>
-    </div>
+                                            <div class="form-group">
+                                                <label for="email-2">Your email address *</label>
+                                                <p id="email-error" class="error-message" style="color: red;"></p>
+                                                <input type="email" class="form-control" id="register-email-2" name="email"
+                                                    required>
+                                                
+                                            </div>
 
-    <div class="form-group">
-        <label for="password-2">Password *</label>
-        <input type="password" class="form-control" id="register-password-2" name="password" required>
-        <p id="password-error" class="error-message"></p>
-    </div>
+                                            <div class="form-group">
+                                                <label for="phone">Phone Number *</label>
+                                                <p id="phone-error" class="error-message" style="color: red;"></p>
+                                                <div class="input-group">
+                                                    <input type="tel" class="form-control" id="register-phone" name="phone"
+                                                        required>
+                                                  
+                                                </div>
+                                            </div>
 
-    <div class="form-footer">
-        <button type="submit" class="btn btn-outline-primary-2">
-            <span>SIGN UP</span>
-            <i class="icon-long-arrow-right"></i>
-        </button>
-    </div>
-</form>
-</div>
+                                            <div class="form-group">
+                                                <label for="password-2">Password *</label>
+                                                <p id="password-error" class="error-message" style="color: red;"></p>
+                                                <input type="password" class="form-control" id="register-password-2"
+                                                    name="password" required>
+                                               
+                                            </div>
 
-
-
-                                    <!-- ... (remaining HTML code) ... -->
+                                            <div class="form-footer">
+                                                <button type="button" class="btn btn-outline-primary-2" onclick="submitForm()">
+                                                    <span>SIGN UP</span>
+                                                    <i class="icon-long-arrow-right"></i>
+                                                </button>
+                                            </div>
+                                        </form>
                                 </div>
-                            </div><!-- End .tab-content -->
-                        </div><!-- End .form-tab -->
-                    </div><!-- End .form-box -->
-                </div><!-- End .container -->
-            </div><!-- End .login-page section-bg -->
-        </main><!-- End .main -->
 
-        <footer class="footer">
-            <div class="footer-middle">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="widget widget-about">
-                                <img src="assets/images/logo.png" class="footer-logo" alt="Footer Logo" width="105"
-                                    height="25">
-                                <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate
-                                    magna eros eu erat. </p>
 
-                                <div class="social-icons">
-                                    <a href="#" class="social-icon" target="_blank" title="Facebook"><i
-                                            class="icon-facebook-f"></i></a>
-                                    <a href="#" class="social-icon" target="_blank" title="Twitter"><i
-                                            class="icon-twitter"></i></a>
-                                    <a href="#" class="social-icon" target="_blank" title="Instagram"><i
-                                            class="icon-instagram"></i></a>
-                                    <a href="#" class="social-icon" target="_blank" title="Youtube"><i
-                                            class="icon-youtube"></i></a>
-                                    <a href="#" class="social-icon" target="_blank" title="Pinterest"><i
-                                            class="icon-pinterest"></i></a>
-                                </div><!-- End .soial-icons -->
-                            </div><!-- End .widget about-widget -->
-                        </div><!-- End .col-sm-6 col-lg-3 -->
 
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="widget">
-                                <h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
 
-                                <ul class="widget-list">
-                                    <li><a href="about.html">About Molla</a></li>
-                                    <li><a href="#">How to shop on Molla</a></li>
-                                    <li><a href="#">FAQ</a></li>
-                                    <li><a href="contact.html">Contact us</a></li>
-                                    <li><a href="login.html">Log in</a></li>
-                                </ul><!-- End .widget-list -->
-                            </div><!-- End .widget -->
-                        </div><!-- End .col-sm-6 col-lg-3 -->
+                            </div>
+                        </div><!-- End .tab-content -->
+                    </div><!-- End .form-tab -->
+                </div><!-- End .form-box -->
+            </div><!-- End .container -->
+    </div><!-- End .login-page section-bg -->
+    </main><!-- End .main -->
 
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="widget">
-                                <h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
+    <footer class="footer">
+        <div class="footer-middle">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="widget widget-about">
+                            <img src="assets/images/logo.png" class="footer-logo" alt="Footer Logo" width="105"
+                                height="25">
+                            <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate
+                                magna eros eu erat. </p>
 
-                                <ul class="widget-list">
-                                    <li><a href="#">Payment Methods</a></li>
-                                    <li><a href="#">Money-back guarantee!</a></li>
-                                    <li><a href="#">Returns</a></li>
-                                    <li><a href="#">Shipping</a></li>
-                                    <li><a href="#">Terms and conditions</a></li>
-                                    <li><a href="#">Privacy Policy</a></li>
-                                </ul><!-- End .widget-list -->
-                            </div><!-- End .widget -->
-                        </div><!-- End .col-sm-6 col-lg-3 -->
+                            <div class="social-icons">
+                                <a href="#" class="social-icon" target="_blank" title="Facebook"><i
+                                        class="icon-facebook-f"></i></a>
+                                <a href="#" class="social-icon" target="_blank" title="Twitter"><i
+                                        class="icon-twitter"></i></a>
+                                <a href="#" class="social-icon" target="_blank" title="Instagram"><i
+                                        class="icon-instagram"></i></a>
+                                <a href="#" class="social-icon" target="_blank" title="Youtube"><i
+                                        class="icon-youtube"></i></a>
+                                <a href="#" class="social-icon" target="_blank" title="Pinterest"><i
+                                        class="icon-pinterest"></i></a>
+                            </div><!-- End .soial-icons -->
+                        </div><!-- End .widget about-widget -->
+                    </div><!-- End .col-sm-6 col-lg-3 -->
 
-                        <div class="col-sm-6 col-lg-3">
-                            <div class="widget">
-                                <h4 class="widget-title">My Account</h4><!-- End .widget-title -->
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="widget">
+                            <h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
 
-                                <ul class="widget-list">
-                                    <li><a href="#">Sign In</a></li>
-                                    <li><a href="cart.html">View Cart</a></li>
-                                    <li><a href="#">My Wishlist</a></li>
-                                    <li><a href="#">Track My Order</a></li>
-                                    <li><a href="#">Help</a></li>
-                                </ul><!-- End .widget-list -->
-                            </div><!-- End .widget -->
-                        </div><!-- End .col-sm-6 col-lg-3 -->
-                    </div><!-- End .row -->
-                </div><!-- End .container -->
-            </div><!-- End .footer-middle -->
+                            <ul class="widget-list">
+                                <li><a href="about.html">About Molla</a></li>
+                                <li><a href="#">How to shop on Molla</a></li>
+                                <li><a href="#">FAQ</a></li>
+                                <li><a href="contact.html">Contact us</a></li>
+                                <li><a href="login.html">Log in</a></li>
+                            </ul><!-- End .widget-list -->
+                        </div><!-- End .widget -->
+                    </div><!-- End .col-sm-6 col-lg-3 -->
 
-            <div class="footer-bottom">
-                <div class="container">
-                    <p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p>
-                    <!-- End .footer-copyright -->
-                    <figure class="footer-payments">
-                        <img src="assets/images/payments.png" alt="Payment methods" width="272" height="20">
-                    </figure><!-- End .footer-payments -->
-                </div><!-- End .container -->
-            </div><!-- End .footer-bottom -->
-        </footer><!-- End .footer -->
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="widget">
+                            <h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
+
+                            <ul class="widget-list">
+                                <li><a href="#">Payment Methods</a></li>
+                                <li><a href="#">Money-back guarantee!</a></li>
+                                <li><a href="#">Returns</a></li>
+                                <li><a href="#">Shipping</a></li>
+                                <li><a href="#">Terms and conditions</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                            </ul><!-- End .widget-list -->
+                        </div><!-- End .widget -->
+                    </div><!-- End .col-sm-6 col-lg-3 -->
+
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="widget">
+                            <h4 class="widget-title">My Account</h4><!-- End .widget-title -->
+
+                            <ul class="widget-list">
+                                <li><a href="#">Sign In</a></li>
+                                <li><a href="cart.html">View Cart</a></li>
+                                <li><a href="#">My Wishlist</a></li>
+                                <li><a href="#">Track My Order</a></li>
+                                <li><a href="#">Help</a></li>
+                            </ul><!-- End .widget-list -->
+                        </div><!-- End .widget -->
+                    </div><!-- End .col-sm-6 col-lg-3 -->
+                </div><!-- End .row -->
+            </div><!-- End .container -->
+        </div><!-- End .footer-middle -->
+
+        <div class="footer-bottom">
+            <div class="container">
+                <p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p>
+                <!-- End .footer-copyright -->
+                <figure class="footer-payments">
+                    <img src="assets/images/payments.png" alt="Payment methods" width="272" height="20">
+                </figure><!-- End .footer-payments -->
+            </div><!-- End .container -->
+        </div><!-- End .footer-bottom -->
+    </footer><!-- End .footer -->
+
+
     </div><!-- End .page-wrapper -->
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
 
     <!-- Mobile Menu -->
-    <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
-
-    <div class="mobile-menu-container">
-        <div class="mobile-menu-wrapper">
-            <span class="mobile-menu-close"><i class="icon-close"></i></span>
-
-            <form action="#" method="get" class="mobile-search">
-                <label for="mobile-search" class="sr-only">Search</label>
-                <input type="search" class="form-control" name="mobile-search" id="mobile-search"
-                    placeholder="Search in..." required>
-                <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
-            </form>
-
-            <nav class="mobile-nav">
-                <ul class="mobile-menu">
-                    <li class="active">
-                        <a href="index.html">Home</a>
-                    </li>
-                    <li>
-                        <a href="category.html">Shop</a>
-                       
-                    </li>
-                    <li>
-                        <a href="product.html" class="sf-with-ul">Product</a>
-                        
-                    </li>
-                    <li>
-                        <a href="#">Pages</a>
-                        <ul>
-                            <li>
-                                <a href="about.html">About</a>
-
-                                
-                            </li>
-                            <li>
-                                <a href="contact.html">Contact</a>
-
-                            </li>
-                            
-                        </ul>
-                    </li>
-            
-                </ul>
-            </nav>
-
-            <div class="social-icons">
-                <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
-                <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
-                <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
-                <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
-            </div><!-- End .social-icons -->
-        </div><!-- End .mobile-menu-wrapper -->
-    </div><!-- End .mobile-menu-container -->
-
-    <!-- Sign in / Register Modal -->
-    <div class="modal fade" id="signin-modal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"><i class="icon-close"></i></span>
-                    </button>
-
-                    <div class="form-box">
-                        <div class="form-tab">
-                            <ul class="nav nav-pills nav-fill" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin"
-                                        role="tab" aria-controls="signin" aria-selected="true">Sign In</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab"
-                                        aria-controls="register" aria-selected="false">Register</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content" id="tab-content-5">
-                                <div class="tab-pane fade show active" id="signin" role="tabpanel"
-                                    aria-labelledby="signin-tab">
-                                    <form action="#">
-                                        <div class="form-group">
-                                            <label for="singin-email">Email address *</label>
-                                            <input type="text" class="form-control" id="singin-email"
-                                                name="singin-email" required>
-                                        </div><!-- End .form-group -->
-
-                                        <div class="form-group">
-                                            <label for="singin-password">Password *</label>
-                                            <input type="password" class="form-control" id="singin-password"
-                                                name="singin-password" required>
-                                        </div><!-- End .form-group -->
-
-                                        <div class="form-footer">
-                                            <button type="submit" class="btn btn-outline-primary-2">
-                                                <span>LOG IN</span>
-                                                <i class="icon-long-arrow-right"></i>
-                                            </button>                                           
-                                        </div><!-- End .form-footer -->
-                                    </form>
-                                    
-                                </div><!-- .End .tab-pane -->
-                                <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
-                                    <form action="#">
-                                        <div class="form-group">
-                                            <label for="register-email">Your email address *</label>
-                                            <input type="email" class="form-control" id="register-email"
-                                                name="register-email" required>
-                                        </div><!-- End .form-group -->
-
-                                        <div class="form-group">
-                                            <label for="register-password">Password *</label>
-                                            <input type="password" class="form-control" id="register-password"
-                                                name="register-password" required>
-                                        </div><!-- End .form-group -->
-
-                                        <div class="form-footer">
-                                            <button type="submit" class="btn btn-outline-primary-2">
-                                                <span>SIGN UP</span>
-                                                <i class="icon-long-arrow-right"></i>
-                                            </button>
-
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="register-policy"
-                                                    required>
-                                                <label class="custom-control-label" for="register-policy">I agree to the
-                                                    <a href="#">privacy policy</a> *</label>
-                                            </div><!-- End .custom-checkbox -->
-                                        </div><!-- End .form-footer -->
-                                    </form>
-                                    <div class="form-choice">
-                                        <p class="text-center">or sign in with</p>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <a href="#" class="btn btn-login btn-g">
-                                                    <i class="icon-google"></i>
-                                                    Login With Google
-                                                </a>
-                                            </div><!-- End .col-6 -->
-                                            <div class="col-sm-6">
-                                                <a href="#" class="btn btn-login  btn-f">
-                                                    <i class="icon-facebook-f"></i>
-                                                    Login With Facebook
-                                                </a>
-                                            </div><!-- End .col-6 -->
-                                        </div><!-- End .row -->
-                                    </div><!-- End .form-choice -->
-                                </div><!-- .End .tab-pane -->
-                            </div><!-- End .tab-content -->
-                        </div><!-- End .form-tab -->
-                    </div><!-- End .form-box -->
-                </div><!-- End .modal-body -->
-            </div><!-- End .modal-content -->
-        </div><!-- End .modal-dialog -->
-    </div><!-- End .modal -->
 
     <!-- Plugins JS File -->
     <script src="assets/js/jquery.min.js"></script>
@@ -440,66 +234,68 @@
     <script>
         // Scroll down when the page loads
         window.onload = function () {
-            window.scroll(0, window.innerHeight/2.5);  // Adjust the scroll position as needed
+            window.scroll(0, window.innerHeight / 2.5);  // Adjust the scroll position as needed
         };
     </script>
+<!-- <!--  -->
+<script>
+    function getElementValue(id) {
+        const element = document.getElementById(id);
+        return element.value;
+    }
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Attach the validateForm function to the input events of the relevant form fields
-            document.getElementById("register-fullname").addEventListener('input', validateForm);
-            document.getElementById("register-email-2").addEventListener('input', validateForm);
-            document.getElementById("register-phone").addEventListener('input', validateForm);
-            document.getElementById("register-password-2").addEventListener('input', validateForm);
-        });
+    function validateInput(inputId, pattern, errorId, errorMessage) {
+        const inputValue = getElementValue(inputId);
+        const errorElement = document.getElementById(errorId);
 
-        function validateForm() {
-            // Reset previous error messages
-            document.getElementById("fullname-error").innerText = "";
-            document.getElementById("email-error").innerText = "";
-            document.getElementById("phone-error").innerText = "";
-            document.getElementById("password-error").innerText = "";
-
-            // Get form values
-            var fullname = document.getElementById("register-fullname").value;
-            var email = document.getElementById("register-email-2").value;
-            var phone = document.getElementById("register-phone").value;
-            var password = document.getElementById("register-password-2").value;
-
-            // Validation rules
-            var fullnameRegex = /^[a-zA-Z\s]+$/;
-
-            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-            var phoneRegex = /^\d{10}$/;
-            
-            var passwordRegex = /^(?=.*\d)(?=.*[A-Z]).{8,}$/;
-
-            // Validate Full Name
-            if (!fullnameRegex.test(fullname)) {
-                document.getElementById("fullname-error").innerText = "Full Name should contain only letters and spaces.";
-            }
-
-            // Validate Email
-            if (!emailRegex.test(email)) {
-                document.getElementById("email-error").innerText = "Invalid email address.";
-            }
-
-            // Validate Phone Number
-            if (!phoneRegex.test(phone)) {
-                document.getElementById("phone-error").innerText = "Phone Number should have 10 digits.";
-            }
-
-            // Validate Password
-            if (!passwordRegex.test(password)) {
-                document.getElementById("password-error").innerText = "Password should be at least 8 characters, including numbers and an uppercase letter.";
-            }
+        if (inputValue.trim() === '') {
+            errorElement.innerText = errorMessage;
+            return false;
+        } else if (pattern.test(inputValue)) {
+            errorElement.innerText = '';
+            return true;
+        } else {
+            errorElement.innerText = 'Please enter a valid ' + errorMessage.toLowerCase() + '.';
+            return false;
         }
-    </script>
+    }
+
+    function validateName() {
+        return validateInput('register-fullname', /^[A-Za-z]+(\s[A-Za-z]+)*$/, 'fullname-error', 'Name');
+    }
+
+    function validateEmail() {
+        return validateInput('register-email-2', /^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'email-error', 'Email address');
+    }
+
+    function validatePhone() {
+        return validateInput('register-phone', /^\d{10}$/, 'phone-error', '10-digit phone number');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const fullNameInput = document.getElementById('register-fullname');
+        const emailInput = document.getElementById('register-email-2');
+        const phoneInput = document.getElementById('register-phone');
+
+        fullNameInput.addEventListener('input', validateName);
+        emailInput.addEventListener('input', validateEmail);
+        phoneInput.addEventListener('input', validatePhone);
+    });
+
+    function submitForm() {
+        if (validateName() && validateEmail() && validatePhone()) {
+            document.getElementById('register').submit();
+        } else {
+            document.getElementById('main-error').innerText = 'CANNOT SUBMIT';
+        }
+    }
+</script> 
+
+
+
 
 </body>
 
 
-<!-- molla/login.html  22 Nov 2019 10:04:03 GMT -->
 
 </html>
