@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
 
   is_verified: {
     type: String,
-    default: 0,
+    default: 1,
   },
 
   is_active: {

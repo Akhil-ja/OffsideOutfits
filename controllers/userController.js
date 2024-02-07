@@ -30,6 +30,17 @@ const initialSignUp = async (req, res) => {
   try {
     const spassword = await securePassword(req.body.password);
 
+    //  const emailExists = await User.findOne({ email: req.body.email });
+    //  const phoneExists = await User.findOne({ phone: req.body.phone });
+
+    //  if (emailExists || phoneExists) {
+    //    // User with the same email or phone number already exists
+    //    const errorMessage =
+    //      "User with the same email or phone number already exists.";
+    //    res.render("loginRegister", { errorMessage });
+    //    return;
+    //  }
+
     const randomCode = generateRandomCode();
 
     req.session.tempUserDetails = {
@@ -42,29 +53,13 @@ const initialSignUp = async (req, res) => {
       otp: randomCode, // Store the generated OTP in the session
     };
 
-   const validateSignup = [
-     body("fullname").trim().notEmpty().withMessage("Full name is required"),
-     body("email").trim().isEmail().withMessage("Invalid email address"),
-     body("phone").trim().isMobilePhone().withMessage("Invalid phone number"), // Assuming you want to validate as a mobile phone number
-
-     (req, res, next) => {
-       const errors = validationResult(req);
-       if (!errors.isEmpty()) {
-         // If there are validation errors, return response with 400 status and error messages
-         return res.status(400).json({ errors: errors.array() });
-       }
-       next();
-     },
-   ];
-
-
     if (req.session.tempUserDetails) {
       const subject = "Welcome to YourApp";
       console.log(randomCode);
       const text = `Your verification code is: ${randomCode}`;
       await sendEmail(req.body.email, subject, text);
       console.log(req.session.tempUserDetails);
-      res.render("OTPpage", { errorMessage:null });
+      res.render("OTPpage", { errorMessage: null });
     } else {
       console.log("Registration not successful");
     }
@@ -86,32 +81,30 @@ const insertUser = async (req, res) => {
         name: req.session.tempUserDetails.fullname,
         email: req.session.tempUserDetails.email,
         phone: req.session.tempUserDetails.phone,
-        password: spassword,
+        password: req.session.tempUserDetails.password,
         is_admin: 0,
-        is_verified: 0,
+        is_verified: 1,
       });
 
       const userData = await user.save();
 
       res.redirect("/home");
     } else {
-      
-    
-
-    res.render("OTPpage", { errorMessage:"Not valid OTP" });
+      res.render("OTPpage", { errorMessage: "Not valid OTP" });
     }
   } catch (error) {
     console.log(error.message);
   }
 };
 
-
-
 const verifyLogin = async (req, res) => {
   try {
-    const email = req.body.email;
-    const password = req.body.password;
+     const { email, password } = req.body;
+
+
     const userData = await User.findOne({ email: email });
+
+    console.log(userData);
 
     if (userData) {
       const passwordMatch = await bcrypt.compare(password, userData.password);
@@ -135,11 +128,10 @@ const verifyLogin = async (req, res) => {
   }
 };
 
-
 const loadHome = async (req, res) => {
   try {
     const products = await Product.find();
-    res.render("home", { products,errorMessage:" " });
+    res.render("home", { products, errorMessage: " " });
   } catch (error) {
     console.log(error.message);
   }

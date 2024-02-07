@@ -24,14 +24,12 @@ const loadAdminLog = async (req, res) => {
   }
 };
 
-
 const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
     const userData = await User.findOne({ email: email });
 
     if (userData) {
-
       const passwordMatch = await bcrypt.compare(password, userData.password);
 
       console.log(password);
