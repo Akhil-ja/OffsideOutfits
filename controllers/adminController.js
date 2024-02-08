@@ -71,6 +71,9 @@ const loadProducts = async (req, res) => {
   }
 };
 
+
+
+
 const loadUsers = async (req, res) => {
   try {
     const users = await User.find();
@@ -79,6 +82,9 @@ const loadUsers = async (req, res) => {
     console.log(error.message);
   }
 };
+
+
+
 
 const addUser = async (req, res) => {
   try {
@@ -89,6 +95,9 @@ const addUser = async (req, res) => {
     console.log(error.message);
   }
 };
+
+
+
 
 const addProduct = async (req, res) => {
   try {
@@ -159,6 +168,9 @@ const editUser = async (req, res) => {
   }
 };
 
+
+
+
 const edit_User = async (req, res) => {
   try {
     // Extract the user ID from the query parameter
@@ -205,6 +217,9 @@ const edit_User = async (req, res) => {
   }
 };
 
+
+
+
 const delete_User = async (req, res) => {
   try {
     const id = req.query.id;
@@ -223,6 +238,9 @@ const delete_User = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
+
+
 
 const add_Product = async (req, res) => {
   try {
@@ -338,6 +356,8 @@ const createCategory = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
+
 
 const deleteCategory = async (req, res) => {
   try {

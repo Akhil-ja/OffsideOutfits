@@ -151,7 +151,7 @@
             </ul>
         </div>
     </header>
-        <form action="/admin/add-product" method="post"enctype="multipart/form-data">
+        <form action="/admin/add-product" method="post" enctype="multipart/form-data" id="productForm">
         <section class="content-main">
             <div class="row">
                 <div class="col-9">
@@ -167,46 +167,56 @@
                 <div class="col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
+
                             <div class="mb-4">
                                 <label for="product_title" class="form-label">Product title</label>
-                                <input type="text" placeholder="Type here" class="form-control" name="ProductName"  maxlength="10" required />
+                                <input type="text" placeholder="Type here" class="form-control" name="ProductName" id="ProductName" maxlength="100"
+                                    required />
+                                <p id="productTitleError" class="error-message" style="color: red;"></p>
                             </div>
                             <div class="row gx-3"></div>
 
                             <div class="mb-4">
                                 <label for="product_brand" class="form-label">Brand</label>
-                                <input type="text" placeholder="Type here" class="form-control"  maxlength="10"  name="ProductBrand" required />
+                                <input type="text" placeholder="Type here" class="form-control" name="ProductBrand" id="ProductBrand" maxlength="10"
+                                    required />
+                                <p id="productBrandError" class="error-message" style="color: red;"></p>
                             </div>
                         </div>
                     </div>
                     <!-- card end// -->
                     <div class="card mb-4">
                         <div class="card-body">
-                            <div>
-                                <label class="form-label">Description</label>
-                                <textarea placeholder="Type here" class="form-control"  name="ProductDetails"  maxlength="100" rows="4" required ></textarea>
-                            </div>
+                        <div>
+                            <label class="form-label">Description</label>
+                            <textarea placeholder="Type here" class="form-control" name="ProductDetails" id="ProductDetails" maxlength="100"
+                                rows="4" required></textarea>
+                            <p id="productDescriptionError" class="error-message" style="color: red;"></p>
+                        </div>
+
                         </div>
                     </div>
                     <!-- card end// -->
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <div>
-                            <label class="form-label">Images (Up to 4 images)</label>
-                            <input class="form-control" type="file" multiple name="ProductImage" accept="image/*"
-                                onchange="limitFiles(this, 4)" required />
-                        </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div>
+                        <label class="form-label">Images (Up to 4 images)</label>
+                        <input class="form-control" type="file" multiple name="ProductImage" accept="image/*"
+                            onchange="limitFiles(this, 4)" required />
+                        <p id="productImageError" class="error-message" style="color: red;"></p>
                     </div>
                 </div>
+            </div>
                     <!-- card end// -->
                 </div>
                 <div class="col-lg-3">
                     <div class="card mb-4">
                         <div class="card-body">
+
                             <div class="mb-4">
                                 <label class="form-label">Price</label>
-                            <input type="text" placeholder="Type here" name="ProductPrice"  maxlength="1" id="productPrice" class="form-control" required />
-
+                                <input type="text" placeholder="Type here" name="ProductPrice" id="productPrice" class="form-control" required />
+                                <p id="productPriceError" class="error-message" style="color: red;"></p>
                             </div>
                            
                             <h5 class="mb-3">Status</h5>
@@ -244,50 +254,59 @@
 
 
                 </div>
-                <div class="card ">
-                    <div class="card-body" style="display: flex;flex-direction: column;flex-wrap: wrap;">
-                        <label class="form-label">Sizes and Stock</label>
-
-                        <div class="row gx-3">
-                            <div class="col-md-4 mb-2">
-                                <label for="size_xs" class="form-label">XS</label>
-                                <input type="number" placeholder="Stock" id="size_xs" class="form-control"
-                                    style="width: 6rem;">
-                            </div>
-
-                            <div class="col-md-4 mb-2">
-                                <label for="size_s" class="form-label">S</label>
-                                <input type="number" placeholder="Stock" id="size_s" class="form-control"
-                                    style="width: 6rem;">
-                            </div>
-
-                            <div class="col-md-4 mb-2">
-                                <label for="size_m" class="form-label">M</label>
-                                <input type="number" placeholder="Stock" id="size_m" class="form-control"
-                                    style="width: 6rem;">
-                            </div>
-
-                            <div class="col-md-4 mb-2">
-                                <label for="size_l" class="form-label">L</label>
-                                <input type="number" placeholder="Stock" id="size_l" class="form-control"
-                                    style="width: 6rem;">
-                            </div>
-
-                            <div class="col-md-4 mb-2">
-                                <label for="size_xl" class="form-label">XL</label>
-                                <input type="number" placeholder="Stock" id="size_xl" class="form-control"
-                                    style="width: 6rem;">
-                            </div>
-
-                            <div class="col-md-4 mb-2">
-                                <label for="size_xxl" class="form-label">XXL</label>
-                                <input type="number" placeholder="Stock" id="size_xxl" class="form-control"
-                                    style="width: 6rem;">
-                            </div>
-                            <!-- Add more size fields as needed -->
+               v class="card">
+                <div class="card-body" style="display: flex;flex-direction: column;flex-wrap: wrap;">
+                    <label class="form-label">Sizes and Stock</label>
+            
+                    <div class="row gx-3">
+                        <div class="col-md-4 mb-2">
+                            <label for="size_xs" class="form-label">XS</label>
+                            <input type="number" placeholder="Stock" id="size_xs" class="form-control" style="width: 6rem;"
+                                oninput="validateStock('size_xs', 'size_xsError')">
+                            <span id="size_xsError" class="text-danger"></span>
                         </div>
+            
+                        <div class="col-md-4 mb-2">
+                            <label for="size_s" class="form-label">S</label>
+                            <input type="number" placeholder="Stock" id="size_s" class="form-control" style="width: 6rem;"
+                                oninput="validateStock('size_s', 'size_sError')">
+                            <span id="size_sError" class="text-danger"></span>
+                        </div>
+            
+                        <div class="col-md-4 mb-2">
+                            <label for="size_m" class="form-label">M</label>
+                            <input type="number" placeholder="Stock" id="size_m" class="form-control" style="width: 6rem;"
+                                oninput="validateStock('size_m', 'size_mError')">
+                            <span id="size_mError" class="text-danger"></span>
+                        </div>
+            
+                        <div class="col-md-4 mb-2">
+                            <label for="size_l" class="form-label">L</label>
+                            <input type="number" placeholder="Stock" id="size_l" class="form-control" style="width: 6rem;"
+                                oninput="validateStock('size_l', 'size_lError')">
+                            <span id="size_lError" class="text-danger"></span>
+                        </div>
+            
+                        <div class="col-md-4 mb-2">
+                            <label for="size_xl" class="form-label">XL</label>
+                            <input type="number" placeholder="Stock" id="size_xl" class="form-control" style="width: 6rem;"
+                                oninput="validateStock('size_xl', 'size_xlError')">
+                            <span id="size_xlError" class="text-danger"></span>
+                        </div>
+            
+                        <div class="col-md-4 mb-2">
+                            <label for="size_xxl" class="form-label">XXL</label>
+                            <input type="number" placeholder="Stock" id="size_xxl" class="form-control" style="width: 6rem;"
+                                oninput="validateStock('size_xxl', 'size_xxlError')" maxlength="1">
+                            <span id="size_xxlError" class="text-danger"></span>
+                        </div>
+                        <!-- Add more size fields as needed -->
                     </div>
                 </div>
+            </div>
+            
+        
+
 
         </section>
        </form>
@@ -323,17 +342,107 @@
                 input.value = "";
             }
         }
-
-        // Event listener for the price input to disallow negative numbers
-        document.getElementById("productPrice").addEventListener("input", function () {
-            var priceInput = document.getElementById("productPrice");
-            var price = parseFloat(priceInput.value);
-            if (isNaN(price) || price < 0) {
-                alert("Please enter a valid, non-negative price.");
-                priceInput.value = "";
-            }
-        });
     </script>
+
+    <script>
+        function getElementValue(id) {
+            const element = document.getElementById(id);
+            return element.value;
+        }
+
+        function validateInput(inputId, pattern, errorId, errorMessage) {
+            const inputValue = getElementValue(inputId);
+            const errorElement = document.getElementById(errorId);
+
+            if (inputValue.trim() === '') {
+                errorElement.innerText = errorMessage + ' is required.';
+                return false;
+            } else if (pattern && !pattern.test(inputValue)) {
+                errorElement.innerText = 'Please enter a valid ' + errorMessage.toLowerCase() + '.';
+                return false;
+            } else {
+                errorElement.innerText = '';
+                return true;
+            }
+        }
+
+        function validateStock(id) {
+            const stockInput = document.getElementById(id);
+            const errorId = id + 'Error';
+            const errorElement = document.getElementById(errorId);
+
+            if (stockInput.value.trim() === '') {
+                errorElement.innerText = 'Stock is required.';
+                return false;
+            } else if (parseInt(stockInput.value) < 0 || parseInt(stockInput.value) ===-0 ) {
+                errorElement.innerText = 'Stock cannot be negative.';
+                return false;
+            } else if (parseInt(stockInput.value) > 1000) {
+                errorElement.innerText = 'Stock should be <1000.';
+                return false;
+            }
+            
+            else {
+                errorElement.innerText = '';
+                return true;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const titleInput = document.getElementById('ProductName');
+            const brandInput = document.getElementById('ProductBrand');
+            const descriptionInput = document.getElementById('ProductDetails');
+            const priceInput = document.getElementById('productPrice');
+
+            const stockInputs = ['size_xs', 'size_s', 'size_m', 'size_l', 'size_xl', 'size_xxl'];
+
+            titleInput.addEventListener('input', function () {
+                validateInput('ProductName', null, 'productTitleError', 'Product title');
+            });
+
+            brandInput.addEventListener('input', function () {
+                validateInput('ProductBrand', /^[A-Za-z]+$/, 'productBrandError', 'Brand');
+            });
+
+            descriptionInput.addEventListener('input', function () {
+                validateInput('ProductDetails', null, 'productDescriptionError', 'Description');
+            });
+
+            priceInput.addEventListener('input', function () {
+                validateInput('productPrice', /^(0*[1-9]\d*)$/, 'productPriceError', 'Price');
+            });
+
+            stockInputs.forEach(function (id) {
+                const stockInput = document.getElementById(id);
+                const errorId = id + 'Error';
+
+                stockInput.addEventListener('input', function () {
+                    validateStock(id);
+                });
+
+                stockInput.addEventListener('blur', function () {
+                    validateStock(id);
+                });
+            });
+        });
+
+        function submitForm() {
+            const stockInputs = ['size_xs', 'size_s', 'size_m', 'size_l', 'size_xl', 'size_xxl'];
+            let isValid = true;
+
+            stockInputs.forEach(function (id) {
+                isValid = isValid && validateStock(id);
+            });
+
+            if (validateName() && validateBrand() && validateDescription() && validatePrice() && isValid) {
+                document.getElementById('productForm').submit();
+            } else {
+                document.getElementById('main-error').innerText = 'CANNOT SUBMIT';
+            }
+        }
+    </script>
+
+
 
     
 </body>

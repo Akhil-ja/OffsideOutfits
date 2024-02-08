@@ -47,8 +47,8 @@
                             <div class="tab-content">
                                 <div class="tab-pane fade" id="signin-2" role="tabpanel" aria-labelledby="signin-tab-2">
 
-
-                                    <form action="/login" method="post">
+                                    <form id="loginForm" action="/login" method="post">
+                                        <p id="login-error" class="error-message" style="color: red;"></p>
                                         <div class="form-group">
                                             <label for="singin-email-2">Email Address *</label>
                                             <input type="text" class="form-control" id="singin-email-2" name="email"
@@ -62,66 +62,66 @@
                                         </div><!-- End .form-group -->
 
                                         <div class="form-footer">
-                                            <button type="submit" class="btn btn-outline-primary-2">
+                                            <button type="button" class="btn btn-outline-primary-2"
+                                                onclick="submitLoginForm()">
                                                 <span>LOG IN</span>
                                                 <i class="icon-long-arrow-right"></i>
                                             </button>
-
-
                                         </div>
-
                                     </form>
+
 
                                 </div>
 
                                 <div class="tab-pane fade show active" id="register-2" role="tabpanel"
                                     aria-labelledby="register-tab-2">
 
-                                        <form action="/register" method="post"  id="register">
-                                            <p id="main-error" class="error-message" style="color: red;"></p>
-                                            <div class="form-group">
-                                                <label for="fullname">Full Name *</label>
-                                                <p id="fullname-error" class="error-message" style="color: red;"></p>
-                                           
-                                                <input type="text" class="form-control" id="register-fullname"
-                                                    name="fullname" required>
-                                                
-                                            </div>
+                                    <form action="/register" method="post" id="register">
+                                        <p id="main-error" class="error-message" style="color: red;"></p>
+                                        <div class="form-group">
+                                            <label for="fullname">Full Name *</label>
+                                            <p id="fullname-error" class="error-message" style="color: red;"></p>
 
-                                            <div class="form-group">
-                                                <label for="email-2">Your email address *</label>
-                                                <p id="email-error" class="error-message" style="color: red;"></p>
-                                                <input type="email" class="form-control" id="register-email-2" name="email"
+                                            <input type="text" class="form-control" id="register-fullname"
+                                                name="fullname" required>
+
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="email-2">Your email address *</label>
+                                            <p id="email-error" class="error-message" style="color: red;"></p>
+                                            <input type="email" class="form-control" id="register-email-2" name="email"
+                                                required>
+
+                                        </div>
+
+                                        <div class="form-group">
+
+                                            <label for="phone">Phone Number *</label>
+                                            <p id="phone-error" class="error-message" style="color: red;"></p>
+                                            <div class="input-group">
+                                                <input type="tel" class="form-control" id="register-phone" name="phone"
                                                     required>
-                                                
-                                            </div>
 
-                                            <div class="form-group">
-                                               
-                                                <label for="phone">Phone Number *</label>
-                                                <p id="phone-error" class="error-message" style="color: red;"></p>
-                                                <div class="input-group">
-                                                    <input type="tel" class="form-control" id="register-phone" name="phone"
-                                                        required>
-                                                  
-                                                </div>
                                             </div>
+                                        </div>
 
-                                            <div class="form-group">
-                                                <label for="password-2">Password *</label>
-                                                <p id="password-error" class="error-message" style="color: red;"></p>
-                                                <input type="password" class="form-control" id="register-password-2"
-                                                    name="password" required>
-                                               
-                                            </div>
+                                        <div class="form-group">
+                                            <label for="password-2">Password *</label>
+                                            <p id="password-error" class="error-message" style="color: red;"></p>
+                                            <input type="password" class="form-control" id="register-password-2"
+                                                name="password" required>
 
-                                            <div class="form-footer">
-                                                <button type="button" class="btn btn-outline-primary-2" onclick="submitForm()">
-                                                    <span>SIGN UP</span>
-                                                    <i class="icon-long-arrow-right"></i>
-                                                </button>
-                                            </div>
-                                        </form>
+                                        </div>
+
+                                        <div class="form-footer">
+                                            <button type="button" class="btn btn-outline-primary-2"
+                                                onclick="submitForm()">
+                                                <span>SIGN UP</span>
+                                                <i class="icon-long-arrow-right"></i>
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
 
 
@@ -239,59 +239,97 @@
             window.scroll(0, window.innerHeight / 2.5);  // Adjust the scroll position as needed
         };
     </script>
-<!-- <!--  -->
-<script>
-    function getElementValue(id) {
-        const element = document.getElementById(id);
-        return element.value;
-    }
-
-    function validateInput(inputId, pattern, errorId, errorMessage) {
-        const inputValue = getElementValue(inputId);
-        const errorElement = document.getElementById(errorId);
-
-        if (inputValue.trim() === '') {
-            errorElement.innerText = errorMessage;
-            return false;
-        } else if (pattern.test(inputValue)) {
-            errorElement.innerText = '';
-            return true;
-        } else {
-            errorElement.innerText = 'Please enter a valid ' + errorMessage.toLowerCase() + '.';
-            return false;
+   
+    <script>
+        function getElementValue(id) {
+            const element = document.getElementById(id);
+            return element.value;
         }
-    }
 
-    function validateName() {
-        return validateInput('register-fullname', /^[A-Za-z]+(\s[A-Za-z]+)*$/, 'fullname-error', 'Name');
-    }
+        function validateInput(inputId, pattern, errorId, errorMessage) {
+            const inputValue = getElementValue(inputId);
+            const errorElement = document.getElementById(errorId);
 
-    function validateEmail() {
-        return validateInput('register-email-2', /^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'email-error', 'Email address');
-    }
-
-    function validatePhone() {
-        return validateInput('register-phone', /^\d{10}$/, 'phone-error', '10-digit phone number');
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const fullNameInput = document.getElementById('register-fullname');
-        const emailInput = document.getElementById('register-email-2');
-        const phoneInput = document.getElementById('register-phone');
-
-        fullNameInput.addEventListener('input', validateName);
-        emailInput.addEventListener('input', validateEmail);
-        phoneInput.addEventListener('input', validatePhone);
-    });
-
-    function submitForm() {
-        if (validateName() && validateEmail() && validatePhone()) {
-            document.getElementById('register').submit();
-        } else {
-            document.getElementById('main-error').innerText = 'CANNOT SUBMIT';
+            if (inputValue.trim() === '') {
+                errorElement.innerText = errorMessage;
+                return false;
+            } else if (pattern.test(inputValue)) {
+                errorElement.innerText = '';
+                return true;
+            } else {
+                errorElement.innerText = 'Please enter a valid ' + errorMessage.toLowerCase() + '.';
+                return false;
+            }
         }
-    }
-</script> 
+
+        function validateName() {
+            return validateInput('register-fullname', /^[A-Za-z]+(\s[A-Za-z]+)*$/, 'fullname-error', 'Name');
+        }
+
+        function validateEmail() {
+            return validateInput('register-email-2', /^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'email-error', 'Email address');
+        }
+
+        function validatePhone() {
+            return validateInput('register-phone', /^\d{10}$/, 'phone-error', '10-digit phone number');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const fullNameInput = document.getElementById('register-fullname');
+            const emailInput = document.getElementById('register-email-2');
+            const phoneInput = document.getElementById('register-phone');
+
+            fullNameInput.addEventListener('input', validateName);
+            emailInput.addEventListener('input', validateEmail);
+            phoneInput.addEventListener('input', validatePhone);
+        });
+
+        function submitForm() {
+            if (validateName() && validateEmail() && validatePhone()) {
+                document.getElementById('register').submit();
+            } else {
+                document.getElementById('main-error').innerText = 'CANNOT SUBMIT';
+            }
+        }
+    </script>
+
+
+    <script>
+        function submitLoginForm() {
+            const email = document.getElementById('singin-email-2').value;
+            const password = document.getElementById('singin-password-2').value;
+
+            fetch("/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password }),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const loginErrorElement = document.getElementById('login-error');
+
+                    if (data.errorMessage) {
+
+                        console.error(data.errorMessage);
+                        loginErrorElement.innerText = data.errorMessage;
+                    } else {
+
+                        window.location.href = "/home";
+                    }
+                })
+                .catch(error => {
+                    console.error("There was a problem with the fetch operation:", error);
+                });
+        }
+
+    </script>
 
 
 

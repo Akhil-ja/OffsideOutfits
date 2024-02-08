@@ -99,34 +99,31 @@ const insertUser = async (req, res) => {
 
 const verifyLogin = async (req, res) => {
   try {
-     const { email, password } = req.body;
-
+    const { email, password } = req.body;
 
     const userData = await User.findOne({ email: email });
-
-    console.log(userData);
 
     if (userData) {
       const passwordMatch = await bcrypt.compare(password, userData.password);
 
       if (passwordMatch) {
         if (userData.is_verified === "0") {
-          res.render("loginRegister", {
-            errorMessage: "Account not verified yet.",
-          });
+          res.status(200).json({ errorMessage: "Account not verified yet." });
         } else {
-          res.redirect("/home");
+          res.status(200).json({ success: true });
         }
       } else {
-        res.render("loginRegister", { errorMessage: "Incorrect password." });
+        res.status(200).json({ errorMessage: "Incorrect password." });
       }
     } else {
-      res.render("loginRegister", { errorMessage: "User does not exist." });
+      res.status(200).json({ errorMessage: "User does not exist." });
     }
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
+    res.status(500).json({ errorMessage: "Internal server error." });
   }
 };
+
 
 const loadHome = async (req, res) => {
   try {
