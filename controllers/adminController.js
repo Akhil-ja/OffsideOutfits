@@ -4,6 +4,9 @@ const Category = require("../models/categoryModel");
 
 const bcrypt = require("bcrypt");
 
+
+
+
 const securePassword = async (password) => {
   try {
     const passwordHash = await bcrypt.hash(password, 10);
@@ -246,16 +249,26 @@ const add_Product = async (req, res) => {
   try {
     const images = req.files.map((file) => file.filename);
 
+    // Assuming you have an array of size names, adjust this based on your data
+    const sizeNames = ["XS", "S", "M", "L", "XL", "XXL"];
+
+    const sizes = sizeNames.map((size) => ({
+      size: size,
+      quantity: req.body.sizes[size] || 0,
+     
+    }));
+
     const newProduct = new Product({
       pname: req.body.ProductName,
       price: req.body.ProductPrice,
       description: req.body.ProductDetails,
-      sizes: req.body.pname,
+      sizes: sizes,
       category: req.body.productCategory,
       is_listed: req.body.listed,
       brand: req.body.ProductBrand,
       images: images,
     });
+
     await newProduct.save();
     console.log(newProduct);
     res.redirect("/admin/products");
@@ -264,6 +277,7 @@ const add_Product = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 const deleteProduct = async (req, res) => {
   try {
@@ -313,30 +327,40 @@ const getCategories = async () => {
   }
 };
 
+
+
+
 const edit_product = async (req, res) => {
   try {
-    // Extract the user ID from the query parameter
+    // Extract the product ID from the query parameter
     const id = req.query.id;
 
-    // Update the user details based on the data in req.body
-    const updatedProduct = await Product.findByIdAndUpdate(id, {
+    const sizeNames = ["XS", "S", "M", "L", "XL", "XXL"];
+
+    const sizes = sizeNames.map((size) => ({
+      size: size,
+      quantity: req.body.sizes[size] || 0,
+    }));
+
+    const updatedProductData =await Product.findByIdAndUpdate(id, {
       pname: req.body.ProductName,
       price: req.body.ProductPrice,
       description: req.body.ProductDetails,
-      sizes: req.body.pname,
       category: req.body.productCategory,
       is_listed: req.body.listed,
       brand: req.body.ProductBrand,
-      images: req.body.ProductImages,
+      sizes:sizes
+
     });
 
-    const selectedCategory = req.body.productCategory;
-    res.redirect(`/admin/products?selectedCategory=${selectedCategory}`);
+   
+    res.redirect(`/admin/products`);
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 const createCategory = async (req, res) => {
   try {

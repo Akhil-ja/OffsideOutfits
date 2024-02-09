@@ -23,7 +23,7 @@
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
             <a href="index.html" class="brand-wrap">
-            <img src="assets\images\Logo1.png" alt="OOF Logo" width="30">
+                <img src="assets\images\Logo1.png" alt="OOF Logo" width="30">
             </a>
             <div>
                 <button class="btn btn-icon btn-aside-minimize">
@@ -122,194 +122,184 @@
         </nav>
     </aside>
     <main class="main-wrap">
-    <header class="main-header navbar">
-        <div class="col-search">
-            <form class="searchform">
-                <div class="input-group">
-                    <input list="search_terms" type="text" class="form-control" placeholder="Search term">
-                    <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
-                </div>
-    
-            </form>
-        </div>
-        <div class="col-nav">
-    
-            <ul class="nav">
-    
-                <li class="dropdown nav-item">
-                    <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount"
-                        aria-expanded="false"> <img class="img-xs rounded-circle"
-                            src="/admin-assets/imgs/people/User-logo.png" alt="User"></a>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                        <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Profile</a>
-    
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item text-danger" href="/admin/login"><i
-                                class="material-icons md-exit_to_app"></i>Logout</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </header>
+        <header class="main-header navbar">
+            <div class="col-search">
+            </div>
+            <div class="col-nav">
+
+                <ul class="nav">
+
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount"
+                            aria-expanded="false"> <img class="img-xs rounded-circle"
+                                src="/admin-assets/imgs/people/User-logo.png" alt="User"></a>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
+                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Profile</a>
+
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="/admin/login"><i
+                                    class="material-icons md-exit_to_app"></i>Logout</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </header>
+
+
         <form action="/admin/add-product" method="post" enctype="multipart/form-data" id="productForm">
-        <section class="content-main">
-            <div class="row">
-                <div class="col-9">
-                    <div class="content-header">
-                        <h2 class="content-title">Add Product</h2>
-                        <div>
-                            <button type="submit" class="btn btn-md rounded font-sm hover-up">
-                                Publish
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="card mb-4">
-                        <div class="card-body">
 
-                            <div class="mb-4">
-                                <label for="product_title" class="form-label">Product title</label>
-                                <input type="text" placeholder="Type here" class="form-control" name="ProductName" id="ProductName" maxlength="100"
-                                    required />
-                                <p id="productTitleError" class="error-message" style="color: red;"></p>
-                            </div>
-                            <div class="row gx-3"></div>
-
-                            <div class="mb-4">
-                                <label for="product_brand" class="form-label">Brand</label>
-                                <input type="text" placeholder="Type here" class="form-control" name="ProductBrand" id="ProductBrand" maxlength="10"
-                                    required />
-                                <p id="productBrandError" class="error-message" style="color: red;"></p>
+            <section class="content-main">
+                <div class="row">
+                    <div class="col-9">
+                        <div class="content-header">
+                            <h2 class="content-title">Add Product</h2>
+                            <p id="main-error" class="text-centre" style="color: red;"></p>
+                            <div>
+                                <button type="button" onclick="submitForm()"
+                                    class="btn btn-md rounded font-sm hover-up">
+                                    Publish
+                                </button>
                             </div>
                         </div>
                     </div>
-                    <!-- card end// -->
-                    <div class="card mb-4">
-                        <div class="card-body">
-                        <div>
-                            <label class="form-label">Description</label>
-                            <textarea placeholder="Type here" class="form-control" name="ProductDetails" id="ProductDetails" maxlength="100"
-                                rows="4" required></textarea>
-                            <p id="productDescriptionError" class="error-message" style="color: red;"></p>
-                        </div>
-
-                        </div>
-                    </div>
-                    <!-- card end// -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div>
-                        <label class="form-label">Images (Up to 4 images)</label>
-                        <input class="form-control" type="file" multiple name="ProductImage" accept="image/*"
-                            onchange="limitFiles(this, 4)" required />
-                        <p id="productImageError" class="error-message" style="color: red;"></p>
-                    </div>
-                </div>
-            </div>
-                    <!-- card end// -->
-                </div>
-                <div class="col-lg-3">
-                    <div class="card mb-4">
-                        <div class="card-body">
-
-                            <div class="mb-4">
-                                <label class="form-label">Price</label>
-                                <input type="text" placeholder="Type here" name="ProductPrice" id="productPrice" class="form-control" required />
-                                <p id="productPriceError" class="error-message" style="color: red;"></p>
-                            </div>
-                           
-                            <h5 class="mb-3">Status</h5>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="listed" id="status1" value="0" checked>
-                                <label class="form-check-label" for="status1">Draft</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="listed" id="status2" value="1">
-                                <label class="form-check-label" for="status2">Published</label>
-                            </div>
-
-                            <br>    
-
-                            
-                            <h5 class="mb-3">Categories</h5>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="productCategory" id="category" value="none" checked>
-                                <label class="form-check-label" for="category">None</label>
-                            </div>
-                            
-                            <% categories.forEach(category=> { %>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="productCategory" value="<%= category.cName %>">
-                                    <label class="form-check-label" for="category">
-                                        <%= category.cName %>
-                                    </label>
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="mb-4">
+                                    <label for="product_title" class="form-label">Product title</label>
+                                    <input type="text" placeholder="Type here" class="form-control" name="ProductName"
+                                        id="ProductName" maxlength="100" required />
+                                    <p id="productTitleError" class="error-message" style="color: red;"></p>
                                 </div>
-                                <% }); %>
+                                <div class="row gx-3"></div>
 
-                            
-                            
+                                <div class="mb-4">
+                                    <label for="product_brand" class="form-label">Brand</label>
+                                    <input type="text" placeholder="Type here" class="form-control" name="ProductBrand"
+                                        id="ProductBrand" maxlength="50" required />
+                                    <p id="productBrandError" class="error-message" style="color: red;"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- card end// -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div>
+                                    <label class="form-label">Description</label>
+                                    <textarea placeholder="Type here" class="form-control" name="ProductDetails"
+                                        id="ProductDetails" maxlength="10000" rows="4" required></textarea>
+                                    <p id="productDescriptionError" class="error-message" style="color: red;"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- card end// -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div>
+                                    <label class="form-label">Images (Up to 4 images)</label>
+                                    <input class="form-control" type="file" multiple name="ProductImage"
+                                        accept="image/*" onchange="limitFiles(this, 4)" required />
+                                    <p id="productImageError" class="error-message" style="color: red;"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- card end// -->
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card mb-4">
+                            <div class="card-body">
+
+                                <div class="mb-4">
+                                    <label class="form-label">Price</label>
+                                    <input type="text" placeholder="Type here" name="ProductPrice" id="productPrice"
+                                        class="form-control" required />
+                                    <p id="productPriceError" class="error-message" style="color: red;"></p>
+                                </div>
+                                <h5 class="mb-3">Status</h5>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="listed" id="status1" value="0"
+                                        checked>
+                                    <label class="form-check-label" for="status1">Draft</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="listed" id="status2" value="1">
+                                    <label class="form-check-label" for="status2">Published</label>
+                                </div>
+                                <br>
+                                <h5 class="mb-3">Categories</h5>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="productCategory" id="category"
+                                        value="none" checked>
+                                    <label class="form-check-label" for="category">None</label>
+                                </div>
+
+                                <% categories.forEach(category=> { %>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="productCategory"
+                                            value="<%= category.cName %>">
+                                        <label class="form-check-label" for="category">
+                                            <%= category.cName %>
+                                        </label>
+                                    </div>
+                                    <% }); %>
+                            </div>
                         </div>
                     </div>
+                    <div class="card">
+                        <div class="card-body" style="display: flex;flex-direction: column;flex-wrap: wrap;">
+                            <label class="form-label">Sizes and Stock</label>
 
+                            <div class="row gx-3">
+                                <div class="col-md-4 mb-2">
+                                    <label for="size_xs" class="form-label">XS</label>
+                                    <input type="number" placeholder="Stock" id="size_xs" class="form-control"
+                                        style="width: 6rem;" name="sizes[XS]"
+                                        oninput="validateStock('size_xs', 'size_xsError')">
+                                    <span id="size_xsError" class="text-danger"></span>
 
-                </div>
-               v class="card">
-                <div class="card-body" style="display: flex;flex-direction: column;flex-wrap: wrap;">
-                    <label class="form-label">Sizes and Stock</label>
-            
-                    <div class="row gx-3">
-                        <div class="col-md-4 mb-2">
-                            <label for="size_xs" class="form-label">XS</label>
-                            <input type="number" placeholder="Stock" id="size_xs" class="form-control" style="width: 6rem;"
-                                oninput="validateStock('size_xs', 'size_xsError')">
-                            <span id="size_xsError" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-4 mb-2">
+                                    <label for="size_s" class="form-label">S</label>
+                                    <input type="number" placeholder="Stock" id="size_s" class="form-control"
+                                        style="width: 6rem;"name="sizes[S]" oninput="validateStock('size_s', 'size_sError')">
+                                    <span id="size_sError" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-4 mb-2">
+                                    <label for="size_m" class="form-label">M</label>
+                                    <input type="number" placeholder="Stock" id="size_m" class="form-control"
+                                        style="width: 6rem;"name="sizes[M]" oninput="validateStock('size_m', 'size_mError')">
+                                    <span id="size_mError" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-4 mb-2">
+                                    <label for="size_l" class="form-label">L</label>
+                                    <input type="number" placeholder="Stock" id="size_l" class="form-control"
+                                        style="width: 6rem;"name="sizes[L]" oninput="validateStock('size_l', 'size_lError')">
+                                    <span id="size_lError" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-4 mb-2">
+                                    <label for="size_xl" class="form-label">XL</label>
+                                    <input type="number" placeholder="Stock" id="size_xl" class="form-control"
+                                        style="width: 6rem;"name="sizes[XL]" oninput="validateStock('size_xl', 'size_xlError')">
+                                    <span id="size_xlError" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-4 mb-2">
+                                    <label for="size_xxl" class="form-label">XXL</label>
+                                    <input type="number" placeholder="Stock" id="size_xxl" class="form-control"
+                                        style="width: 6rem;"name="sizes[XXL]" oninput="validateStock('size_xxl', 'size_xxlError')"
+                                        maxlength="1">
+                                    <span id="size_xxlError" class="text-danger"></span>
+                                </div>
+                                <!-- Add more size fields as needed -->
+                            </div>
                         </div>
-            
-                        <div class="col-md-4 mb-2">
-                            <label for="size_s" class="form-label">S</label>
-                            <input type="number" placeholder="Stock" id="size_s" class="form-control" style="width: 6rem;"
-                                oninput="validateStock('size_s', 'size_sError')">
-                            <span id="size_sError" class="text-danger"></span>
-                        </div>
-            
-                        <div class="col-md-4 mb-2">
-                            <label for="size_m" class="form-label">M</label>
-                            <input type="number" placeholder="Stock" id="size_m" class="form-control" style="width: 6rem;"
-                                oninput="validateStock('size_m', 'size_mError')">
-                            <span id="size_mError" class="text-danger"></span>
-                        </div>
-            
-                        <div class="col-md-4 mb-2">
-                            <label for="size_l" class="form-label">L</label>
-                            <input type="number" placeholder="Stock" id="size_l" class="form-control" style="width: 6rem;"
-                                oninput="validateStock('size_l', 'size_lError')">
-                            <span id="size_lError" class="text-danger"></span>
-                        </div>
-            
-                        <div class="col-md-4 mb-2">
-                            <label for="size_xl" class="form-label">XL</label>
-                            <input type="number" placeholder="Stock" id="size_xl" class="form-control" style="width: 6rem;"
-                                oninput="validateStock('size_xl', 'size_xlError')">
-                            <span id="size_xlError" class="text-danger"></span>
-                        </div>
-            
-                        <div class="col-md-4 mb-2">
-                            <label for="size_xxl" class="form-label">XXL</label>
-                            <input type="number" placeholder="Stock" id="size_xxl" class="form-control" style="width: 6rem;"
-                                oninput="validateStock('size_xxl', 'size_xxlError')" maxlength="1">
-                            <span id="size_xxlError" class="text-danger"></span>
-                        </div>
-                        <!-- Add more size fields as needed -->
                     </div>
-                </div>
-            </div>
-            
-        
-
-
-        </section>
-       </form>
+            </section>
+        </form>
 
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
@@ -317,7 +307,7 @@
                     <script>
                         document.write(new Date().getFullYear());
                     </script>
-                    ©, 
+                    ©,
                 </div>
                 <div class="col-sm-6">
                     <div class="text-sm-end">All rights reserved</div>
@@ -374,15 +364,13 @@
             if (stockInput.value.trim() === '') {
                 errorElement.innerText = 'Stock is required.';
                 return false;
-            } else if (parseInt(stockInput.value) < 0 || parseInt(stockInput.value) ===-0 ) {
+            } else if (parseInt(stockInput.value) < 0 || parseInt(stockInput.value) === -0) {
                 errorElement.innerText = 'Stock cannot be negative.';
                 return false;
             } else if (parseInt(stockInput.value) > 1000) {
                 errorElement.innerText = 'Stock should be <1000.';
                 return false;
-            }
-            
-            else {
+            } else {
                 errorElement.innerText = '';
                 return true;
             }
@@ -434,17 +422,22 @@
                 isValid = isValid && validateStock(id);
             });
 
-            if (validateName() && validateBrand() && validateDescription() && validatePrice() && isValid) {
+            if (validateInput('ProductName', null, 'productTitleError', 'Product title') &&
+                validateInput('ProductBrand', /^[A-Za-z]+$/, 'productBrandError', 'Brand') &&
+                validateInput('ProductDetails', null, 'productDescriptionError', 'Description') &&
+                validateInput('productPrice', /^(0*[1-9]\d*)$/, 'productPriceError', 'Price') &&
+                isValid) {
                 document.getElementById('productForm').submit();
             } else {
                 document.getElementById('main-error').innerText = 'CANNOT SUBMIT';
             }
         }
+
     </script>
 
 
 
-    
+
 </body>
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:32 GMT -->

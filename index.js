@@ -6,6 +6,7 @@ mongoose.connect("mongodb://localhost:27017/OffsideOutfits");
 const expressValidator = require("express-validator");
 const express = require("express");
 const session = require("express-session");
+const bodyParser = require("body-parser");
 const app = express();
 
 app.use(
@@ -17,12 +18,17 @@ app.use(
   })
 );
 
+app.use(express.urlencoded({ extended: true }));
+
+app.use(bodyParser.json());
+
 
 
 const path = require("path");
-
 const userRoute = require("./routes/userRoute");
 app.use("/", userRoute);
+
+
 
 const adminRoute = require("./routes/adminRoute");
 app.use("/admin", adminRoute);
