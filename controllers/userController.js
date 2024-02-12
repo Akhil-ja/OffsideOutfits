@@ -4,6 +4,7 @@ const sendEmail = require("../services/sendEmail");
 const bcrypt = require("bcrypt");
 const { generateOTP } = require("../services/generateOTP");
 const { body, validationResult } = require("express-validator");
+const { ListSearchIndexesCursor } = require("mongodb");
 
 const securePassword = async (password) => {
   try {
@@ -107,8 +108,8 @@ const verifyLogin = async (req, res) => {
       const passwordMatch = await bcrypt.compare(password, userData.password);
 
       if (passwordMatch) {
-        if (userData.is_verified === "0") {
-          res.status(200).json({ errorMessage: "Account not verified yet." });
+        if (userData.is_active === "0") {
+          res.status(200).json({ errorMessage: "Account is Blocked" });
         } else {
           res.status(200).json({ success: true });
         }
@@ -159,6 +160,40 @@ const loadProduct = async (req, res) => {
   }
 };
 
+
+const loadCart = async (req, res) => {
+  try {
+    // Incorrect query where 'cart' is mistakenly used as an ObjectId
+    
+
+    res.render("cart")
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
+const loadCheckout=async(req,res)=>{
+  try {
+    res.render("checkout")
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+
+const loadProfile = async (req, res) => {
+  try {
+    res.render("profile");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+
+
+
 module.exports = {
   loadlogin,
   insertUser,
@@ -167,4 +202,7 @@ module.exports = {
   loadCategory,
   loadProduct,
   initialSignUp,
+  loadCart,
+  loadCheckout,
+  loadProfile,
 };

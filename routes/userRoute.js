@@ -29,6 +29,14 @@ userRoute.post("/verify-otp", userController.insertUser);
 
 userRoute.get("/products", userController.loadCategory);
 
+userRoute.get("/cart", userController.loadCart);
+
 userRoute.get("/products/:productId", userController.loadProduct);
+
+userRoute.get("/checkOut", userController.loadCheckout);
+
+userRoute.get("/profile", userController.loadProfile);
+
+
 
 module.exports= userRoute;

@@ -343,6 +343,7 @@ const edit_product = async (req, res) => {
     }));
 
     const updatedProductData =await Product.findByIdAndUpdate(id, {
+      _id:id,
       pname: req.body.ProductName,
       price: req.body.ProductPrice,
       description: req.body.ProductDetails,
