@@ -18,6 +18,7 @@ const securePassword = async (password) => {
 
 const loadlogin = async (req, res) => {
   try {
+     res.cookie("jwt", "", { maxAge: 1 });
     res.render("loginRegister");
   } catch (error) {
     console.log(error.message);
