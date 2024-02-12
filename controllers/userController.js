@@ -3,8 +3,9 @@ const Product = require("../models/productModel");
 const sendEmail = require("../services/sendEmail");
 const bcrypt = require("bcrypt");
 const { generateOTP } = require("../services/generateOTP");
-const { body, validationResult } = require("express-validator");
-const { ListSearchIndexesCursor } = require("mongodb");
+const authRoutes=require("../services/authRoutes")
+
+
 
 const securePassword = async (password) => {
   try {
@@ -69,15 +70,14 @@ const initialSignUp = async (req, res) => {
   }
 };
 
+
+
 const insertUser = async (req, res) => {
   try {
-    let errorMessage = ""; // Declare errorMessage variable
+    
 
     if (req.body.otp === req.session.tempUserDetails.otp) {
-      const spassword = await securePassword(
-        req.session.tempUserDetails.password
-      );
-
+    
       const user = new User({
         name: req.session.tempUserDetails.fullname,
         email: req.session.tempUserDetails.email,
@@ -88,6 +88,14 @@ const insertUser = async (req, res) => {
       });
 
       const userData = await user.save();
+      const userID=userData._id;
+      const token = authRoutes.createToken(userID);
+      res.cookie("jwt", token,{httpOnly:true,maxAge:authRoutes.maxAge*1000});
+      console.log(token);
+      
+      
+
+     
 
       res.redirect("/home");
     } else {
@@ -97,6 +105,8 @@ const insertUser = async (req, res) => {
     console.log(error.message);
   }
 };
+
+
 
 const verifyLogin = async (req, res) => {
   try {
@@ -111,6 +121,17 @@ const verifyLogin = async (req, res) => {
         if (userData.is_active === "0") {
           res.status(200).json({ errorMessage: "Account is Blocked" });
         } else {
+                 // creating Token
+                const userID = userData._id;
+                 console.log(userData.name);
+
+                const token = authRoutes.createToken(userID);
+                res.cookie("jwt", token, {
+                   httpOnly: true,
+                   maxAge: authRoutes.maxAge * 1000,
+                 });
+                 console.log(token);
+
           res.status(200).json({ success: true });
         }
       } else {
@@ -163,10 +184,7 @@ const loadProduct = async (req, res) => {
 
 const loadCart = async (req, res) => {
   try {
-    // Incorrect query where 'cart' is mistakenly used as an ObjectId
-    
-
-    res.render("cart")
+        res.render("cart")
   } catch (error) {
     console.log(error.message);
     res.status(500).send("Internal Server Error");
@@ -191,6 +209,14 @@ const loadProfile = async (req, res) => {
   }
 };
 
+const userLogout=async(req,res)=>{
+  try {
+     res.cookie("jwt", "", { maxAge: 1 });
+    res.redirect("/register")
+  } catch (error) {
+    console.log(error.message);
+  }
+}
 
 
 
@@ -205,4 +231,5 @@ module.exports = {
   loadCart,
   loadCheckout,
   loadProfile,
+  userLogout,
 };

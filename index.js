@@ -1,13 +1,16 @@
 require("dotenv").config();
 
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost:27017/OffsideOutfits");
+mongoose.connect(process.env.dbURI);
 
-const expressValidator = require("express-validator");
 const express = require("express");
 const session = require("express-session");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const nocache = require("nocache");
 const app = express();
+
+app.use(nocache());
 
 app.use(
   session({
@@ -18,6 +21,7 @@ app.use(
   })
 );
 
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(bodyParser.json());

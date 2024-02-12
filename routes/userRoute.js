@@ -3,6 +3,8 @@ const express=require("express");
 
 const bodyParser = require("body-parser");
 
+const authRoutes=require("../services/authRoutes")
+
 
 const userRoute=express();
 
@@ -16,26 +18,35 @@ userRoute.set("views","./views/User");
 
 const userController=require("../controllers/userController");
 
-userRoute.get("/register",userController.loadlogin);
-// userRoute.post("/register", userController.insertUser);
+userRoute.get("*", authRoutes.checkUser);
+
+userRoute.get("/register", userController.loadlogin);
+
 
 userRoute.post("/login", userController.verifyLogin);
 
-userRoute.get("/home", userController.loadHome);
+userRoute.get("/home",authRoutes.isLogin,authRoutes.checkUser, userController.loadHome );
 
 userRoute.post("/register", userController.initialSignUp);
 
 userRoute.post("/verify-otp", userController.insertUser);
 
-userRoute.get("/products", userController.loadCategory);
+userRoute.get("/products", authRoutes.isLogin, userController.loadCategory);
 
-userRoute.get("/cart", userController.loadCart);
+userRoute.get("/cart", authRoutes.isLogin, userController.loadCart);
 
-userRoute.get("/products/:productId", userController.loadProduct);
+userRoute.get(
+  "/products/:productId",
+  authRoutes.isLogin,
+  userController.loadProduct
+);
 
-userRoute.get("/checkOut", userController.loadCheckout);
+userRoute.get("/checkOut", authRoutes.isLogin, userController.loadCheckout);
 
-userRoute.get("/profile", userController.loadProfile);
+userRoute.get("/profile", authRoutes.isLogin, userController.loadProfile);
+
+userRoute.get("/logout", userController.userLogout);
+
 
 
 
