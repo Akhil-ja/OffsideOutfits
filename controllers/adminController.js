@@ -276,7 +276,7 @@ const add_Product = async (req, res) => {
       price: req.body.ProductPrice,
       description: req.body.ProductDetails,
       sizes: sizes,
-      category: req.body.productCategory,
+      category_id: req.body.productCategory,
       is_listed: req.body.listed,
       brand: req.body.ProductBrand,
       images: images,
@@ -312,23 +312,26 @@ const deleteProduct = async (req, res) => {
 
 const editProduct = async (req, res) => {
   try {
+    console.log("Edit product");
     const id = req.query.id;
-    const product = await Product.findById(id);
+    const product = await Product.findById(id).populate("category");
 
     if (!product) {
-    
       return res.status(404).send("Product not found");
     }
 
     const categories = await getCategories();
-    const selectedCategory = product.category; 
+    // const selectedCategory = product.cName; 
+    // console.log("Selected category=" + selectedCategory);
 
-    res.render("editProduct", { product, categories, selectedCategory });
+
+    res.render("editProduct", { product, categories });
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 const getCategories = async () => {
   try {
@@ -355,16 +358,15 @@ const edit_product = async (req, res) => {
       quantity: req.body.sizes[size] || 0,
     }));
 
-    const updatedProductData =await Product.findByIdAndUpdate(id, {
-      _id:id,
+    const updatedProductData = await Product.findByIdAndUpdate(id, {
+      _id: id,
       pname: req.body.ProductName,
       price: req.body.ProductPrice,
       description: req.body.ProductDetails,
       category: req.body.productCategory,
       is_listed: req.body.listed,
       brand: req.body.ProductBrand,
-      sizes:sizes
-
+      sizes: sizes,
     });
 
    

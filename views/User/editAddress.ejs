@@ -1,0 +1,15 @@
+<div class="container">
+    <h2>Edit Address</h2>
+    <form action="/edit-address/<%= user._id %>/<%= addressIndex %>" method="post">
+        <!-- Form fields for editing address -->
+        <label for="AddName">Name:</label>
+        <input type="text" id="AddName" name="AddName" value="<%= address.AddName %>" required>
+
+        <label for="House">House:</label>
+        <input type="text" id="House" name="House" value="<%= address.House %>" required>
+
+        <!-- Add more fields as needed -->
+
+        <button type="submit">Save Changes</button>
+    </form>
+</div>

@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
   is_admin: {
     type: String,
     required: true,
-    default:0
+    default: 0,
   },
 
   is_verified: {
@@ -40,6 +40,40 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 1,
   },
+
+  address: [
+    {
+      AddName: {
+        type: String,
+        required: true,
+      },
+      House: {
+        type: String,
+        required: true,
+      },
+      street: {
+        type: String,
+        required: true,
+      },
+      state: {
+        type: String,
+        required: true,
+      },
+      city: {
+        type: String,
+        required: true,
+      },
+
+      PIN: {
+        type: String,
+        required: true,
+      },
+      type: {
+        type: String,
+        default: "home",
+      },
+    },
+  ],
 });
 
 module.exports= mongoose.model('User',userSchema)

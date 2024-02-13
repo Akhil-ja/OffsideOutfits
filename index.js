@@ -64,6 +64,6 @@ app.use(express.static("public"));
 app.use(express.static("views"));
 app.use(express.static("lib"));
 
-app.listen(3000, function () {
+app.listen(process.env.PORT, function () {
   console.log("Server is Running.... http://localhost:3000/");
 });

@@ -219,6 +219,15 @@ const userLogout=async(req,res)=>{
   }
 }
 
+const addAddress=async(req,res)=>{
+  try {
+    res.render("addAddress");
+  } catch (error) {
+     console.log(error.message);
+  }
+}
+
+
 
 
 module.exports = {
@@ -233,4 +242,5 @@ module.exports = {
   loadCheckout,
   loadProfile,
   userLogout,
+  addAddress,
 };

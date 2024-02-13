@@ -48,6 +48,9 @@ userRoute.get("/profile", authRoutes.isLogin, userController.loadProfile);
 userRoute.get("/logout", userController.userLogout);
 
 
+userRoute.get("/add-address", userController.addAddress);
+
+
 
 
 module.exports= userRoute;

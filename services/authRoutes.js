@@ -13,7 +13,6 @@ const createToken = (id) => {
 
 const isLogin = (req, res, next) => {
 
-               console.log("In the islogin");
                const token = req.cookies.jwt;
                   if (token) {
                     jwt.verify(token, "secret", (err, decodedToken) => {
@@ -52,19 +51,18 @@ const isAdminLogin = (req, res, next) => {
 
 
     const checkUser = async (req, res, next) => {
-    console.log("**** Check user ****");
+    // console.log("**** Check user ****");
     const token = req.cookies.jwt;
-    console.log("This is the token:", token);
+
+    // console.log("This is the token:", token);
 
     if (token) {
         jwt.verify(token, "secret", async (err, decodedToken) => {
-        console.log("Decoded Token:", decodedToken); 
         if (err) {
             console.log("Error:", err.message);
              res.locals.user = null;
             next();
         } else {
-            console.log("Decoded Token:", decodedToken);
             try {
             let user = await User.findById(decodedToken.id);
             console.log("User:", user.name);
