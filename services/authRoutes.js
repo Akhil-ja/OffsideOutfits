@@ -51,32 +51,28 @@ const isAdminLogin = (req, res, next) => {
 
 
     const checkUser = async (req, res, next) => {
-    // console.log("**** Check user ****");
     const token = req.cookies.jwt;
-
-    // console.log("This is the token:", token);
-
     if (token) {
         jwt.verify(token, "secret", async (err, decodedToken) => {
         if (err) {
             console.log("Error:", err.message);
-             res.locals.user = null;
+             res.locals.currentUser = null;
             next();
         } else {
             try {
             let user = await User.findById(decodedToken.id);
             console.log("User:", user.name);
-            res.locals.user=user;
+            res.locals.currentUser = user;
             next();
             } catch (userError) {
             console.log("User Error:", userError.message);
-               res.locals.user = null;
+               res.locals.currentUser = null;
             next();
             }
         }
         });
     } else {
-         res.locals.user = null;
+         res.locals.currentUser = null;
         console.log("No token found");
         next();
     }

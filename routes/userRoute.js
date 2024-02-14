@@ -48,7 +48,8 @@ userRoute.get("/profile", authRoutes.isLogin, userController.loadProfile);
 userRoute.get("/logout", userController.userLogout);
 
 
-userRoute.get("/add-address", userController.addAddress);
+userRoute.get("/add-address",authRoutes.isLogin, userController.addAddress);
+userRoute.post("/add-address",authRoutes.isLogin, userController.add_Address);
 
 
 

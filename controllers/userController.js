@@ -1,5 +1,8 @@
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
+const Address=require("../models/addressModel")
+
+
 const sendEmail = require("../services/sendEmail");
 const bcrypt = require("bcrypt");
 const { generateOTP } = require("../services/generateOTP");
@@ -131,7 +134,7 @@ const verifyLogin = async (req, res) => {
                    httpOnly: true,
                    maxAge: authRoutes.maxAge * 1000,
                  });
-                 console.log(token);
+                 
 
           res.status(200).json({ success: true });
         }
@@ -221,11 +224,50 @@ const userLogout=async(req,res)=>{
 
 const addAddress=async(req,res)=>{
   try {
+    
     res.render("addAddress");
   } catch (error) {
      console.log(error.message);
   }
 }
+
+const add_Address = async (req, res) => {
+  try {
+    console.log("Hi");
+    const { type, Name, House, street, state, city, PIN } = req.body;
+
+    const newAddress = {
+     
+      AddName: Name,
+      House,
+      street,
+      state,
+      city,
+      PIN,
+      type,
+    };
+
+   
+    const address = new Address({
+      user: req.body.userID,
+      address: [newAddress],
+    });
+
+    
+    await address.save();
+
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+
+
+
+   
+
+
+   
 
 
 
@@ -243,4 +285,5 @@ module.exports = {
   loadProfile,
   userLogout,
   addAddress,
+  add_Address,
 };

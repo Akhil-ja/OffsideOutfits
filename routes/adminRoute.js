@@ -22,7 +22,7 @@ const authRoutes=require("../services/authRoutes")
 
 
 
-
+adminRoute.get("*", authRoutes.checkUser);
 adminRoute.get("/login", adminController.loadAdminLog);
 adminRoute.post("/login", adminController.adminLogin);
 adminRoute.get("/dashboard", adminController.loadDashboard);
@@ -93,7 +93,7 @@ const storage = multer.diskStorage({
     cb(
       null,
       file.fieldname + "_" + Date.now() + path.extname(file.originalname)
-    ); // Specify the filename
+    ); 
   },
 });
 
