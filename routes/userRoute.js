@@ -20,20 +20,19 @@ const userController=require("../controllers/userController");
 
 userRoute.get("*", authRoutes.checkUser);
 
-
-
 userRoute.get("/register", userController.loadlogin);
-
-
 userRoute.post("/login", userController.verifyLogin);
-
-userRoute.get("/home",authRoutes.isLogin,authRoutes.checkUser, userController.loadHome );
 
 userRoute.post("/register", userController.initialSignUp);
 
 userRoute.post("/verify-otp", userController.insertUser);
 
-userRoute.get("/products", authRoutes.isLogin, userController.loadCategory);
+userRoute.use(authRoutes.isBlocked);
+
+userRoute.get("/home",authRoutes.checkUser, userController.loadHome );
+
+
+userRoute.get("/products",authRoutes.isBlocked, authRoutes.isLogin, userController.loadCategory);
 
 userRoute.get("/cart", authRoutes.isLogin, userController.loadCart);
 
@@ -60,6 +59,12 @@ userRoute.get(
   userController.editAddress
 );
 userRoute.post("/edit-address", authRoutes.isLogin, userController.edit_Address);
+
+
+
+
+userRoute.post("/add-to-cart", userController.addToCart);
+
 
 
 

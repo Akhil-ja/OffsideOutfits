@@ -7,6 +7,7 @@ const sendEmail = require("../services/sendEmail");
 const bcrypt = require("bcrypt");
 const { generateOTP } = require("../services/generateOTP");
 const authRoutes=require("../services/authRoutes")
+const Cart = require("../models/cartModel");
 
 
 
@@ -186,14 +187,7 @@ const loadProduct = async (req, res) => {
 };
 
 
-const loadCart = async (req, res) => {
-  try {
-        res.render("cart")
-  } catch (error) {
-    console.log(error.message);
-    res.status(500).send("Internal Server Error");
-  }
-};
+
 
 
 const loadCheckout=async(req,res)=>{
@@ -350,8 +344,99 @@ try {
     }
 };
 
-   
 
+
+
+const loadCart = async (req, res) => {
+  try {
+    console.log("in cart");
+
+    const cartItems = await Cart.find();
+
+    
+    const productIds = cartItems.reduce((ids, item) => {
+      const itemProductIds = item.cartProducts.map(
+        (product) => product.product
+      );
+      return [...ids, ...itemProductIds];
+    }, []);
+
+  
+    const products = await Product.find({ _id: { $in: productIds } });
+
+  
+    const cartWithProductDetails = cartItems.map((cartItem) => {
+      const cartProducts = cartItem.cartProducts.map((product) => {
+        const productDetail = products.find((p) =>
+          p._id.equals(product.product)
+        );
+        return {
+          ...product.toObject(),
+          productDetail: productDetail || null,
+        };
+      });
+
+      return {
+        ...cartItem.toObject(),
+        cartProducts,
+      };
+    });
+
+    console.log("cart Items", cartWithProductDetails);
+
+    res.render("cart", { cartItems: cartWithProductDetails });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
+
+   
+const addToCart=async(req,res)=>{
+   try {
+
+    console.log("in add to cart");
+     const { productId, userId } = req.body;
+
+
+     const user = await User.findById(userId);
+     if (!user) {
+       return res.status(404).json({ error: "User not found." });
+     }
+
+    
+     const product = await Product.findById(productId);
+     if (!product) {
+       return res.status(404).json({ error: "Product not found." });
+     }
+
+     
+     let cart = await Cart.findOne({ user: userId });
+     if (!cart) {
+       cart = new Cart({
+         user: userId,
+         cartProducts: [{ product: productId }],
+       });
+     } else {
+       if (cart.cartProducts.some((item) => item.product.equals(productId))) {
+         return res.status(400).json({ error: "Product already in the cart." });
+       }
+
+       cart.cartProducts.push({ product: productId });
+     }
+
+     await cart.save();
+
+     return res
+       .status(200)
+       .json({ success: true, message: "Product added to cart." });
+   } catch (error) {
+     console.error(error);
+     res.status(500).json({ error: "Internal server error." });
+   }
+}
 
 
 
@@ -371,4 +456,5 @@ module.exports = {
   add_Address,
   editAddress,
   edit_Address,
+  addToCart,
 };

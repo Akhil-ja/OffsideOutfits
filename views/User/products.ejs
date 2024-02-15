@@ -105,17 +105,21 @@
                                 <i class="icon-heart-o"></i>
                             </a>
 
-                            <div class=" cart-dropdown">
-                                <a href="/cart" class="dropdown-toggle" role="button" 
-                                    aria-haspopup="true" aria-expanded="false" data-display="static">
-                                    <i class="icon-shopping-cart"></i>
-                                </a>
-                            </div>
+                <div class="cart-dropdown position-relative">
+                    <a href="/cart" class="dropdown-toggle" role="button" style="position: relative; display: inline-block;">
+                        <i class="icon-shopping-cart">
+                            <span class="badge badge-danger"
+                                style="position: absolute; top: 0; right: 0; font-size: 10px; padding: 2px 5px;">Cart count</span>
+                        </i>
+                    </a>
+                </div>
+
+
 
                             <div class=" cart-dropdown">
                                 <a href="/profile" class="dropdown-toggle" role="button"
                                     aria-haspopup="true" aria-expanded="false" data-display="static">
-                                    <i class="icon-user"></i>
+                                    <i class="icon-user"> </i>
 
                                 </a>
                             </div>
@@ -172,10 +176,10 @@
                                 <% if (product.is_listed==="1" ) { %>
                                     <div class="col-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
                                         <div class="product">
-                                            <div class="card card-product-grid">
+                                            <div class="card card-product-grid"">
                                                 <a href="/products/<%= product._id %>"">
                                             <img src=" /productAssets/<%=product.images[0] %>" alt="Product image"
-                                                    class="product-image"style="height: 290px;width: 300px;">
+                                                    class="product-image"style="height: 280px;width: 285px;">
                                                 </a>
 
                                                 <div class="product-action-vertical">
@@ -449,7 +453,7 @@
 
                             <ul class="widget-list">
                                 <li><a href="#">Sign In</a></li>
-                                <li><a href="cart.html">View Cart</a></li>
+                                <li><a href="">View Cart</a></li>
                                 <li><a href="#">My Wishlist</a></li>
                                 <li><a href="#">Track My Order</a></li>
                                 <li><a href="#">Help</a></li>
@@ -481,7 +485,7 @@
 
         <div class="footer-bottom">
             <div class="container-fluid">
-                <p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p>
+                <p class="footer-copyright">Copyright.</p>
                 <!-- End .footer-copyright -->
                 <ul class="footer-menu">
                     <li><a href="#">Terms Of Use</a></li>

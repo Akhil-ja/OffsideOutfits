@@ -271,12 +271,14 @@ const add_Product = async (req, res) => {
      
     }));
 
+    console.log(req.body);
+
     const newProduct = new Product({
       pname: req.body.ProductName,
       price: req.body.ProductPrice,
       description: req.body.ProductDetails,
       sizes: sizes,
-      category_id: req.body.productCategory,
+      category: req.body.productCategory,
       is_listed: req.body.listed,
       brand: req.body.ProductBrand,
       images: images,
