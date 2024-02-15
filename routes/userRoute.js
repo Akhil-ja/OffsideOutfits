@@ -20,6 +20,8 @@ const userController=require("../controllers/userController");
 
 userRoute.get("*", authRoutes.checkUser);
 
+
+
 userRoute.get("/register", userController.loadlogin);
 
 
@@ -50,6 +52,15 @@ userRoute.get("/logout", userController.userLogout);
 
 userRoute.get("/add-address",authRoutes.isLogin, userController.addAddress);
 userRoute.post("/add-address",authRoutes.isLogin, userController.add_Address);
+
+
+userRoute.get(
+  "/edit-address?:addressId",
+  authRoutes.isLogin,
+  userController.editAddress
+);
+userRoute.post("/edit-address", authRoutes.isLogin, userController.edit_Address);
+
 
 
 

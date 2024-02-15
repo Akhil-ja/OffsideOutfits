@@ -204,24 +204,42 @@
                                         aria-labelledby="tab-address-link">
                                         <p>The following addresses will be used on the checkout page by default.</p>
 
+                                        <%if(pageinfo==="AddressSize"){%>
+                                           <p style="color: red;">Error: Cannot add more than 4 addresses.</p>
+                                         <script>
+                                            document.addEventListener("DOMContentLoaded", function () {
+                                        
+                                                var tabAddressLink = document.getElementById("tab-address-link");
+                                                tabAddressLink.click();
+                                            });
+                                        </script>
+
+                                            <%}%>
+
                                         <div class="row">
+                                            
+                                        <% for (const address of matchingAddress.address) { %>
                                             <div class="col-lg-6">
                                                 <div class="card card-dashboard">
                                                     <div class="card-body">
-                                                        <h3 class="card-title">Home Address</h3>
-                                                        <!-- End .card-title -->
+                                                        <h3 class="card-title">
+                                                            <%= address.type %> Address
+                                                        </h3>
+                                                        <p>
+                                                            <%= address.AddName %><br>
+                                                                <%= address.House %><br>
+                                                                    <%= address.street %><br>
+                                                                        <%= address.city %><br>
+                                                                            <%= address.state %><br>
+                                                                            <%= address.PIN %>  <br>
+                                                                            <a href="/edit-address<%= address._id %>">Edit <i class="icon-edit"></i></a>
 
-                                                        <p>User Name<br>
-                                                            house<br>
-                                                              street<br>
-                                                            city<br>
-                                                            state<br>
-                                                            yourmail@mail.com<br>
-                                                            <a href="#">Edit <i class="icon-edit"></i></a>
                                                         </p>
                                                     </div><!-- End .card-body -->
                                                 </div><!-- End .card-dashboard -->
                                             </div><!-- End .col-lg-6 -->
+                                            <% } %>
+
 
                                             
 
@@ -247,33 +265,19 @@
                                                     <input type="text" class="form-control" required>
                                                 </div><!-- End .col-sm-6 -->
 
-                                                <div class="col-sm-6">
-                                                    <label>Last Name *</label>
-                                                    <input type="text" class="form-control" required>
-                                                </div><!-- End .col-sm-6 -->
+                                                
                                             </div><!-- End .row -->
-
-                                            <label>Display Name *</label>
-                                            <input type="text" class="form-control" required>
-                                            <small class="form-text">This will be how your name will be displayed in the
-                                                account section and in reviews</small>
 
                                             <label>Email address *</label>
                                             <input type="email" class="form-control" required>
+                                            
 
-                                            <label>Current password (leave blank to leave unchanged)</label>
-                                            <input type="password" class="form-control">
+                                            <label>Phone Number</label>
+                                            <input type="text" class="form-control" required>
 
-                                            <label>New password (leave blank to leave unchanged)</label>
-                                            <input type="password" class="form-control">
+                                           
 
-                                            <label>Confirm new password</label>
-                                            <input type="password" class="form-control mb-2">
-
-                                            <button type="submit" class="btn btn-outline-primary-2">
-                                                <span>SAVE CHANGES</span>
-                                                <i class="icon-long-arrow-right"></i>
-                                            </button>
+    
                                         </form>
                                     </div><!-- .End .tab-pane -->
 
@@ -283,6 +287,16 @@
                     </div><!-- End .container -->
                 </div><!-- End .dashboard -->
             </div><!-- End .page-content -->
+
+           <%if(pageinfo==="Address"){%> 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Activate the "tab-address" tab
+        var tabAddressLink = document.getElementById("tab-address-link");
+        tabAddressLink.click();
+    });
+</script>
+            <%}%>
         </main>
 <footer class="footer footer-2">
     <div class="footer-middle">
@@ -340,7 +354,7 @@
 
                         <ul class="widget-list">
                             <li><a href="#">Sign In</a></li>
-                            <li><a href="cart.html">View Cart</a></li>
+                            <li><a href="">View Cart</a></li>
                             <li><a href="#">My Wishlist</a></li>
                             <li><a href="#">Track My Order</a></li>
                             <li><a href="#">Help</a></li>
@@ -401,24 +415,6 @@
 <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
 
 <!-- Mobile Menu -->
-<div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
-
-<div class="mobile-menu-container">
-    <div class="mobile-menu-wrapper">
-        <span class="mobile-menu-close"><i class="icon-close"></i></span>
-
-
-
-        <div class="social-icons">
-            <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
-            <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
-            <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
-            <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
-        </div><!-- End .social-icons -->
-    </div><!-- End .mobile-menu-wrapper -->
-</div><!-- End .mobile-menu-container -->
-
-
 
 <!-- Plugins JS File -->
 <script src="assets/js/jquery.min.js"></script>
@@ -434,6 +430,8 @@
 <!-- Main JS File -->
 <script src="assets/js/main.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
 
 </body>
 

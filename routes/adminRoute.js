@@ -23,6 +23,8 @@ const authRoutes=require("../services/authRoutes")
 
 
 adminRoute.get("*", authRoutes.checkUser);
+
+
 adminRoute.get("/login", adminController.loadAdminLog);
 adminRoute.post("/login", adminController.adminLogin);
 adminRoute.get("/dashboard", adminController.loadDashboard);

@@ -204,14 +204,33 @@ const loadCheckout=async(req,res)=>{
   }
 }
 
-
 const loadProfile = async (req, res) => {
   try {
-    res.render("profile");
+    const selectedValue = req.query.selected;
+    console.log(selectedValue);
+    const userId = res.locals.currentUser._id.toString();
+
+
+    
+    const matchingAddress = await Address.findOne({ user: userId }).exec();
+   
+
+    if (!matchingAddress) {
+      console.error("Address not found for user:", userId);
+      return res.status(404).send("Address not found for user");
+    }
+
+    let pageinfo = selectedValue;
+    res.render("profile", { pageinfo, matchingAddress });
   } catch (error) {
     console.log(error.message);
   }
 };
+
+
+
+
+
 
 const userLogout=async(req,res)=>{
   try {
@@ -222,6 +241,9 @@ const userLogout=async(req,res)=>{
   }
 }
 
+
+
+
 const addAddress=async(req,res)=>{
   try {
     
@@ -231,14 +253,14 @@ const addAddress=async(req,res)=>{
   }
 }
 
-const add_Address = async (req, res) => {
+
+const add_Address = async (req, res, next) => {
   try {
     console.log("Hi");
-    const { type, Name, House, street, state, city, PIN } = req.body;
+    const { type, AddName, House, street, state, city, PIN } = req.body;
 
     const newAddress = {
-     
-      AddName: Name,
+      AddName,
       House,
       street,
       state,
@@ -247,15 +269,27 @@ const add_Address = async (req, res) => {
       type,
     };
 
-   
-    const address = new Address({
-      user: req.body.userID,
-      address: [newAddress],
-    });
+    const existingAddress = await Address.findOne({ user: req.body.userID });
 
-    
-    await address.save();
+    if (existingAddress) {
+      if (existingAddress.address.length >= 4) {
+        return res.redirect("/profile?selected=AddressSize");
+      }
 
+      existingAddress.address.push(newAddress);
+      await existingAddress.save();
+      return res.redirect("/profile?selected=Address");
+    } else {
+      const address = new Address({
+        user: req.body.userID,
+        address: [newAddress],
+      });
+
+      await address.save();
+    }
+
+    let pageinfo = "Address";
+    res.render("profile", { pageinfo });
   } catch (error) {
     console.log(error.message);
   }
@@ -264,8 +298,57 @@ const add_Address = async (req, res) => {
 
 
 
-   
+const editAddress = async (req, res) => {
+  try {
+    const addressId = req.params.addressId;
+    console.log("object_id:"+addressId);
+    const addressDetails = await Address.findOne(
+      { "address._id": addressId },
+      { "address.$": 1 }
+    );
 
+console.log("Address======"+addressDetails);
+  
+
+    if (!addressDetails) {
+      console.error("Address not found for ID:", addressId);
+      return res.status(404).send("Address not found for ID");
+    }
+
+    res.render("editAddress", { addressDetails });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+
+
+
+
+const edit_Address = async (req, res) =>  {
+
+try {
+        const addressId = req.query.addressId; 
+        const updatedAddressData = req.body; 
+        console.log("updated"+updatedAddressData);
+
+        
+        const result = await Address.findOneAndUpdate(
+          { "address._id": addressId },
+          { $set: { "address.$": updatedAddressData } },
+          { new: true }
+        );
+
+        if (!result) {
+            console.log("Address not found or not updated");
+            
+        }
+
+        res.redirect("/profile?selected=Address");
+    } catch (error) {
+        console.log(error.message);
+    }
+};
 
    
 
@@ -286,4 +369,6 @@ module.exports = {
   userLogout,
   addAddress,
   add_Address,
+  editAddress,
+  edit_Address,
 };

@@ -125,187 +125,245 @@
                 </div><!-- End .header-middle -->
             </div>
         </header><!-- End .header -->
-        <!-- Edit Address Page -->
+
         <main class="main">
-            <div class="tab-pane container" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
+            <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+                <div class="container">
+                    <h1 class="page-title">My Account<span></span></h1>
+                </div><!-- End .container -->
+            </div><!-- End .page-header -->
+            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
 
-                <form action="/add-address" method="post">
-                    <input type="text" value="<%=currentUser._id%>" name="userID" id="" hidden>
-                    <div class="form-group">
-                        <label>Type</label><br>
+            </nav><!-- End .breadcrumb-nav -->
+            <div class="page-content">
+                <div class="dashboard">
+                    <div class="container">
+                        <div class="row">
+                            <aside class="col-md-4 col-lg-3">
+                                <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link " id="tab-dashboard-link" data-toggle="tab"
+                                            href="#tab-dashboard" role="tab" aria-controls="tab-dashboard"
+                                            aria-selected="true">Dashboard</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders"
+                                            role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="tab-downloads-link" data-toggle="tab"
+                                            href="#tab-downloads" role="tab" aria-controls="tab-downloads"
+                                            aria-selected="false">Downloads</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="tab-address-link" href="/profile?selected=Address"
+                                            role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account"
+                                            role="tab" aria-controls="tab-account" aria-selected="false">Account
+                                            Details</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a style="color: red;" class="nav-link font-weight-bold" href="/logout">Sign
+                                            Out</a>
+                                    </li>
+                                </ul>
+                            </aside>
 
-                        <div class="btn-group" data-toggle="buttons">
-                            <label class="btn btn-primary active">
-                                <input type="radio" name="type" id="home" value="home" autocomplete="off" checked
-                                    style="display: none;">
-                                Home
-                            </label>
-
-                            <label class="btn btn-primary">
-                                <input type="radio" name="type" id="work" value="work" autocomplete="off"
-                                    style="display: none;"> Work
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-4">
-                        <label> Name *</label>
-                        <input type="text" id="Name" name="Name" class="form-control" required>
-                    </div>
+                            <div class="col-md-8 col-lg-9">
+                                <div class="tab-content">
 
 
 
-                    <div class="">
-                        <label for="House">House*</label>
-                        <input type="text" id="House" name="House" class="form-control" value="" required>
-                    </div><!-- End .col-sm-6 -->
 
-                    <label for="street">Street*</label>
-                    <input type="text" id="street" name="street" class="form-control" value="" required>
+<div class="tab-pane container" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
+    <form action="/add-address" method="post">
+        <input type="text" value="<%= currentUser._id %>" name="userID" id="" hidden>
+        <div class="form-group">
+            <label>Type</label><br>
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-primary active">
+                    <input type="radio" name="type" id="home" value="home" autocomplete="off" checked
+                        style="display: none;">
+                    Home
+                </label>
+                <label class="btn btn-primary">
+                    <input type="radio" name="type" id="work" value="work" autocomplete="off" style="display: none;">
+                    Work
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-sm-4">
+                <label for="AddName">Name *</label>
+                <input type="text" id="AddName" name="AddName" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="House">House *</label>
+            <textarea id="House" name="House" class="form-control" rows="4" style="width: 50%;"
+                required></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="street">Street *</label>
+            <textarea id="street" name="street" class="form-control" rows="4" style="width: 50%;"
+                required></textarea>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-sm-4">
+                <label for="state">State*</label>
+                <input type="text" id="state" name="state" class="form-control" value="" required>
+            </div>
+            <div class="form-group col-sm-4">
+                <label for="city">City*</label>
+                <input type="text" id="city" name="city" class="form-control" value="" required>
+            </div>
+            
+        </div>
+        <div class="form-group col-sm-2">
+            <label for="PIN">PIN*</label>
+            <input type="text" id="PIN" name="PIN" class="form-control" value="" required>
+        </div>
+
+        <button type="submit" class="btn btn-outline-primary-2">
+            <span>SAVE CHANGES</span>
+            <i class="icon-long-arrow-right"></i>
+        </button>
+
+        <a href="/profile?selected=Address" class="btn btn-secondary">Back</a>
+    </form>
+</div><!-- .End .tab-pane -->
 
 
 
+
+
+
+                                </div>
+                            </div><!-- End .col-lg-9 -->
+                        </div><!-- End .row -->
+                    </div><!-- End .container -->
+                </div><!-- End .dashboard -->
+            </div><!-- End .page-content -->
+        </main>
+
+
+
+
+        <footer class="footer footer-2">
+            <div class="footer-middle">
+                <div class="container-fluid">
                     <div class="row">
-                        <div class="col-sm-4">
-                            <label for="state">State*</label>
-                            <input type="text" id="state" name="state" class="form-control" value="" required>
-                        </div><!-- End .col-sm-6 -->
+                        <div class="col-sm-12 col-lg-4">
+                            <div class="widget widget-about">
+                                <img src="assets/images/LogoFooter.png" class="footer-logo" alt="Footer Logo"
+                                    width="280" height="25">
+                                <p></p>
 
-                        <div class="col-sm-4">
-                            <label for="city">City*</label>
-                            <input type="text" id="city" name="city" class="form-control" value="" required>
-                        </div><!-- End .col-sm-6 -->
-                        <div class="col-sm-2">
-                            <label for="PIN">PIN*</label>
-                            <input type="text" id="PIN" name="PIN" class="form-control" value="" required>
-                        </div>
-                    </div>
+                                <div class="widget-about-info">
+                                    <div class="row">
 
 
-                    <button type="submit" class="btn btn-outline-primary-2">
-                        <span>SAVE CHANGES</span>
-                        <i class="icon-long-arrow-right"></i>
-                    </button>
+                                    </div><!-- End .row -->
+                                </div><!-- End .widget-about-info -->
+                            </div><!-- End .widget about-widget -->
+                        </div><!-- End .col-sm-12 col-lg-4 -->
 
-                </form>
-            </div><!-- .End .tab-pane -->
-    </div>
-    </div>
-    </main>
+                        <div class="col-sm-4 col-lg-2">
+                            <div class="widget">
+                                <h4 class="widget-title">Information</h4><!-- End .widget-title -->
 
+                                <ul class="widget-list">
+                                    <li><a href="about.html">About Molla</a></li>
+                                    <li><a href="#">How to shop on Molla</a></li>
+                                    <li><a href="faq.html">FAQ</a></li>
+                                    <li><a href="contact.html">Contact us</a></li>
+                                    <li><a href="login.html">Log in</a></li>
+                                </ul><!-- End .widget-list -->
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-4 col-lg-2 -->
 
+                        <div class="col-sm-4 col-lg-2">
+                            <div class="widget">
+                                <h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
 
-    <footer class="footer footer-2">
-        <div class="footer-middle">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-sm-12 col-lg-4">
-                        <div class="widget widget-about">
-                            <img src="assets/images/LogoFooter.png" class="footer-logo" alt="Footer Logo" width="280"
-                                height="25">
-                            <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate
-                                magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan
-                                porttitor, facilisis luctus, metus. </p>
+                                <ul class="widget-list">
+                                    <li><a href="#">Payment Methods</a></li>
+                                    <li><a href="#">Money-back guarantee!</a></li>
+                                    <li><a href="#">Returns</a></li>
+                                    <li><a href="#">Shipping</a></li>
+                                    <li><a href="#">Terms and conditions</a></li>
+                                    <li><a href="#">Privacy Policy</a></li>
+                                </ul><!-- End .widget-list -->
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-4 col-lg-2 -->
 
-                            <div class="widget-about-info">
-                                <div class="row">
+                        <div class="col-sm-4 col-lg-2">
+                            <div class="widget">
+                                <h4 class="widget-title">My Account</h4><!-- End .widget-title -->
 
+                                <ul class="widget-list">
+                                    <li><a href="#">Sign In</a></li>
+                                    <li><a href="cart.html">View Cart</a></li>
+                                    <li><a href="#">My Wishlist</a></li>
+                                    <li><a href="#">Track My Order</a></li>
+                                    <li><a href="#">Help</a></li>
+                                </ul><!-- End .widget-list -->
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-4 col-lg-2 -->
 
-                                </div><!-- End .row -->
-                            </div><!-- End .widget-about-info -->
-                        </div><!-- End .widget about-widget -->
-                    </div><!-- End .col-sm-12 col-lg-4 -->
+                        <div class="col-sm-6 col-lg-2">
+                            <div class="widget widget-newsletter">
+                                <h4 class="widget-title">Newsletter</h4><!-- End .widget-title -->
 
-                    <div class="col-sm-4 col-lg-2">
-                        <div class="widget">
-                            <h4 class="widget-title">Information</h4><!-- End .widget-title -->
+                                <p>Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan.</p>
 
-                            <ul class="widget-list">
-                                <li><a href="about.html">About Molla</a></li>
-                                <li><a href="#">How to shop on Molla</a></li>
-                                <li><a href="faq.html">FAQ</a></li>
-                                <li><a href="contact.html">Contact us</a></li>
-                                <li><a href="login.html">Log in</a></li>
-                            </ul><!-- End .widget-list -->
-                        </div><!-- End .widget -->
-                    </div><!-- End .col-sm-4 col-lg-2 -->
+                                <form action="#">
+                                    <div class="input-group">
+                                        <input type="email" class="form-control" placeholder="Enter your Email Address"
+                                            aria-label="Email Adress" required>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-dark" type="submit"><i
+                                                    class="icon-long-arrow-right"></i></button>
+                                        </div><!-- .End .input-group-append -->
+                                    </div><!-- .End .input-group -->
+                                </form>
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-6 col-lg-2 -->
+                    </div><!-- End .row -->
+                </div><!-- End .container-fluid -->
+            </div><!-- End .footer-middle -->
 
-                    <div class="col-sm-4 col-lg-2">
-                        <div class="widget">
-                            <h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
+            <div class="footer-bottom">
+                <div class="container-fluid">
+                    <p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p>
+                    <!-- End .footer-copyright -->
+                    <ul class="footer-menu">
+                        <li><a href="#">Terms Of Use</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul><!-- End .footer-menu -->
 
-                            <ul class="widget-list">
-                                <li><a href="#">Payment Methods</a></li>
-                                <li><a href="#">Money-back guarantee!</a></li>
-                                <li><a href="#">Returns</a></li>
-                                <li><a href="#">Shipping</a></li>
-                                <li><a href="#">Terms and conditions</a></li>
-                                <li><a href="#">Privacy Policy</a></li>
-                            </ul><!-- End .widget-list -->
-                        </div><!-- End .widget -->
-                    </div><!-- End .col-sm-4 col-lg-2 -->
-
-                    <div class="col-sm-4 col-lg-2">
-                        <div class="widget">
-                            <h4 class="widget-title">My Account</h4><!-- End .widget-title -->
-
-                            <ul class="widget-list">
-                                <li><a href="#">Sign In</a></li>
-                                <li><a href="cart.html">View Cart</a></li>
-                                <li><a href="#">My Wishlist</a></li>
-                                <li><a href="#">Track My Order</a></li>
-                                <li><a href="#">Help</a></li>
-                            </ul><!-- End .widget-list -->
-                        </div><!-- End .widget -->
-                    </div><!-- End .col-sm-4 col-lg-2 -->
-
-                    <div class="col-sm-6 col-lg-2">
-                        <div class="widget widget-newsletter">
-                            <h4 class="widget-title">Newsletter</h4><!-- End .widget-title -->
-
-                            <p>Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan.</p>
-
-                            <form action="#">
-                                <div class="input-group">
-                                    <input type="email" class="form-control" placeholder="Enter your Email Address"
-                                        aria-label="Email Adress" required>
-                                    <div class="input-group-append">
-                                        <button class="btn btn-dark" type="submit"><i
-                                                class="icon-long-arrow-right"></i></button>
-                                    </div><!-- .End .input-group-append -->
-                                </div><!-- .End .input-group -->
-                            </form>
-                        </div><!-- End .widget -->
-                    </div><!-- End .col-sm-6 col-lg-2 -->
-                </div><!-- End .row -->
-            </div><!-- End .container-fluid -->
-        </div><!-- End .footer-middle -->
-
-        <div class="footer-bottom">
-            <div class="container-fluid">
-                <p class="footer-copyright">Copyright © 2019 </p>
-                <!-- End .footer-copyright -->
-                <ul class="footer-menu">
-                    <li><a href="#">Terms Of Use</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                </ul><!-- End .footer-menu -->
-
-                <div class="social-icons social-icons-color">
-                    <span class="social-label">Socials</span>
-                    <a href="#" class="social-icon social-facebook" title="Facebook" target="_blank"><i
-                            class="icon-facebook-f"></i></a>
-                    <a href="#" class="social-icon social-twitter" title="Twitter" target="_blank"><i
-                            class="icon-twitter"></i></a>
-                    <a href="#" class="social-icon social-instagram" title="Instagram" target="_blank"><i
-                            class="icon-instagram"></i></a>
-                    <a href="#" class="social-icon social-youtube" title="Youtube" target="_blank"><i
-                            class="icon-youtube"></i></a>
-                    <a href="#" class="social-icon social-pinterest" title="Pinterest" target="_blank"><i
-                            class="icon-pinterest"></i></a>
-                </div><!-- End .soial-icons -->
-            </div><!-- End .container-fluid -->
-        </div><!-- End .footer-bottom -->
-    </footer><!-- End .footer -->
+                    <div class="social-icons social-icons-color">
+                        <span class="social-label">Socials</span>
+                        <a href="#" class="social-icon social-facebook" title="Facebook" target="_blank"><i
+                                class="icon-facebook-f"></i></a>
+                        <a href="#" class="social-icon social-twitter" title="Twitter" target="_blank"><i
+                                class="icon-twitter"></i></a>
+                        <a href="#" class="social-icon social-instagram" title="Instagram" target="_blank"><i
+                                class="icon-instagram"></i></a>
+                        <a href="#" class="social-icon social-youtube" title="Youtube" target="_blank"><i
+                                class="icon-youtube"></i></a>
+                        <a href="#" class="social-icon social-pinterest" title="Pinterest" target="_blank"><i
+                                class="icon-pinterest"></i></a>
+                    </div><!-- End .soial-icons -->
+                </div><!-- End .container-fluid -->
+            </div><!-- End .footer-bottom -->
+        </footer><!-- End .footer -->
 
 
     </div><!-- End .page-wrapper -->
@@ -346,6 +404,16 @@
     <script src="assets/js/main.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Activate the "tab-address" tab
+            var tabAddressLink = document.getElementById("tab-address-link");
+            tabAddressLink.classList.add("active");
+
+            var tabAddressPane = document.getElementById("tab-address");
+            tabAddressPane.classList.add("active", "show");
+        });
+    </script>
 </body>
 
 

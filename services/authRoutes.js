@@ -61,7 +61,6 @@ const isAdminLogin = (req, res, next) => {
         } else {
             try {
             let user = await User.findById(decodedToken.id);
-            console.log("User:", user.name);
             res.locals.currentUser = user;
             next();
             } catch (userError) {
@@ -77,8 +76,9 @@ const isAdminLogin = (req, res, next) => {
         next();
     }
     };
+    
 
-
+    
 
 
 module.exports = {
@@ -87,4 +87,5 @@ module.exports = {
   isLogin,
   isAdminLogin,
   checkUser,
+  
 };
