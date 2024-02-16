@@ -217,11 +217,16 @@
                                             <%}%>
 
                                         <div class="row">
-                                            
+                                           
                                         <% for (const address of matchingAddress.address) { %>
                                             <div class="col-lg-6">
                                                 <div class="card card-dashboard">
                                                     <div class="card-body">
+                                            <button style="height: 5px; width: 5px; font-size: xx-small;" onclick="setDefaultType('<%= address._id %>')"
+                                                class="btn btn-outline-secondary float-right">Set Default</button>
+
+
+
                                                         <h3 class="card-title">
                                                             <%= address.type %> Address
                                                         </h3>
@@ -430,7 +435,34 @@
 <!-- Main JS File -->
 <script src="assets/js/main.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
+
+<script>
+
+    function setDefaultType(addressId) {
+        fetch(`/set-default-address/${addressId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => response.json())
+            .then(result => {
+                console.log(result);
+                Swal.fire({
+                    icon: "success",
+                    title: "Success!",
+                    text: "Address type set to default.",
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+
+</script>
 
 
 </body>

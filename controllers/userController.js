@@ -190,13 +190,6 @@ const loadProduct = async (req, res) => {
 
 
 
-const loadCheckout=async(req,res)=>{
-  try {
-    res.render("checkout")
-  } catch (error) {
-    console.log(error.message);
-  }
-}
 
 const loadProfile = async (req, res) => {
   try {
@@ -393,7 +386,6 @@ const loadCart = async (req, res) => {
 
 
 
-
 const addToCart = async (req, res) => {
   try {
     const { productId, userId } = req.body;
@@ -416,7 +408,12 @@ const addToCart = async (req, res) => {
       });
     } else {
       if (cart.cartProducts.some((item) => item.product.equals(productId))) {
-        return res.status(400).json({ error: "Product already in the cart." });
+        return res
+          .status(200)
+          .json({
+            alreadyExists: true,
+            message: "Product already in the cart.",
+          });
       }
 
       cart.cartProducts.push({ product: productId });
@@ -426,7 +423,11 @@ const addToCart = async (req, res) => {
 
     return res
       .status(200)
-      .json({ success: true, message: "Product added to cart." });
+      .json({
+        alreadyExists: false,
+        success: true,
+        message: "Product added to cart.",
+      });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error." });
@@ -439,7 +440,7 @@ const cartQuantity=async(req,res)=>{
   const { cartId, productId, newQuantity } = req.body;
 
   try {
-    // Find the cart and the specific product in the cart
+   
     let cart = await Cart.findById(cartId);
     const productInCart = cart.cartProducts.find((product) =>
       product.product.equals(productId)
@@ -449,10 +450,10 @@ const cartQuantity=async(req,res)=>{
       return res.status(404).json({ error: "Cart or product not found." });
     }
 
-    // Update the quantity
+    
     productInCart.quantity = newQuantity;
 
-    // Save the updated cart
+  
     await cart.save();
 
     res
@@ -469,7 +470,7 @@ const cartRemove=async(req,res)=>{
   const { cartId, productId } = req.body;
 
   try {
-    // Find the cart and the specific product in the cart
+   
     let cart = await Cart.findById(cartId);
     const productIndex = cart.cartProducts.findIndex((product) =>
       product.product.equals(productId)
@@ -497,6 +498,105 @@ const cartRemove=async(req,res)=>{
 
 
 
+  const setDefault = async (req, res) => {
+    try {
+      console.log("default add");
+      const { addressId } = req.params;
+
+      console.log(addressId);
+
+      const matchingAddress = await Address.findOneAndUpdate(
+        { "address._id": addressId },
+        { $set: { "address.$.type": "default" } },
+        { new: true }
+      );
+
+      console.log(matchingAddress);
+
+      if (matchingAddress) {
+     
+             res.json({
+               success: true,
+               message: "Address type set to default.",
+             });
+      } else {
+        res.status(404).json({ error: "Address not found." });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal server error." });
+    }
+  };
+
+
+  
+const loadCheckout = async (req, res) => {
+  try {
+    const userId = res.locals.currentUser._id.toString();
+
+    
+    const userAddresses = await Address.find({ user: userId });
+    console.log("User Addresses:", userAddresses);
+
+    
+    const cartItems = await Cart.find();
+
+    // Extract unique product IDs from cart items
+    const productIds = cartItems.reduce((ids, item) => {
+      const itemProductIds = item.cartProducts.map(
+        (product) => product.product
+      );
+      return [...ids, ...itemProductIds];
+    }, []);
+
+    // Fetch product details for the extracted product IDs
+    const products = await Product.find({ _id: { $in: productIds } });
+
+   
+    let totalAmount = 0;
+
+    // Map cart items with product details
+    const cartWithProductDetails = cartItems.map((cartItem) => {
+      const cartProducts = cartItem.cartProducts.map((product) => {
+        const productDetail = products.find((p) =>
+          p._id.equals(product.product)
+        );
+
+        
+        totalAmount += productDetail.price * product.quantity;
+
+
+
+        return {
+          ...product.toObject(),
+          productDetail:productDetail,
+          
+        };
+      });
+
+      return {
+        ...cartItem.toObject(),
+        cartProducts,
+      };
+    });
+
+   
+    console.log("Total Amount:", totalAmount);
+    console.log("cart=", cartWithProductDetails);
+   
+    res.render("checkout", {
+      userAddresses,
+      cartItems: cartWithProductDetails,
+      totalAmount,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
+
 module.exports = {
   loadlogin,
   insertUser,
@@ -516,4 +616,5 @@ module.exports = {
   addToCart,
   cartRemove,
   cartQuantity,
+  setDefault,
 };

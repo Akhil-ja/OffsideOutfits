@@ -71,6 +71,10 @@ userRoute.post("/update-cart-quantity",userController.cartQuantity);
 userRoute.post("/remove-from-cart", userController.cartRemove);
 
 
+userRoute.post("/set-default-address/:addressId", userController.setDefault);
+
+
+
 
 
 

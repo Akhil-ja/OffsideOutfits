@@ -162,269 +162,193 @@
                                
                     </form>
                 </div><!-- End .checkout-discount -->
-                <form action="#">
-                    <div class="row">
-                        <div class="col-lg-9">
-                            <h2 class="checkout-title">Billing Details</h2>
+            <form action="#">
+                <div class="row">
+                    <!-- Left side - Address selection -->
+                    <div class="col-lg-9">
+                        <h2 class="checkout-title">Address Details</h2>
+            
+                        <!-- Iterate over user addresses and create radio buttons -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>Select Address</th>
+            <th>Address Name</th>
+            <th>House</th>
+            <th>Street</th>
+            <th>City</th>
+            <th>State</th>
+            <th>PIN</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% userAddresses.forEach((userAddress, index)=> { %>
+            <% userAddress.address.forEach((address, addressIndex)=> { %>
+                <tr>
+                    <td>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="address"
+                                id="<%= `address${index}-${addressIndex}` %>" value="<%= address._id %>" required>
+                            <label class="form-check-label" for="<%= `address${index}-${addressIndex}` %>"></label>
+                        </div>
+                    </td>
+                    <td>
+                        <%= address.AddName %>
+                    </td>
+                    <td>
+                        <%= address.House %>
+                    </td>
+                    <td>
+                        <%= address.street %>
+                    </td>
+                    <td>
+                        <%= address.city %>
+                    </td>
+                    <td>
+                        <%= address.state %>
+                    </td>
+                    <td>
+                        <%= address.PIN %>
+                    </td>
+                </tr>
+                <% }); %>
+                    <% }); %>
+    </tbody>
+</table>
 
-                        <style>
-                            .form-check {
-                                display: inline-block;
-                                margin-right: 10px;
-                            }
-                        
-                            .form-check-input {
-                                display: none;
-                            }
-                        
-                            .form-check-label {
-                                display: inline-block;
-                                padding: 8px 16px;
-                                background-color: white;
-                                color: black;
-                                cursor: pointer;
-                                border-radius: 4px;
-                                transition: background-color 0.3s, border-color 0.3s;
-                                /* Add border-color transition */
-                                border: 1px solid #c96;
-                                /* Default border color */
-                            }
-                        
-                            .form-check-input:checked+.form-check-label {
-                                background-color: #c96;
-                                border-color: #c96;
-                                /* Set border color to #c96 when checked */
-                            }
-                        </style>
-
-
-
-<div class="">
-    <div class="form-check mb-3 ">
-        <input class="form-check-input" type="radio" name="addressType" id="homeAddress" value="home" checked>
-        <label class="form-check-label" for="homeAddress">
-        <i class="icon-home"></i>    Home
-        </label>
-    </div>
-
-    <div class="form-check">
-        <input class="form-check-input" type="radio" name="addressType" id="workAddress" value="work">
-        <label class="form-check-label" for="workAddress">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building"
-        viewBox="0 0 16 16">
-        <path
-            d="M4 2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z" />
-        <path
-            d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1zm11 0H3v14h3v-2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V15h3z" />
-    </svg> Work
-        </label>
-    </div>
-
-    <div class="form-check">
-        <input class="form-check-input" type="radio" name="addressType" id="otherAddress" value="other">
-        <label class="form-check-label" for="otherAddress">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-houses-fill"
-                viewBox="0 0 16 16">
-                <path
-                    d="M7.207 1a1 1 0 0 0-1.414 0L.146 6.646a.5.5 0 0 0 .708.708L1 7.207V12.5A1.5 1.5 0 0 0 2.5 14h.55a2.5 2.5 0 0 1-.05-.5V9.415a1.5 1.5 0 0 1-.56-2.475l5.353-5.354z" />
-                <path
-                    d="M8.793 2a1 1 0 0 1 1.414 0L12 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l1.854 1.853a.5.5 0 0 1-.708.708L15 8.207V13.5a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 4 13.5V8.207l-.146.147a.5.5 0 1 1-.708-.708z" />
-            </svg> Other
-        </label>
-    </div>
-</div>
-                         
-
-
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <label>First Name *</label>
-                                    <input type="text" class="form-control" required>
-                                </div><!-- End .col-sm-6 -->
-
-                                <div class="col-sm-6">
-                                    <label>Last Name *</label>
-                                    <input type="text" class="form-control" required>
-                                </div><!-- End .col-sm-6 -->
-                            </div><!-- End .row -->
-                            <label>Street address *</label>
-                            <input type="text" class="form-control" placeholder="House number and Street name" required>
-                            <input type="text" class="form-control" placeholder="Appartments, suite, unit etc ..."
-                                required>
-
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <label>Village/ City *</label>
-                                    <input type="text" class="form-control" required>
-                                </div><!-- End .col-sm-6 -->
-
-                                <div class="col-sm-6">
-                                    <label>State *</label>
-                                    <input type="text" class="form-control" required>
-                                </div><!-- End .col-sm-6 -->
-                            </div><!-- End .row -->
-
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <label>PIN Code *</label>
-                                    <input type="text" class="form-control" required>
-                                </div><!-- End .col-sm-6 -->
-
-                                <div class="col-sm-6">
-                                    <label>Phone *</label>
-                                    <input type="tel" class="form-control" required>
-                                </div><!-- End .col-sm-6 -->
-                            </div><!-- End .row -->
-
-                            <label>Email address *</label>
-                            <input type="email" class="form-control" required>
-
-
-                            <label>Order notes (optional)</label>
-                            <textarea class="form-control" cols="30" rows="4"
-                                placeholder="Notes about your order, e.g. special notes for delivery"></textarea>
-                        </div><!-- End .col-lg-9 -->
-                        <aside class="col-lg-3">
-                            <div class="summary">
-                                <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
-
+                                        <!-- Additional form fields go here -->
+                    </div><!-- End .col-lg-9 -->
+       
+                    <!-- Right side - Summary (aside) -->
+                <aside class="col-lg-3">
+                    <div class="summary">
+                        <h3 class="summary-title">Your Order</h3>
+                                
                                 <table class="table table-summary">
                                     <thead>
                                         <tr>
                                             <th>Product</th>
-                                            <th>Total</th>
+                                            <th>Quantity</th>
+                                            <th>Price</th>
                                         </tr>
                                     </thead>
-
                                     <tbody>
-                                        <tr>
-                                            <td><a href="#">Beige knitted elastic runner shoes</a></td>
-                                            <td>$84.00</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><a href="#">Blue utility pinafore denimdress</a></td>
-                                            <td>$76,00</td>
-                                        </tr>
-                                        <tr class="summary-subtotal">
-                                            <td>Subtotal:</td>
-                                            <td>$160.00</td>
-                                        </tr><!-- End .summary-subtotal -->
-                                        <tr>
-                                            <td>Shipping:</td>
-                                            <td>Free shipping</td>
-                                        </tr>
-                                        <tr class="summary-total">
-                                            <td>Total:</td>
-                                            <td>$160.00</td>
-                                        </tr><!-- End .summary-total -->
+                                        <% cartItems.forEach(cartItem=> { %>
+                                            <% cartItem.cartProducts.forEach(product=> { %>
+                                                <tr>
+                                                    <td>
+                                                        <%= product.productDetail.pname %>
+                                                    </td>
+                                                    <td>
+                                                        <%= product.quantity %>
+                                                    </td>
+                                                    <td>$<%=  product.productDetail.price %>
+                                                    </td>
+                                                </tr>
+                                                <% }); %>
+                                                    <% }); %>
+                                                   
                                     </tbody>
-                                </table><!-- End .table table-summary -->
+                                </table>
+                
+                         <p style="font-weight: 600;">Total Amount To be paid:<%=totalAmount%></p>  
 
-                                <div class="accordion-summary" id="accordion-payment">
-                                    <div class="card">
-                                        <div class="card-header" id="heading-1">
-                                            <h2 class="card-title">
-                                                <a role="button" data-toggle="collapse" href="#collapse-1"
-                                                    aria-expanded="true" aria-controls="collapse-1">
-                                                    Direct bank transfer
-                                                </a>
-                                            </h2>
-                                        </div><!-- End .card-header -->
-                                        <div id="collapse-1" class="collapse show" aria-labelledby="heading-1"
-                                            data-parent="#accordion-payment">
-                                            <div class="card-body">
-                                                Make your payment directly into our bank account. Please use your Order
-                                                ID as the payment reference. Your order will not be shipped until the
-                                                funds have cleared in our account.
-                                            </div><!-- End .card-body -->
-                                        </div><!-- End .collapse -->
-                                    </div><!-- End .card -->
-
-                                    <div class="card">
-                                        <div class="card-header" id="heading-2">
-                                            <h2 class="card-title">
-                                                <a class="collapsed" role="button" data-toggle="collapse"
-                                                    href="#collapse-2" aria-expanded="false" aria-controls="collapse-2">
-                                                    Check payments
-                                                </a>
-                                            </h2>
-                                        </div><!-- End .card-header -->
-                                        <div id="collapse-2" class="collapse" aria-labelledby="heading-2"
-                                            data-parent="#accordion-payment">
-                                            <div class="card-body">
-                                                Ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque
-                                                volutpat mattis eros. Nullam malesuada erat ut turpis.
-                                            </div><!-- End .card-body -->
-                                        </div><!-- End .collapse -->
-                                    </div><!-- End .card -->
-
-                                    <div class="card">
-                                        <div class="card-header" id="heading-3">
-                                            <h2 class="card-title">
-                                                <a class="collapsed" role="button" data-toggle="collapse"
-                                                    href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
-                                                    Cash on delivery
-                                                </a>
-                                            </h2>
-                                        </div><!-- End .card-header -->
-                                        <div id="collapse-3" class="collapse" aria-labelledby="heading-3"
-                                            data-parent="#accordion-payment">
-                                            <div class="card-body">Quisque volutpat mattis eros. Lorem ipsum dolor sit
-                                                amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis
-                                                eros.
-                                            </div><!-- End .card-body -->
-                                        </div><!-- End .collapse -->
-                                    </div><!-- End .card -->
-
-                                    <div class="card">
-                                        <div class="card-header" id="heading-4">
-                                            <h2 class="card-title">
-                                                <a class="collapsed" role="button" data-toggle="collapse"
-                                                    href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
-                                                    PayPal <small class="float-right paypal-link">What is
-                                                        PayPal?</small>
-                                                </a>
-                                            </h2>
-                                        </div><!-- End .card-header -->
-                                        <div id="collapse-4" class="collapse" aria-labelledby="heading-4"
-                                            data-parent="#accordion-payment">
-                                            <div class="card-body">
-                                                Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non,
-                                                semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis
-                                                fermentum.
-                                            </div><!-- End .card-body -->
-                                        </div><!-- End .collapse -->
-                                    </div><!-- End .card -->
-
-                                    <div class="card">
-                                        <div class="card-header" id="heading-5">
-                                            <h2 class="card-title">
-                                                <a class="collapsed" role="button" data-toggle="collapse"
-                                                    href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
-                                                    Credit Card (Stripe)
-                                                    <img src="assets/images/payments-summary.png" alt="payments cards">
-                                                </a>
-                                            </h2>
-                                        </div><!-- End .card-header -->
-                                        <div id="collapse-5" class="collapse" aria-labelledby="heading-5"
-                                            data-parent="#accordion-payment">
-                                            <div class="card-body"> Donec nec justo eget felis facilisis fermentum.Lorem
-                                                ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque
-                                                volutpat mattis eros. Lorem ipsum dolor sit ame.
-                                            </div><!-- End .card-body -->
-                                        </div><!-- End .collapse -->
-                                    </div><!-- End .card -->
-                                </div><!-- End .accordion -->
-
+                            <div class="accordion-summary" id="accordion-payment">
+                                <div class="card">
+                                    <div class="card-header" id="heading-1">
+                                        <h2 class="card-title">
+                                            <a role="button" data-toggle="collapse" href="#collapse-1" aria-expanded="true"
+                                                aria-controls="collapse-1">
+                                                Direct bank transfer
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            Make your payment directly into our bank account. Please use your Order ID as the payment reference.
+                                            Your order will not be shipped until the funds have cleared in our account.
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+                            
+                                <div class="card">
+                                    <div class="card-header" id="heading-2">
+                                        <h2 class="card-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-2" aria-expanded="false"
+                                                aria-controls="collapse-2">
+                                                Check payments
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-2" class="collapse" aria-labelledby="heading-2" data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            Ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam
+                                            malesuada erat ut turpis.
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+                            
+                                <div class="card">
+                                    <div class="card-header" id="heading-3">
+                                        <h2 class="card-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false"
+                                                aria-controls="collapse-3">
+                                                Cash on delivery
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
+                                        <div class="card-body">Quisque volutpat mattis eros. Lorem ipsum dolor sit amet, consectetuer adipiscing
+                                            elit. Donec odio. Quisque volutpat mattis eros.
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+                            
+                                <div class="card">
+                                    <div class="card-header" id="heading-4">
+                                        <h2 class="card-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-4" aria-expanded="false"
+                                                aria-controls="collapse-4">
+                                                PayPal <small class="float-right paypal-link">What is PayPal?</small>
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.
+                                            Donec nec justo eget felis facilisis fermentum.
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+                            
+                                <div class="card">
+                                    <div class="card-header" id="heading-5">
+                                        <h2 class="card-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-5" aria-expanded="false"
+                                                aria-controls="collapse-5">
+                                                Credit Card (Stripe)
+                                                <img src="assets/images/payments-summary.png" alt="payments cards">
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
+                                        <div class="card-body"> Donec nec justo eget felis facilisis fermentum.Lorem ipsum dolor sit amet,
+                                            consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Lorem ipsum dolor sit ame.
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+                            </div><!-- End .accordion -->
+                
                                 <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
                                     <span class="btn-text">Place Order</span>
                                     <span class="btn-hover-text">Proceed to Checkout</span>
                                 </button>
-                            </div><!-- End .summary -->
-                        </aside><!-- End .col-lg-3 -->
-                    </div><!-- End .row -->
-                </form>
+                    </div><!-- End .summary -->
+                </aside><!-- End .col-lg-3 -->
+
+                </div><!-- End .row -->
+            </form>
+
             </div><!-- End .container -->
         </div><!-- End .checkout -->
     </div><!-- End .page-content -->
