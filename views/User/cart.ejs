@@ -171,28 +171,29 @@
                                                         </h3><!-- End .product-title -->
                                                     </div><!-- End .product -->
                                                 </td>
+                                                </td>
                                                 <td class="price-col">
                                                     <%= product.productDetail.price %>
                                                 </td>
                                                 <td class="quantity-col">
                                                     <div class="cart-product-quantity">
-                                                        <input type="number" class="form-control" value="<%= product.quantity %>" min="1" max="5"
-                                                            step="1" data-decimals="0" required>
-                                                    </div><!-- End .cart-product-quantity -->
+                                                        <input type="number" class="form-control" value="<%= product.quantity %>" min="1" max="5" step="1"
+                                                            data-decimals="0" required
+                                                            onchange="updateQuantity('<%= cartItem._id %>', '<%= product.productDetail._id %>', this.value)">
+                                                    </div>
                                                 </td>
                                                 <td class="total-col">
                                                     <%= product.productDetail.price * product.quantity %>
                                                 </td>
                                                 <td class="remove-col">
-                                                    <button class="btn-remove">
+                                                    <button class="btn-remove" onclick="removeProduct('<%= cartItem._id %>', '<%= product.productDetail._id %>')">
                                                         <i class="icon-close"></i>
                                                     </button>
                                                 </td>
-                                            </tr>
-                                            <% }); %>
+                                                </tr>
                                                 <% }); %>
-                                </tbody>
-
+                                                    <% }); %>
+                                                        </tbody>
                                 </table><!-- End .table table-wishlist -->
 
                                 <div class="cart-bottom">
@@ -692,6 +693,54 @@
     <script src="assets/js/bootstrap-input-spinner.js"></script>
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
+
+    <script>
+        function updateQuantity(cartId, productId, newQuantity) {
+        console.log("in ipdate");
+            fetch('/update-cart-quantity', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    cartId: cartId,
+                    productId: productId,
+                    newQuantity: newQuantity
+                })
+            })
+                .then(response => response.json())
+                .then(result => {
+                   
+                    console.log(result);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function removeProduct(cartId, productId) {
+         
+            fetch('/remove-from-cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    cartId: cartId,
+                    productId: productId
+                })
+            })
+                .then(response => response.json())
+                .then(result => {
+                    // Handle the response (if needed)
+                    console.log(result);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+
 </body>
 
 

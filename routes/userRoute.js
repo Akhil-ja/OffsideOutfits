@@ -67,6 +67,11 @@ userRoute.post("/add-to-cart", userController.addToCart);
 
 
 
+userRoute.post("/update-cart-quantity",userController.cartQuantity);
+userRoute.post("/remove-from-cart", userController.cartRemove);
+
+
+
 
 
 

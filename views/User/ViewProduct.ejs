@@ -230,7 +230,10 @@
                                             <div class="product-details-quantity">
                                                 
                                             </div> 
-                                        <a href="#" class="btn btn-outline-primary-2" onclick="addToCart('<%= product._id %>')"><span>Add to Cart</span></a>
+                                    <a href="#" class="btn btn-outline-primary-2" onclick="addToCart('<%= product._id %>')">
+                                        <span>Add to Cart</span>
+                                    </a>
+                                       
                                         </div>
         
                                         <div class="details-action-wrapper">
@@ -397,9 +400,10 @@
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
 
+
 <script>
-    async function addToCart(productId, successCallback) {
-        const userId = res.locals.currentUser;
+    async function addToCart(productId) {
+        const userId = '<%=currentUser._id %>';  
 
         const data = {
             productId: productId,
@@ -416,7 +420,7 @@
             });
 
             if (response.ok) {
-                successCallback();
+                alert('Product added to the cart successfully!');
             } else {
                 console.error('Failed to add product to cart');
             }
@@ -424,19 +428,7 @@
             console.error('Error:', error);
         }
     }
-
-    
-    function updateCartCount() {
-        const cartCountElement = document.getElementById('cart-count');
-        if (cartCountElement) {
-            const currentCount = parseInt(cartCountElement.innerText, 10);
-            cartCountElement.innerText = currentCount + 1;
-        }
-    }
-
 </script>
-
-
 
 </body>
 
