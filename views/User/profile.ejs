@@ -65,8 +65,8 @@
                                     <li class="megamenu-container ">
                                         <a href="/home" class="">Home</a>
                                     </li>
-                                    <li class="active">
-                                        <a href="" class=" ">Shop</a>
+                                    <li class="">
+                                        <a href="/products" class=" ">Shop</a>
 
 
                                     </li>
@@ -217,16 +217,14 @@
                                             <%}%>
 
                                         <div class="row">
-                                           
-                                        <% for (const address of matchingAddress.address) { %>
+
+                                        <% if (typeof matchingAddress !=='undefined' ) { for (const address of matchingAddress.address) { %>
                                             <div class="col-lg-6">
                                                 <div class="card card-dashboard">
                                                     <div class="card-body">
-                                            <button style="height: 5px; width: 5px; font-size: xx-small;" onclick="setDefaultType('<%= address._id %>')"
-                                                class="btn btn-outline-secondary float-right">Set Default</button>
-
-
-
+                                                        <!-- <button style="height: 5px; width: 5px; font-size: xx-small;" onclick="setDefaultType('<%= address._id %>')"
+                                                                class="btn btn-outline-secondary float-right">Set Default</button> -->
+                                        
                                                         <h3 class="card-title">
                                                             <%= address.type %> Address
                                                         </h3>
@@ -236,15 +234,13 @@
                                                                     <%= address.street %><br>
                                                                         <%= address.city %><br>
                                                                             <%= address.state %><br>
-                                                                            <%= address.PIN %>  <br>
-                                                                            <a href="/edit-address<%= address._id %>">Edit <i class="icon-edit"></i></a>
-
+                                                                                <%= address.PIN %> <br>
+                                                                                    <a href="/edit-address<%= address._id %>">Edit <i class="icon-edit"></i></a>
                                                         </p>
                                                     </div><!-- End .card-body -->
                                                 </div><!-- End .card-dashboard -->
                                             </div><!-- End .col-lg-6 -->
-                                            <% } %>
-
+                                            <% } } %>
 
                                             
 

@@ -5,23 +5,33 @@ const cartSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
-  cartProducts: [
+  products: [
     {
-      user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      },
-
       product: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
+        ref: "Product", // Assuming you have a Product model
+        required: true,
       },
       quantity: {
         type: Number,
-        default: 1,
+        required: true,
       },
     },
   ],
+  status: {
+    type: String,
+    enum: ["pending", "completed", "cancelled"], // Add other status values as needed
+    default: "pending",
+  },
+  orderDate: {
+    type: Date,
+    default: Date.now,
+  },
+
+  address:{
+    type:String,
+    required:true
+  }
 });
 
 module.exports = mongoose.model("Orders", cartSchema);

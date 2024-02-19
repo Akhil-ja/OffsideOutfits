@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const mongoose = require("mongoose");
-mongoose.connect(process.env.dbURI);
+
 
 const express = require("express");
 const session = require("express-session");
@@ -10,6 +10,7 @@ const cookieParser = require("cookie-parser");
 const nocache = require("nocache");
 const app = express();
 
+mongoose.connect(process.env.dbURI);
 
 app.use(function (req, res, next) {
   res.set(
@@ -41,6 +42,7 @@ app.use(bodyParser.json());
 
 const path = require("path");
 const userRoute = require("./routes/userRoute");
+
 app.use("/", userRoute);
 
 

@@ -1,15 +1,13 @@
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
-const Address=require("../models/addressModel")
-
+const Address = require("../models/addressModel");
+const Orders = require("../models/ordersModel");
 
 const sendEmail = require("../services/sendEmail");
 const bcrypt = require("bcrypt");
 const { generateOTP } = require("../services/generateOTP");
-const authRoutes=require("../services/authRoutes")
+const authRoutes = require("../services/authRoutes");
 const Cart = require("../models/cartModel");
-
-
 
 const securePassword = async (password) => {
   try {
@@ -22,7 +20,7 @@ const securePassword = async (password) => {
 
 const loadlogin = async (req, res) => {
   try {
-     res.cookie("jwt", "", { maxAge: 1 });
+    res.cookie("jwt", "", { maxAge: 1 });
     res.render("loginRegister");
   } catch (error) {
     console.log(error.message);
@@ -30,24 +28,22 @@ const loadlogin = async (req, res) => {
 };
 
 const generateRandomCode = () => {
-  return Math.floor(1000 + Math.random() * 9000).toString(); // Generates a random number between 1000 and 9999 as a string
-};
+  return Math.floor(1000 + Math.random() * 9000).toString(); 
 
+}
+
+ const otpNull = (req, res) => {
+   setInterval(() => {
+     req.session.tempUserDetails.otp = null;
+     req.session.save();
+     console.log("otp null!!!!!!!!!!!!!!!!!!!!!!!!11");
+   }, 60*1000*5);
+ };
+
+    
 const initialSignUp = async (req, res) => {
   try {
     const spassword = await securePassword(req.body.password);
-
-    //  const emailExists = await User.findOne({ email: req.body.email });
-    //  const phoneExists = await User.findOne({ phone: req.body.phone });
-
-    //  if (emailExists || phoneExists) {
-    //    // User with the same email or phone number already exists
-    //    const errorMessage =
-    //      "User with the same email or phone number already exists.";
-    //    res.render("loginRegister", { errorMessage });
-    //    return;
-    //  }
-
     const randomCode = generateRandomCode();
 
     req.session.tempUserDetails = {
@@ -57,14 +53,16 @@ const initialSignUp = async (req, res) => {
       password: spassword,
       is_admin: 0,
       is_verified: 0,
-      otp: randomCode, // Store the generated OTP in the session
+      otp: randomCode,
     };
 
+    req.session.save();
     if (req.session.tempUserDetails) {
-      const subject = "Welcome to YourApp";
-      console.log(randomCode);
+      const subject = "Welcome to Offside Outfits";
+      console.log("OTP:" + randomCode);
       const text = `Your verification code is: ${randomCode}`;
       await sendEmail(req.body.email, subject, text);
+       otpNull(req, res);
       console.log(req.session.tempUserDetails);
       res.render("OTPpage", { errorMessage: null });
     } else {
@@ -76,13 +74,25 @@ const initialSignUp = async (req, res) => {
 };
 
 
+const resentOTP = async (req, res) => {
+  const randomCode = generateRandomCode();
+
+  req.session.tempUserDetails.otp = randomCode;
+  req.session.save();
+
+  const subject = "Welcome to Offside Outfits";
+  console.log("New OTP:" + randomCode);
+  const text = `Your verification code is: ${randomCode}`;
+  await sendEmail(req.session.tempUserDetails.email, subject, text);
+    otpNull(req, res);
+  console.log(req.session.tempUserDetails);
+};
+
+
 
 const insertUser = async (req, res) => {
   try {
-    
-
     if (req.body.otp === req.session.tempUserDetails.otp) {
-    
       const user = new User({
         name: req.session.tempUserDetails.fullname,
         email: req.session.tempUserDetails.email,
@@ -93,15 +103,13 @@ const insertUser = async (req, res) => {
       });
 
       const userData = await user.save();
-      const userID=userData._id;
+      const userID = userData._id;
       const token = authRoutes.createToken(userID);
-      res.cookie("jwt", token,{httpOnly:true,maxAge:authRoutes.maxAge*1000});
+      res.cookie("jwt", token, {
+        httpOnly: true,
+        maxAge: authRoutes.maxAge * 1000,
+      });
       console.log(token);
-      
-      
-
-     
-
       res.redirect("/home");
     } else {
       res.render("OTPpage", { errorMessage: "Not valid OTP" });
@@ -110,8 +118,6 @@ const insertUser = async (req, res) => {
     console.log(error.message);
   }
 };
-
-
 
 const verifyLogin = async (req, res) => {
   try {
@@ -126,16 +132,14 @@ const verifyLogin = async (req, res) => {
         if (userData.is_active === "0") {
           res.status(200).json({ errorMessage: "Account is Blocked" });
         } else {
-                 // creating Token
-                const userID = userData._id;
-                 console.log(userData.name);
+          const userID = userData._id;
+          console.log(userData.name);
 
-                const token = authRoutes.createToken(userID);
-                res.cookie("jwt", token, {
-                   httpOnly: true,
-                   maxAge: authRoutes.maxAge * 1000,
-                 });
-                 
+          const token = authRoutes.createToken(userID);
+          res.cookie("jwt", token, {
+            httpOnly: true,
+            maxAge: authRoutes.maxAge * 1000,
+          });
 
           res.status(200).json({ success: true });
         }
@@ -150,7 +154,6 @@ const verifyLogin = async (req, res) => {
     res.status(500).json({ errorMessage: "Internal server error." });
   }
 };
-
 
 const loadHome = async (req, res) => {
   try {
@@ -186,60 +189,42 @@ const loadProduct = async (req, res) => {
   }
 };
 
-
-
-
-
-
 const loadProfile = async (req, res) => {
   try {
     const selectedValue = req.query.selected;
     console.log(selectedValue);
     const userId = res.locals.currentUser._id.toString();
 
-
-    
-    const matchingAddress = await Address.findOne({ user: userId }).exec();
-   
+    const matchingAddress = await Address.findOne({ user: userId });
+    let pageinfo = selectedValue;
 
     if (!matchingAddress) {
       console.error("Address not found for user:", userId);
-      return res.status(404).send("Address not found for user");
+      res.render("profile", { pageinfo });
+    } else {
+      res.render("profile", { pageinfo, matchingAddress });
     }
-
-    let pageinfo = selectedValue;
-    res.render("profile", { pageinfo, matchingAddress });
   } catch (error) {
     console.log(error.message);
   }
 };
 
-
-
-
-
-
-const userLogout=async(req,res)=>{
+const userLogout = async (req, res) => {
   try {
-     res.cookie("jwt", "", { maxAge: 1 });
-    res.redirect("/register")
+    res.cookie("jwt", "", { maxAge: 1 });
+    res.redirect("/register");
   } catch (error) {
     console.log(error.message);
   }
-}
+};
 
-
-
-
-const addAddress=async(req,res)=>{
+const addAddress = async (req, res) => {
   try {
-    
     res.render("addAddress");
   } catch (error) {
-     console.log(error.message);
+    console.log(error.message);
   }
-}
-
+};
 
 const add_Address = async (req, res, next) => {
   try {
@@ -282,20 +267,16 @@ const add_Address = async (req, res, next) => {
   }
 };
 
-
-
-
 const editAddress = async (req, res) => {
   try {
     const addressId = req.params.addressId;
-    console.log("object_id:"+addressId);
+    console.log("object_id:" + addressId);
     const addressDetails = await Address.findOne(
       { "address._id": addressId },
       { "address.$": 1 }
     );
 
-console.log("Address======"+addressDetails);
-  
+    console.log("Address======" + addressDetails);
 
     if (!addressDetails) {
       console.error("Address not found for ID:", addressId);
@@ -308,37 +289,27 @@ console.log("Address======"+addressDetails);
   }
 };
 
+const edit_Address = async (req, res) => {
+  try {
+    const addressId = req.query.addressId;
+    const updatedAddressData = req.body;
+    console.log("updated" + updatedAddressData);
 
+    const result = await Address.findOneAndUpdate(
+      { "address._id": addressId },
+      { $set: { "address.$": updatedAddressData } },
+      { new: true }
+    );
 
-
-
-const edit_Address = async (req, res) =>  {
-
-try {
-        const addressId = req.query.addressId; 
-        const updatedAddressData = req.body; 
-        console.log("updated"+updatedAddressData);
-
-        
-        const result = await Address.findOneAndUpdate(
-          { "address._id": addressId },
-          { $set: { "address.$": updatedAddressData } },
-          { new: true }
-        );
-
-        if (!result) {
-            console.log("Address not found or not updated");
-            
-        }
-
-        res.redirect("/profile?selected=Address");
-    } catch (error) {
-        console.log(error.message);
+    if (!result) {
+      console.log("Address not found or not updated");
     }
+
+    res.redirect("/profile?selected=Address");
+  } catch (error) {
+    console.log(error.message);
+  }
 };
-
-
-
 
 const loadCart = async (req, res) => {
   try {
@@ -346,7 +317,6 @@ const loadCart = async (req, res) => {
 
     const cartItems = await Cart.find();
 
-    
     const productIds = cartItems.reduce((ids, item) => {
       const itemProductIds = item.cartProducts.map(
         (product) => product.product
@@ -354,10 +324,8 @@ const loadCart = async (req, res) => {
       return [...ids, ...itemProductIds];
     }, []);
 
-  
     const products = await Product.find({ _id: { $in: productIds } });
 
-  
     const cartWithProductDetails = cartItems.map((cartItem) => {
       const cartProducts = cartItem.cartProducts.map((product) => {
         const productDetail = products.find((p) =>
@@ -384,8 +352,6 @@ const loadCart = async (req, res) => {
   }
 };
 
-
-
 const addToCart = async (req, res) => {
   try {
     const { productId, userId } = req.body;
@@ -408,12 +374,10 @@ const addToCart = async (req, res) => {
       });
     } else {
       if (cart.cartProducts.some((item) => item.product.equals(productId))) {
-        return res
-          .status(200)
-          .json({
-            alreadyExists: true,
-            message: "Product already in the cart.",
-          });
+        return res.status(200).json({
+          alreadyExists: true,
+          message: "Product already in the cart.",
+        });
       }
 
       cart.cartProducts.push({ product: productId });
@@ -421,26 +385,21 @@ const addToCart = async (req, res) => {
 
     await cart.save();
 
-    return res
-      .status(200)
-      .json({
-        alreadyExists: false,
-        success: true,
-        message: "Product added to cart.",
-      });
+    return res.status(200).json({
+      alreadyExists: false,
+      success: true,
+      message: "Product added to cart.",
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error." });
   }
 };
 
-
-
-const cartQuantity=async(req,res)=>{
+const cartQuantity = async (req, res) => {
   const { cartId, productId, newQuantity } = req.body;
 
   try {
-   
     let cart = await Cart.findById(cartId);
     const productInCart = cart.cartProducts.find((product) =>
       product.product.equals(productId)
@@ -450,27 +409,23 @@ const cartQuantity=async(req,res)=>{
       return res.status(404).json({ error: "Cart or product not found." });
     }
 
-    
     productInCart.quantity = newQuantity;
 
-  
     await cart.save();
 
     res
       .status(200)
       .json({ success: true, message: "Quantity updated successfully." });
-      
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error." });
   }
-}
+};
 
-const cartRemove=async(req,res)=>{
+const cartRemove = async (req, res) => {
   const { cartId, productId } = req.body;
 
   try {
-   
     let cart = await Cart.findById(cartId);
     const productIndex = cart.cartProducts.findIndex((product) =>
       product.product.equals(productId)
@@ -480,97 +435,75 @@ const cartRemove=async(req,res)=>{
       return res.status(404).json({ error: "Cart or product not found." });
     }
 
-    
     cart.cartProducts.splice(productIndex, 1);
 
-    
     await cart.save();
 
     res
       .status(200)
       .json({ success: true, message: "Product removed successfully." });
-        
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error." });
   }
-}
+};
 
+const setDefault = async (req, res) => {
+  try {
+    console.log("default add");
+    const { addressId } = req.params;
 
+    console.log(addressId);
 
-  const setDefault = async (req, res) => {
-    try {
-      console.log("default add");
-      const { addressId } = req.params;
+    const matchingAddress = await Address.findOneAndUpdate(
+      { "address._id": addressId },
+      { $set: { "address.$.type": "default" } },
+      { new: true }
+    );
 
-      console.log(addressId);
+    console.log(matchingAddress);
 
-      const matchingAddress = await Address.findOneAndUpdate(
-        { "address._id": addressId },
-        { $set: { "address.$.type": "default" } },
-        { new: true }
-      );
-
-      console.log(matchingAddress);
-
-      if (matchingAddress) {
-     
-             res.json({
-               success: true,
-               message: "Address type set to default.",
-             });
-      } else {
-        res.status(404).json({ error: "Address not found." });
-      }
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Internal server error." });
+    if (matchingAddress) {
+      res.json({
+        success: true,
+        message: "Address type set to default.",
+      });
+    } else {
+      res.status(404).json({ error: "Address not found." });
     }
-  };
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error." });
+  }
+};
 
-
-  
 const loadCheckout = async (req, res) => {
   try {
     const userId = res.locals.currentUser._id.toString();
-
-    
     const userAddresses = await Address.find({ user: userId });
     console.log("User Addresses:", userAddresses);
-
-    
     const cartItems = await Cart.find();
 
-    // Extract unique product IDs from cart items
     const productIds = cartItems.reduce((ids, item) => {
       const itemProductIds = item.cartProducts.map(
         (product) => product.product
       );
       return [...ids, ...itemProductIds];
     }, []);
-
-    // Fetch product details for the extracted product IDs
     const products = await Product.find({ _id: { $in: productIds } });
-
-   
     let totalAmount = 0;
 
-    // Map cart items with product details
     const cartWithProductDetails = cartItems.map((cartItem) => {
       const cartProducts = cartItem.cartProducts.map((product) => {
         const productDetail = products.find((p) =>
           p._id.equals(product.product)
         );
 
-        
         totalAmount += productDetail.price * product.quantity;
-
-
 
         return {
           ...product.toObject(),
-          productDetail:productDetail,
-          
+          productDetail: productDetail,
         };
       });
 
@@ -580,10 +513,9 @@ const loadCheckout = async (req, res) => {
       };
     });
 
-   
     console.log("Total Amount:", totalAmount);
     console.log("cart=", cartWithProductDetails);
-   
+
     res.render("checkout", {
       userAddresses,
       cartItems: cartWithProductDetails,
@@ -595,13 +527,78 @@ const loadCheckout = async (req, res) => {
   }
 };
 
+const viewOrders = async (req, res) => {
+  try {
+    res.render("orders");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
+const createOrders = async (req, res) => {
+  try {
+    console.log("create order");
+    console.log(res.body.userID);
+    const userId = res.body.userID;
+
+    const userAddresses = await Address.find({ user: userId });
+    console.log("User Addresses:", userAddresses);
+    const cartItems = await Cart.find();
+
+    const productIds = cartItems.reduce((ids, item) => {
+      const itemProductIds = item.cartProducts.map(
+        (product) => product.product
+      );
+      return [...ids, ...itemProductIds];
+    }, []);
+    const products = await Product.find({ _id: { $in: productIds } });
+
+    const cartWithProductDetails = cartItems.map((cartItem) => {
+      const cartProducts = cartItem.cartProducts.map((product) => {
+        const productDetail = products.find((p) =>
+          p._id.equals(product.product)
+        );
+
+        return {
+          ...product.toObject(),
+          productDetail: productDetail,
+        };
+      });
+
+      return {
+        ...cartItem.toObject(),
+        cartProducts,
+      };
+    });
+
+    console.log("save part");
+    const newOrder = new Orders({
+      user: userId,
+      products: {
+        product: product.product,
+        quantity: product.quantity,
+      },
+      status: "pending",
+      orderDate: Date.now(),
+      address: req.body.address,
+    });
+
+    await newOrder.save();
+
+    res.redirect("/orders");
+  } catch (error) {
+    console.log(error.message);
+
+    res.status(500).send("Internal Server Error");
+  }
+};
 
 module.exports = {
   loadlogin,
   insertUser,
   loadHome,
   verifyLogin,
+  resentOTP,
   loadCategory,
   loadProduct,
   initialSignUp,
@@ -617,4 +614,6 @@ module.exports = {
   cartRemove,
   cartQuantity,
   setDefault,
+  viewOrders,
+  createOrders,
 };

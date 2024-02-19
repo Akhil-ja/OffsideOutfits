@@ -131,7 +131,7 @@
                     </div>
                 
                     <div class=" cart-dropdown">
-                        <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
+                        <a href="/profile" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false" data-display="static">
                             <i class="icon-user"></i>
                 
@@ -218,19 +218,19 @@
                                 <div class="col-md-6">
                                     <div class="product-details-action">
                                         <div class="details-action-col">
-                                            <div class="product-details-quantity">
+                                            <!-- <div class="product-details-quantity">
                                                 <input type="number" id="qty" class="form-control" value="1" min="1" max="10"
                                                     step="1" data-decimals="0" required>
-                                            </div><!-- End .product-details-quantity -->
+                                            </div> -->
         
-                                            <a href="#" class="btn-product btn-cart"><span>Buy Now</span></a>
+                                            <!-- <a href="#" class="btn-product btn-cart"><span>Buy Now</span></a> -->
                                         </div>
 
                                         <div class="details-action-col">
                                             <div class="product-details-quantity">
                                                 
                                             </div> 
-                                    <a href="#" class="btn btn-outline-primary-2" onclick="addToCart('<%= product._id %>')">
+                                    <a href="#" class="btn-product btn-cart"" onclick="addToCart('<%= product._id %>')">
                                         <span>Add to Cart</span>
                                     </a>
                                        
@@ -244,11 +244,10 @@
                                     </div><!-- End .product-details-action -->
         
                                     <div class="product-details-footer details-footer-col">
-                                        <div class="product-cat">
+                                        <!-- <div class="product-cat">
                                             <span>Category:</span>
-                                            <a href="#"><%=product.category%></a>
-                                        </div><!-- End .product-cat -->
-        
+                                            <a href="#"><%=product.category.cName%></a>
+                                        </div> -->
                                         <div class="social-icons social-icons-sm">
                                             <span class="social-label">Share:</span>
                                             <a href="#" class="social-icon" title="Facebook" target="_blank"><i

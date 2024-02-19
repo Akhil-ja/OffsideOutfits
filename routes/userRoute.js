@@ -11,8 +11,9 @@ const userRoute=express();
 
 userRoute.use(bodyParser.json());
 userRoute.use(bodyParser.urlencoded({ extended: true }));
-
 userRoute.set("view engine","ejs");
+
+
 userRoute.set("views","./views/User");
 
 
@@ -20,16 +21,23 @@ const userController=require("../controllers/userController");
 
 userRoute.get("*", authRoutes.checkUser);
 
-userRoute.get("/register", userController.loadlogin);
-userRoute.post("/login", userController.verifyLogin);
-
-userRoute.post("/register", userController.initialSignUp);
+userRoute.get("/register", userController.loadlogin)
+.post("/login", userController.verifyLogin)
+.post("/register", userController.initialSignUp)
 
 userRoute.post("/verify-otp", userController.insertUser);
+userRoute.get("/resend-otp", userController.resentOTP);
+
+
 
 userRoute.use(authRoutes.isBlocked);
 
-userRoute.get("/home",authRoutes.checkUser, userController.loadHome );
+userRoute.get(
+  "/home",
+  authRoutes.checkUser,
+  authRoutes.isLogin,
+  userController.loadHome
+);
 
 
 userRoute.get("/products",authRoutes.isBlocked, authRoutes.isLogin, userController.loadCategory);
@@ -73,6 +81,9 @@ userRoute.post("/remove-from-cart", userController.cartRemove);
 
 userRoute.post("/set-default-address/:addressId", userController.setDefault);
 
+
+userRoute.get("/orders", authRoutes.isLogin, userController.viewOrders);
+userRoute.post("/orders", authRoutes.isLogin, userController.createOrders);
 
 
 

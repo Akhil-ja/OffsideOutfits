@@ -196,9 +196,9 @@
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div>
-                                    <label class="form-label">Images (Up to 4 images)</label>
-                                    <input class="form-control" type="file" multiple name="ProductImage"
-                                        accept="image/*" onchange="limitFiles(this, 4)" required />
+              <input class="form-control" type="file" multiple name="ProductImage" accept="image/*" onchange="limitFiles(this, 4)"
+                                                                required />
+
                                     <p id="productImageError" class="error-message" style="color: red;"></p>
                                 </div>
                             </div>
@@ -227,11 +227,7 @@
                                 </div>
                                 <br>
                                 <h5 class="mb-3">Categories</h5>
-                               <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="productCategory" id="category"
-                                        value="none" checked>
-                                    <label class="form-check-label" for="category">None</label>
-                                </div>
+                               
 
                                 <% categories.forEach(category=> { %>
                                     <div class="form-check">
@@ -389,7 +385,7 @@
             });
 
             brandInput.addEventListener('input', function () {
-                validateInput('ProductBrand', /^[A-Za-z]+$/, 'productBrandError', 'Brand');
+                validateInput('ProductBrand', /^[A-Za-z\s]+$/, 'productBrandError', 'Brand');
             });
 
             descriptionInput.addEventListener('input', function () {
@@ -423,7 +419,7 @@
             });
 
             if (validateInput('ProductName', null, 'productTitleError', 'Product title') &&
-                validateInput('ProductBrand', /^[A-Za-z]+$/, 'productBrandError', 'Brand') &&
+                validateInput('ProductBrand', /^[A-Za-z\s]+$/, 'productBrandError', 'Brand') &&
                 validateInput('ProductDetails', null, 'productDescriptionError', 'Description') &&
                 validateInput('productPrice', /^(0*[1-9]\d*)$/, 'productPriceError', 'Price') &&
                 isValid) {

@@ -86,27 +86,23 @@ adminRoute.get(
 
 
 
-
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./public/productAssets/"); 
+    cb(null, "./public/productAssets/");
   },
   filename: (req, file, cb) => {
     cb(
       null,
       file.fieldname + "_" + Date.now() + path.extname(file.originalname)
-    ); 
+    );
   },
 });
 
 const upload = multer({ storage: storage });
 
-
-
-
 adminRoute.post(
   "/add-product",
-  upload.array("ProductImage", 5),
+  upload.array("ProductImage", 4),
   adminController.add_Product
 );
 

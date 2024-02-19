@@ -14,6 +14,7 @@
 </head>
 
 <body>
+
     <div class="page-wrapper">
         <header class="header">
             <!-- ... (header content) ... -->
@@ -48,20 +49,20 @@
                                                 <%= errorMessage %>
                                             </p>
                                             <% } %>
-                                    
                                                 <div class="form-footer">
                                                     <button type="submit" class="btn btn-outline-primary-2" id="submitOTP">
                                                         <span>Submit OTP</span>
                                                         <i class="icon-long-arrow-right"></i>
                                                     </button>
-                                                    <button type="button" class="btn btn-outline-secondary" id="resendOTP" onclick="resendOTP()" disabled>
-                                                        <span>Resend OTP</span>
-                                                    </button>
-                                                </div><!-- End .form-footer -->
-                                    </form>
-
-                                </div>
-                            </div>
+                                            
+                                                    </form>
+                                                    <a href="/resend-otp">
+                                                        <button type="button" id="resendButton" class="btn btn-outline-primary-2">Resend OTP</button>
+                                                    </a>
+                                                    <span id="timer">
+                                                    </span>
+                                                </div>
+                                                </div>
 
                         </div><!-- End .form-tab -->
                     </div><!-- End .form-box -->
@@ -83,36 +84,39 @@
     <script src="assets/js/owl.carousel.min.js"></script>
     <script src="assets/js/main.js"></script>
 
-    <script>
-        // Variables to control OTP resend
-        let canResend = true;
-        let resendTimeout;
+ <script>
+   
+    const timeLimit = 90;
 
-        // Function to handle OTP resend
-        function resendOTP() {
-            if (canResend) {
-                // Perform OTP resend logic here (e.g., send a new OTP)
+    function startTimer() {
+        let seconds = timeLimit;
+        const timerElement = document.getElementById('timer');
+        const resendButton = document.getElementById('resendButton');
 
-                // Disable the Resend button
-                document.getElementById('resendOTP').disabled = true;
+        function updateTimer() {
+            timerElement.textContent = `Resend available in ${seconds} seconds`;
+            seconds--;
 
-                // Set a timeout to enable the Resend button after one minute
-                resendTimeout = setTimeout(() => {
-                    canResend = true;
-                    document.getElementById('resendOTP').disabled = false;
-                }, 60000); // 60000 milliseconds = 1 minute
-
-                // Update canResend status
-                canResend = false;
+            if (seconds < 0) {
+                resendButton.disabled = false;
+                timerElement.textContent = '';
+                clearInterval(timerInterval);
             }
         }
 
-        // Attach a submit event listener to the form
-        document.getElementById('otpForm').addEventListener('submit', function (event) {
-            // Clear the timeout if the form is submitted
-            clearTimeout(resendTimeout);
-        });
-    </script>
+        resendButton.disabled = true;
+        const timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    startTimer();
+</script>
+
+
+<script>
+
+
+</script>
+   
 
 </body>
 
