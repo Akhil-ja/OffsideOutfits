@@ -157,6 +157,11 @@
                 <input type="text" placeholder="Search Categories" class="form-control bg-white">
             </div>
         </div>
+        <% if (errorMessage) { %>
+            <div class="alert alert-danger" role="alert">
+                <%= errorMessage %>
+            </div>
+            <% } %>
     
         <form action="/admin/category" method="post">
             <div class="mb-4">

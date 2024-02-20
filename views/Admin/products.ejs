@@ -186,26 +186,26 @@
               <div class="card-body">
                 <div class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5">
             
-                    <% for (let i=0; i < allProducts.length; i++) { %>
+                    <% for (let i=0; i < products.length; i++) { %>
                        
                         <div class="col">
                             <div class="card card-product-grid">
                                 <a href="#" class="img-wrap m-3">
-                                <img src="/productAssets/<%= allProducts[i].images[0] %>" alt="Product Image" style="height: 250px;width: 195px;" >
+                                <img src="/productAssets/<%= products[i].images[0] %>" alt="Product Image" style="height: 250px;width: 195px;" >
 
                                 </a>
                                 <div class="info-wrap">
                                     <a href="#" class="title text-truncate">
-                                        <%= allProducts[i].pname %>
+                                        <%= products[i].pname %>
                                     </a>
                                     <div class="price mb-2">
-                                        <%= allProducts[i].price %>
+                                        <%= products[i].price %>
                                     </div>
-                                    <a href="/admin/products/edit-product?id=<%=allProducts[i]._id %>" class="btn btn-sm font-sm rounded btn-brand">
+                                    <a href="/admin/products/edit-product?id=<%=products[i]._id %>" class="btn btn-sm font-sm rounded btn-brand">
                                         <i class="material-icons md-edit"></i> Edit
                                     </a>
-                                    <% if (allProducts[i].is_listed !=="1" ) { %>
-                                        <a href="/admin/delete-product/<%= allProducts[i]._id %>" class="btn btn-sm font-sm btn-danger rounded">
+                                    <% if (products[i].is_listed !=="1" ) { %>
+                                        <a href="/admin/delete-product/<%= products[i]._id %>" class="btn btn-sm font-sm btn-danger rounded">
                                             <i class="material-icons md-delete_forever"></i> Delete
                                         </a>
                                         <% } %>

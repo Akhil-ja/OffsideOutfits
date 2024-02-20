@@ -1,21 +1,30 @@
 const express = require("express");
-
+const adminController = require("../controllers/adminController");
+const authRoutes = require("../services/authRoutes");
 const bodyParser = require("body-parser");
-
 const multer = require("multer");
 const path = require("path");
+const uuid = require("uuid");
+
+const categoryController = require("../controllers/categoryController");
+const productController = require("../controllers/productController");
+const orderController = require("../controllers/orderController");
+const userController = require("../controllers/userController");
+
+
+
+
+
+
+
 
 const adminRoute = express();
 
-adminRoute.use(bodyParser.json());
 adminRoute.use(bodyParser.urlencoded({ extended: true }));
 
 adminRoute.set("view engine", "ejs");
 adminRoute.set("views", "./views/admin");
 
-const adminController = require("../controllers/adminController");
-
-const authRoutes=require("../services/authRoutes")
 
 
 
@@ -27,61 +36,55 @@ adminRoute.get("*", authRoutes.checkUser);
 
 adminRoute.get("/login", adminController.loadAdminLog);
 adminRoute.post("/login", adminController.adminLogin);
-adminRoute.get("/dashboard", adminController.loadDashboard);
+
 adminRoute.get(
   "/products",
   authRoutes.isAdminLogin,
-  adminController.loadProducts
+  productController.loadProducts
 );
-adminRoute.get("/users", authRoutes.isAdminLogin, adminController.loadUsers);
+adminRoute.get("/users", authRoutes.isAdminLogin, userController.loadUsers);
 adminRoute.get(
   "/users/edit",
   authRoutes.isAdminLogin,
-  adminController.editUser
+  userController.editUser
 );
-adminRoute.get(
-  "/users/add-user",
-  authRoutes.isAdminLogin,
-  adminController.addUser
-);
-adminRoute.post("/users/add-user", adminController.add_User);
+
+
 adminRoute.get(
   "/products/add-product",
   authRoutes.isAdminLogin,
-  adminController.addProduct
+  productController.addProduct
 );
 
 adminRoute.get(
   "/products/edit-product",
   authRoutes.isAdminLogin,
-  adminController.editProduct
+  productController.editProduct
 );
-adminRoute.post("/products/edit-product",adminController.edit_product);
+adminRoute.post("/products/edit-product",productController.edit_product);
 
 adminRoute.get(
   "/category",
   authRoutes.isAdminLogin,
-  adminController.viewCategory
-);
-adminRoute.get(
-  "/users/delete",
-  authRoutes.isAdminLogin,
-  adminController.delete_User
+  categoryController.viewCategory
 );
 
-adminRoute.post("/users/edit", adminController.edit_User);
+
+adminRoute.post("/users/edit", userController.edit_User);
 
 adminRoute.get(
   "/delete-product/:productId",
   authRoutes.isAdminLogin,
-  adminController.deleteProduct
+  productController.deleteProduct
 );
 
 adminRoute.get(
   "/category/delete",
   authRoutes.isAdminLogin,
-  adminController.deleteCategory
+  categoryController.deleteCategory
 );
+
+
 
 
 
@@ -91,10 +94,9 @@ const storage = multer.diskStorage({
     cb(null, "./public/productAssets/");
   },
   filename: (req, file, cb) => {
-    cb(
-      null,
-      file.fieldname + "_" + Date.now() + path.extname(file.originalname)
-    );
+    const uniqueFilename =
+      file.fieldname + "_" + uuid.v4() + path.extname(file.originalname);
+    cb(null, uniqueFilename);
   },
 });
 
@@ -103,13 +105,11 @@ const upload = multer({ storage: storage });
 adminRoute.post(
   "/add-product",
   upload.array("ProductImage", 4),
-  adminController.add_Product
+  productController.add_Product
 );
 
-adminRoute.post("/category", adminController.createCategory);
 
-
-
+adminRoute.post("/category", categoryController.createCategory);
 adminRoute.get(
   "/logout",  adminController.adminLogout
 );

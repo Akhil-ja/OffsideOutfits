@@ -76,53 +76,50 @@
                                 <div class="tab-pane fade show active" id="register-2" role="tabpanel"
                                     aria-labelledby="register-tab-2">
 
-                                    <form action="/register" method="post" id="register">
-                                        <p id="main-error" class="error-message" style="color: red;"></p>
-                                        <div class="form-group">
-                                            <label for="fullname">Full Name *</label>
-                                            <p id="fullname-error" class="error-message" style="color: red;"></p>
-
-                                            <input type="text" class="form-control" id="register-fullname"
-                                                name="fullname" required>
-
+                                <form action="/register" method="post" id="register">
+                                    <p id="main-error" class="error-message" style="color: red;"></p>
+                                
+                                    <div class="form-group">
+                                        <label for="fullname">Full Name *</label>
+                                        <p id="fullname-error" class="error-message" style="color: red;"></p>
+                                        <input type="text" class="form-control" id="register-fullname" name="fullname" required>
+                                    </div>
+                                
+                                    <div class="form-group">
+                                        <label for="email-2">Your email address *</label>
+                                        <p id="email-error" class="error-message" style="color: red;"></p>
+                                        <input type="email" class="form-control" id="register-email-2" name="email" required>
+                                    </div>
+                                
+                                    <div class="form-group">
+                                        <label for="phone">Phone Number *</label>
+                                        <p id="phone-error" class="error-message" style="color: red;"></p>
+                                        <div class="input-group">
+                                            <input type="tel" class="form-control" id="register-phone" name="phone" required>
                                         </div>
-
-                                        <div class="form-group">
-                                            <label for="email-2">Your email address *</label>
-                                            <p id="email-error" class="error-message" style="color: red;"></p>
-                                            <input type="email" class="form-control" id="register-email-2" name="email"
-                                                required>
-
-                                        </div>
-
-                                        <div class="form-group">
-
-                                            <label for="phone">Phone Number *</label>
-                                            <p id="phone-error" class="error-message" style="color: red;"></p>
-                                            <div class="input-group">
-                                                <input type="tel" class="form-control" id="register-phone" name="phone"
-                                                    required>
-
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label for="password-2">Password *</label>
-                                            <p id="password-error" class="error-message" style="color: red;"></p>
-                                            <input type="password" class="form-control" id="register-password-2"
-                                                name="password" required>
-
-                                        </div>
-
-                                        <div class="form-footer">
-                                            <button type="button" class="btn btn-outline-primary-2"
-                                                onclick="submitForm()">
-
-                                                <span>SIGN UP</span>
-                                                <i class="icon-long-arrow-right"></i>
-                                            </button>
-                                        </div>
-                                    </form>
+                                    </div>
+                                
+                                    <div class="form-group">
+                                        <label for="password-2">Password *</label>
+                                        <p id="password-error" class="error-message" style="color: red;"></p>
+                                        <input type="password" class="form-control" id="register-password-2" name="password" required>
+                                    </div>
+                                
+                                    <!-- New Confirm Password field -->
+                                    <div class="form-group">
+                                        <label for="confirm-password">Confirm Password *</label>
+                                        <p id="confirm-password-error" class="error-message" style="color: red;"></p>
+                                        <input type="password" class="form-control" id="confirm-password" name="confirmPassword" required
+                                            onblur="checkPasswordMatch()">
+                                    </div>
+                                
+                                    <div class="form-footer">
+                                        <button type="button" class="btn btn-outline-primary-2" onclick="submitForm()">
+                                            <span>SIGN UP</span>
+                                            <i class="icon-long-arrow-right"></i>
+                                        </button>
+                                    </div>
+                                </form>
                                 </div>
 
 
@@ -234,14 +231,31 @@
     <script src="assets/js/owl.carousel.min.js"></script>
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
+
     <script>
-        // Scroll down when the page loads
+       
         window.onload = function () {
             window.scroll(0, window.innerHeight / 4.5);  
         };
     </script>
    
     <script>
+
+    function checkPasswordMatch() {
+        const password = document.getElementById('register-password-2').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+        const confirmPasswordError = document.getElementById('confirm-password-error');
+
+        if (password !== confirmPassword) {
+            confirmPasswordError.textContent = 'Passwords do not match';
+            return false
+        } else {
+            confirmPasswordError.textContent = '';
+            return true
+        }
+    }
+
+
         function getElementValue(id) {
             const element = document.getElementById(id);
             return element.value;
@@ -286,7 +300,7 @@
         });
 
         function submitForm() {
-            if (validateName() && validateEmail() && validatePhone()) {
+            if (validateName() && validateEmail() && validatePhone()&& checkPasswordMatch()) {
                 document.getElementById('register').submit();
             } else {
                 document.getElementById('main-error').innerText = 'CANNOT SUBMIT';

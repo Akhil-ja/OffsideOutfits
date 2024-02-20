@@ -1,25 +1,26 @@
-const express=require("express");
 
 
-const bodyParser = require("body-parser");
-
+const userController = require("../controllers/userController");
+const cartController = require("../controllers/cartController");
+const categoryController = require("../controllers/categoryController");
+const productController = require("../controllers/productController");
+const orderController = require("../controllers/orderController");
+const addressController = require("../controllers/addressController");
 const authRoutes=require("../services/authRoutes")
+
+const express = require("express");
+
 
 
 const userRoute=express();
 
-
-userRoute.use(bodyParser.json());
-userRoute.use(bodyParser.urlencoded({ extended: true }));
-userRoute.set("view engine","ejs");
-
+userRoute.set("view engine", "ejs");
 
 userRoute.set("views","./views/User");
 
-
-const userController=require("../controllers/userController");
-
 userRoute.get("*", authRoutes.checkUser);
+
+
 
 userRoute.get("/register", userController.loadlogin)
 .post("/login", userController.verifyLogin)
@@ -40,50 +41,55 @@ userRoute.get(
 );
 
 
-userRoute.get("/products",authRoutes.isBlocked, authRoutes.isLogin, userController.loadCategory);
+userRoute.get(
+  "/products",
+  authRoutes.isBlocked,
+  authRoutes.isLogin,
+  productController.loadProducts
+);
 
-userRoute.get("/cart", authRoutes.isLogin, userController.loadCart);
+userRoute.get("/cart", authRoutes.isLogin, cartController.loadCart);
 
 userRoute.get(
   "/products/:productId",
   authRoutes.isLogin,
-  userController.loadProduct
+  productController.loadProduct
 );
 
-userRoute.get("/checkOut", authRoutes.isLogin, userController.loadCheckout);
+userRoute.get("/checkOut", authRoutes.isLogin, cartController.loadCheckout);
 
 userRoute.get("/profile", authRoutes.isLogin, userController.loadProfile);
 
 userRoute.get("/logout", userController.userLogout);
 
 
-userRoute.get("/add-address",authRoutes.isLogin, userController.addAddress);
-userRoute.post("/add-address",authRoutes.isLogin, userController.add_Address);
+userRoute.get("/add-address",authRoutes.isLogin, addressController.addAddress);
+userRoute.post("/add-address",authRoutes.isLogin, addressController.add_Address);
 
 
 userRoute.get(
   "/edit-address?:addressId",
   authRoutes.isLogin,
-  userController.editAddress
+  addressController.editAddress
 );
-userRoute.post("/edit-address", authRoutes.isLogin, userController.edit_Address);
+userRoute.post("/edit-address", authRoutes.isLogin, addressController.edit_Address);
+userRoute.post("/set-default-address/:addressId", addressController.setDefault);
 
 
 
 
-userRoute.post("/add-to-cart", userController.addToCart);
+userRoute.post("/add-to-cart", cartController.addToCart);
 
 
 
-userRoute.post("/update-cart-quantity",userController.cartQuantity);
-userRoute.post("/remove-from-cart", userController.cartRemove);
+userRoute.post("/update-cart-quantity",cartController.cartQuantity);
+userRoute.post("/remove-from-cart", cartController.cartRemove);
 
 
-userRoute.post("/set-default-address/:addressId", userController.setDefault);
 
 
-userRoute.get("/orders", authRoutes.isLogin, userController.viewOrders);
-userRoute.post("/orders", authRoutes.isLogin, userController.createOrders);
+userRoute.get("/orders", authRoutes.isLogin, orderController.viewOrders);
+userRoute.post("/orders", authRoutes.isLogin, orderController.createOrders);
 
 
 
