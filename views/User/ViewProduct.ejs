@@ -150,7 +150,8 @@
         <main class="main">
             <div class="page-content">
                 <div class="product-details-top">
-                    <div class="bg-light pb-5 mb-4">
+                    
+                    <div class="bg-light pb-1 mb-1">
                         <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
                             <div class="container d-flex align-items-center">
                                
@@ -160,28 +161,45 @@
                         <div class="container">
                             <div class="product-gallery-carousel owl-carousel owl-full owl-nav-dark">
 
-                                <figure class="product-gallery-image" style="height: 500px;">
-                                    <img src="/productAssets/<%= product.images[0] %>"
-                                        data-zoom-image="assets/images/products/single/gallery/1-big.jpg" alt="product image">
+                                <figure class="product-gallery-image">
+                                    <img src="/productAssets/<%= product.images[0] %>" data-zoom-image="" alt="product image" class="img-thumbnail"
+                                        data-toggle="modal" data-target="#imageModal" onclick="showModal('/productAssets/<%= product.images[0] %>')">
                                 </figure><!-- End .product-gallery-image -->
         
                                 <figure class="product-gallery-image">
-                                    <img src="/productAssets/<%= product.images[1] %>"
-                                        data-zoom-image="assets/images/products/single/gallery/2-big.jpg" alt="product image">
+                                    <img src="/productAssets/<%= product.images[1] %>" data-zoom-image="" alt="product image" class="img-thumbnail"
+                                        data-toggle="modal" data-target="#imageModal" onclick="showModal('/productAssets/<%= product.images[1] %>')">
                                 </figure><!-- End .product-gallery-image -->
         
-                                <figure class="product-gallery-image">
-                                    <img src="/productAssets/<%= product.images[2] %>"
-                                        data-zoom-image="assets/images/products/single/gallery/3-big.jpg" alt="product image">
-                                </figure><!-- End .product-gallery-image -->
+                            <figure class="product-gallery-image">
+                                <img src="/productAssets/<%= product.images[2] %>" data-zoom-image="" alt="product image" class="img-thumbnail"
+                                    data-toggle="modal" data-target="#imageModal" onclick="showModal('/productAssets/<%= product.images[2] %>')">
+                            </figure><!-- End .product-gallery-image -->
         
-                                <figure class="product-gallery-image">
-                                    <img src="/productAssets/<%= product.images[3] %>"
-                                        data-zoom-image="assets/images/products/single/gallery/4-big.jpg" alt="product image">
-                                </figure><!-- End .product-gallery-image -->
+                            <figure class="product-gallery-image">
+                                <img src="/productAssets/<%= product.images[3] %>" data-zoom-image="" alt="product image" class="img-thumbnail"
+                                    data-toggle="modal" data-target="#imageModal" onclick="showModal('/productAssets/<%= product.images[3] %>')">
+                            </figure><!-- End .product-gallery-image -->
+<script>
+    function showModal(imageSrc) {
+        var modalImage = document.getElementById('modalImage');
+        modalImage.src = imageSrc;
 
+        $('#imageModal').modal('show');
+    }
+</script>
                             </div><!-- End .owl-carousel -->
                         </div><!-- End .container -->
+                        <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <img id="modalImage" class="img-fluid" alt="Modal Image">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div><!-- End .bg-light pb-5 -->
         
                     <div class="product-details product-details-centered product-details-separator">
@@ -198,23 +216,21 @@
         
                                     <div class="product-content">
                                         <p><%=product.description%></p>
-                                    </div><!-- End .product-content -->
-        
+                                    </div>
+                                <div class="details-filter-row details-row-size mb-md-1">
+                                    <label>Size:</label>
                                 
-                                    <div class="details-filter-row details-row-size mb-md-1">
-                                        <label>Size:</label>
-        
-                                        <div class="product-size">
-                                            <a href="#" title="Small">S</a>
-                                            <a href="#" title="Medium" class="">M</a>
-                                            <a href="#" title="Large" class="">L</a>
-                                            <a href="#" title="Extra Large">XL</a>
-                                        </div><!-- End .product-size -->
-        
-                                        <a href="#" class="size-guide"><i class="icon-th-list"></i>size guide</a>
-                                    </div><!-- End .details-filter-row -->
-                                </div><!-- End .col-md-6 -->
-        
+                                    <div class="product-size">
+                                        <a  title="Small" onclick="getSize('S')">S</a>
+                                        <a title="Medium" onclick="getSize('M')">M</a>
+                                        <a  title="Large" onclick="getSize('L')">L</a>
+                                        <a title="Extra Large" onclick="getSize('XL')">XL</a>
+                                    </div>
+                                
+                                    <a href="#" class="size-guide"><i class="icon-th-list"></i>size guide</a>
+                                </div>
+                                </div>
+
                                 <div class="col-md-6">
                                     <div class="product-details-action">
                                         <div class="details-action-col">
@@ -222,7 +238,6 @@
                                                 <input type="number" id="qty" class="form-control" value="1" min="1" max="10"
                                                     step="1" data-decimals="0" required>
                                             </div> -->
-        
                                             <!-- <a href="#" class="btn-product btn-cart"><span>Buy Now</span></a> -->
                                         </div>
 
@@ -244,10 +259,10 @@
                                     </div><!-- End .product-details-action -->
         
                                     <div class="product-details-footer details-footer-col">
-                                        <!-- <div class="product-cat">
+                                        <div class="product-cat">
                                             <span>Category:</span>
                                             <a href="#"><%=product.category.cName%></a>
-                                        </div> -->
+                                        </div>
                                         <div class="social-icons social-icons-sm">
                                             <span class="social-label">Share:</span>
                                             <a href="#" class="social-icon" title="Facebook" target="_blank"><i

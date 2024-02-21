@@ -7,7 +7,7 @@ const Category = require("../models/categoryModel");
 const loadProduct = async (req, res) => {
   try {
     const productId = req.params.productId;
-    const product = await Product.findById(productId);
+    const product = await Product.findById(productId).populate("category");
 
     if (!product) {
       return res.status(404).send("Product not found");

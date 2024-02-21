@@ -89,7 +89,14 @@ userRoute.post("/remove-from-cart", cartController.cartRemove);
 
 
 userRoute.get("/orders", authRoutes.isLogin, orderController.viewOrders);
-userRoute.post("/orders", authRoutes.isLogin, orderController.createOrders);
+userRoute.post(
+  "/place-order",
+  orderController.createOrders
+);
+
+
+
+
 
 
 

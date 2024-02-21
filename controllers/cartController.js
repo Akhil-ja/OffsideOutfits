@@ -46,6 +46,11 @@ const loadCart = async (req, res) => {
   }
 };
 
+
+
+
+
+
 const addToCart = async (req, res) => {
   try {
     const { productId, userId } = req.body;
@@ -90,17 +95,24 @@ const addToCart = async (req, res) => {
   }
 };
 
+
+
 const cartQuantity = async (req, res) => {
   const { cartId, productId, newQuantity } = req.body;
 
   try {
     let cart = await Cart.findById(cartId);
+
+    if (!cart) {
+      return res.status(404).json({ error: "Cart not found." });
+    }
+
     const productInCart = cart.cartProducts.find((product) =>
       product.product.equals(productId)
     );
 
-    if (!cart || !productInCart) {
-      return res.status(404).json({ error: "Cart or product not found." });
+    if (!productInCart) {
+      return res.status(404).json({ error: "Product not found in the cart." });
     }
 
     productInCart.quantity = newQuantity;
@@ -115,6 +127,8 @@ const cartQuantity = async (req, res) => {
     res.status(500).json({ error: "Internal server error." });
   }
 };
+
+
 
 const cartRemove = async (req, res) => {
   const { cartId, productId } = req.body;
@@ -157,27 +171,37 @@ const loadCheckout = async (req, res) => {
       return [...ids, ...itemProductIds];
     }, []);
     const products = await Product.find({ _id: { $in: productIds } });
-    let totalAmount = 0;
 
-    const cartWithProductDetails = cartItems.map((cartItem) => {
-      const cartProducts = cartItem.cartProducts.map((product) => {
-        const productDetail = products.find((p) =>
-          p._id.equals(product.product)
+    let totalAmount = 0; 
+
+    const cartWithProductDetails = await Promise.all(
+      cartItems.map(async (cartItem) => {
+        let totalAmountPerCart = 0; 
+
+        const cartProducts = await Promise.all(
+          cartItem.cartProducts.map(async (product) => {
+            const productDetail = products.find((p) =>
+              p._id.equals(product.product)
+            );
+
+            const productAmount = productDetail.price * product.quantity;
+            totalAmountPerCart += productAmount; 
+            totalAmount += productAmount; 
+            return {
+              ...product.toObject(),
+              productDetail: productDetail,
+              productAmount: productAmount,
+            };
+          })
         );
 
-        totalAmount += productDetail.price * product.quantity;
-
         return {
-          ...product.toObject(),
-          productDetail: productDetail,
+          ...cartItem.toObject(),
+          cartProducts,
+          totalAmountPerCart,
         };
-      });
-
-      return {
-        ...cartItem.toObject(),
-        cartProducts,
-      };
-    });
+      })
+    );
 
     console.log("Total Amount:", totalAmount);
     console.log("cart=", cartWithProductDetails);

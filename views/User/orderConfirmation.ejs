@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Offside Outfits</title>
+    <meta name="keywords" content="HTML5 Template">
+    <meta name="description" content="Molla - Bootstrap eCommerce Template">
+    <meta name="author" content="p-themes">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href=" /productAssets/User-icon.svg">
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/plugins/owl-carousel/owl.carousel.css">
+    <link rel="stylesheet" href="assets/css/plugins/magnific-popup/magnific-popup.css">
+    <link rel="stylesheet" href="assets/css/plugins/nouislider/nouislider.css">
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <header class="header ">
+            <div class="header-middle">
+                <div class="header-top">
+                    <div class="container-fluid">
+                        <div class="header-left m-4">
+
+                        </div><!-- End .header-left -->
+
+                        <div class="header-right">
+                            <ul class="top-menu">
+                                <li>
+                                    <a href="#">Links</a>
+                                    <ul>
+                                        <li><a href="tel:#"><i class="icon-phone"></i>Call: +0123 456 789</a></li>
+                                        <li><a href="about.html">About Us</a></li>
+                                        <li><a href="contact.html">Contact Us</a></li>
+                                        <li style="display: none;"><a href="#signin-modal" data-toggle="modal"><i
+                                                    class="icon-user"></i>Login</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul><!-- End .top-menu -->
+                        </div><!-- End .header-right -->
+                    </div><!-- End .container-fluid -->
+                </div><!-- End .header-top -->
+
+                <div class="header-middle ">
+                    <div class="container-fluid">
+                        <div class="header-left">
+
+
+                            <a href="/home" class="logo">
+                                <img src="assets/images/Logo1.png" alt="Molla Logo" width="50" height="25">
+                            </a>
+
+                            <nav class="main-nav">
+                                <ul class="menu sf-arrows">
+                                    <li class="megamenu-container ">
+                                        <a href="/home" class="">Home</a>
+                                    </li>
+                                    <li class="active">
+                                        <a href="" class=" ">Shop</a>
+
+
+                                    </li>
+                                    <li>
+                                        <a href="" class="">Product</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="">Pages</a>
+                                    </li>
+                                    <li>
+                                        <a href="" class="">Blog</a>
+                                    </li>
+                                    <li>
+                                        <a href="" class="">Elements</a>
+
+
+                                    </li>
+                                </ul><!-- End .menu -->
+                            </nav><!-- End .main-nav -->
+                        </div><!-- End .header-left -->
+
+                        <div class="header-right">
+
+                            <div class="header-search">
+                                <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
+                                <form action="#" method="get">
+                                    <div class="header-search-wrapper">
+                                        <label for="q" class="sr-only">Search</label>
+                                        <input type="search" class="form-control" name="q" id="q"
+                                            placeholder="Search in..." required>
+                                    </div><!-- End .header-search-wrapper -->
+                                </form>
+                            </div><!-- End .header-search -->
+
+                            <a href="" class="wishlist-link">
+                                <i class="icon-heart-o"></i>
+                            </a>
+
+                            <div class="cart-dropdown position-relative">
+                                <a href="/cart" class="dropdown-toggle" role="button"
+                                    style="position: relative; display: inline-block;">
+                                    <i class="icon-shopping-cart">
+                                        <span hidden class="badge badge-danger"
+                                            style="position: absolute; top: 0; right: 0; font-size: 10px; padding: 2px 5px;">Cart
+                                            count</span>
+                                    </i>
+                                </a>
+                            </div>
+
+
+
+                            <div class=" cart-dropdown">
+                                <a href="/profile" class="dropdown-toggle" role="button" aria-haspopup="true"
+                                    aria-expanded="false" data-display="static">
+                                    <i class="icon-user"> </i>
+
+                                </a>
+                            </div>
+
+                        </div><!-- End .header-right -->
+                    </div><!-- End .container-fluid -->
+                </div><!-- End .header-middle -->
+            </div>
+        </header><!-- End .header -->
+
+
+<main class="main">
+    <div class="container">
+        <h2 class="title mb-3">Order Confirmation</h2>
+
+        <!-- Product Display Section -->
+        <div class="row">
+            <% if (orderProducts && orderProducts.length> 0) { %>
+                <% orderProducts.forEach(product=> { %>
+                    <div class="col-md-4">
+                        <div class="product">
+                            <img src="<%= product.product.images[0] %>" alt="Product Image" class="img-fluid">
+                            <h3 class="product-title">
+                                <%= product.product.pname %>
+                            </h3>
+                            <span class="product-price">$<%= product.price %></span>
+                            <span class="Quantity">
+                                <%= product.quantity %> units
+                            </span>
+                            <span class="total-price">Total: $<%= product.price * product.quantity %></span>
+                        </div>
+                    </div>
+                    <% }); %>
+                        <% } else { %>
+                            <p>No products in the order.</p>
+                            <% } %>
+        </div>
+
+        <!-- Order Details Section -->
+        <div class="mt-5">
+            <h4 class="mb-3">Order Details</h4>
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Order Placed Date:
+                    <span class="badge badge-primary">
+                        <%= new Date(newOrder.orderDate).toLocaleDateString() %>
+                    </span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Order Placed Time:
+                    <span class="badge badge-primary badge-pill">
+                        <%= new Date(newOrder.orderDate).toLocaleTimeString() %>
+                    </span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Shipping Address:
+                    <span class="badge ">
+                        <%= orderAddress.AddName %> <br>
+                            <%= orderAddress.House %> <br>
+                                <%= orderAddress.street %> <br>
+                                    <%= orderAddress.state %>, <%= orderAddress.city %>,
+                                            <%= orderAddress.PIN %> <br>
+                    </span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Total Payable Amount:
+                
+                    <% let total=0; %>
+                        <% orderProducts.forEach(product=> { %>
+                            <% total +=product.price * product.quantity; %>
+                                <% }); %>
+                
+                                    <span style="font-weight: 800;">
+                                        Rs:<%= total %>
+                                    </span>
+                </li>
+            </ul>
+        </div>
+
+        
+    <div class="mt-4 ml-5">
+        <form action="/orders" method="get">
+<button class="btn btn-primary mb-5">View Orders</button>
+
+        </form>
+        
+    </div>
+    </div><!-- End .container -->
+</main><!-- End .main -->
+
+
+
+
+
+
+    <footer class="footer">
+        <div class="footer-middle">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="widget widget-about">
+                            <img src="assets/images/logo.png" class="footer-logo" alt="Footer Logo" width="105" height="25">
+                            <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate
+                                magna eros eu erat. </p>
+    
+                            <div class="social-icons">
+                                <a href="#" class="social-icon" target="_blank" title="Facebook"><i
+                                        class="icon-facebook-f"></i></a>
+                                <a href="#" class="social-icon" target="_blank" title="Twitter"><i
+                                        class="icon-twitter"></i></a>
+                                <a href="#" class="social-icon" target="_blank" title="Instagram"><i
+                                        class="icon-instagram"></i></a>
+                                <a href="#" class="social-icon" target="_blank" title="Youtube"><i
+                                        class="icon-youtube"></i></a>
+                                <a href="#" class="social-icon" target="_blank" title="Pinterest"><i
+                                        class="icon-pinterest"></i></a>
+                            </div><!-- End .soial-icons -->
+                        </div><!-- End .widget about-widget -->
+                    </div><!-- End .col-sm-6 col-lg-3 -->
+    
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="widget">
+                            <h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
+    
+                            <ul class="widget-list">
+                                <li><a href="about.html">About Molla</a></li>
+                                <li><a href="#">How to shop on Molla</a></li>
+                                <li><a href="#">FAQ</a></li>
+                                <li><a href="contact.html">Contact us</a></li>
+                                <li><a href="login.html">Log in</a></li>
+                            </ul><!-- End .widget-list -->
+                        </div><!-- End .widget -->
+                    </div><!-- End .col-sm-6 col-lg-3 -->
+    
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="widget">
+                            <h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
+    
+                            <ul class="widget-list">
+                                <li><a href="#">Payment Methods</a></li>
+                                <li><a href="#">Money-back guarantee!</a></li>
+                                <li><a href="#">Returns</a></li>
+                                <li><a href="#">Shipping</a></li>
+                                <li><a href="#">Terms and conditions</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                            </ul><!-- End .widget-list -->
+                        </div><!-- End .widget -->
+                    </div><!-- End .col-sm-6 col-lg-3 -->
+    
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="widget">
+                            <h4 class="widget-title">My Account</h4><!-- End .widget-title -->
+    
+                            <ul class="widget-list">
+                                <li><a href="#">Sign In</a></li>
+                                <li><a href="cart.html">View Cart</a></li>
+                                <li><a href="#">My Wishlist</a></li>
+                                <li><a href="#">Track My Order</a></li>
+                                <li><a href="#">Help</a></li>
+                            </ul><!-- End .widget-list -->
+                        </div><!-- End .widget -->
+                    </div><!-- End .col-sm-6 col-lg-3 -->
+                </div><!-- End .row -->
+            </div><!-- End .container -->
+        </div><!-- End .footer-middle -->
+    
+        <div class="footer-bottom">
+            <div class="container">
+                <p class="footer-copyright">Copyright.</p>
+                <!-- End .footer-copyright -->
+                <figure class="footer-payments">
+                    <img src="assets/images/payments.png" alt="Payment methods" width="272" height="20">
+                </figure><!-- End .footer-payments -->
+            </div><!-- End .container -->
+        </div><!-- End .footer-bottom -->
+    </footer><!-- End .footer -->
+    </div><!-- End .page-wrapper -->
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>

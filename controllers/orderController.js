@@ -2,77 +2,88 @@ const Orders = require("../models/ordersModel");
 const Cart = require("../models/cartModel");
 const Product = require("../models/productModel");
 const Address = require("../models/addressModel");
-
-
-const viewOrders = async (req, res) => {
-  try {
-    res.render("orders");
-  } catch (error) {
-    console.log(error.message);
-  }
-};
+const { findById } = require("../models/userModel");
+const productModel = require("../models/productModel");
 
 const createOrders = async (req, res) => {
   try {
     console.log("create order");
-    console.log(res.body.userID);
-    const userId = res.body.userID;
 
-    const userAddresses = await Address.find({ user: userId });
-    console.log("User Addresses:", userAddresses);
-    const cartItems = await Cart.find();
+    const { userID, address, totalAmount } = req.body;
 
-    const productIds = cartItems.reduce((ids, item) => {
-      const itemProductIds = item.cartProducts.map(
-        (product) => product.product
+    console.log(totalAmount);
+
+    const cart = await Cart.findOne({ user: userID }).populate({
+      path: "cartProducts.product",
+      model: "Product",
+    });
+
+    const orderDocument = await Address.findOne({
+      "address._id": address,
+    });
+
+    if (orderDocument) {
+      const orderAddress = orderDocument.address.find(
+        (addr) => addr._id.toString() === address
       );
-      return [...ids, ...itemProductIds];
-    }, []);
-    const products = await Product.find({ _id: { $in: productIds } });
 
-    const cartWithProductDetails = cartItems.map((cartItem) => {
-      const cartProducts = cartItem.cartProducts.map((product) => {
-        const productDetail = products.find((p) =>
-          p._id.equals(product.product)
-        );
+      if (orderAddress) {
+        const orderProducts = cart.cartProducts.map((cartProduct) => ({
+          product: cartProduct.product, 
+          quantity: cartProduct.quantity,
+          price: cartProduct.product.price,
+        }));
 
-        return {
-          ...product.toObject(),
-          productDetail: productDetail,
-        };
-      });
+        const newOrder = new Orders({
+          user: userID,
+          products: orderProducts,
+          status: "pending",
+          address: orderAddress,
+          orderDate: Date.now(),
+        });
 
-      return {
-        ...cartItem.toObject(),
-        cartProducts,
-      };
-    });
+        await newOrder.save();
+           cart.cartProducts = [];
+           await cart.save();
+        res.render("orderConfirmation", {
+          orderAddress,
+          orderProducts,
+          newOrder,
+        });
 
-    console.log("save part");
-    const newOrder = new Orders({
-      user: userId,
-      products: {
-        product: product.product,
-        quantity: product.quantity,
-      },
-      status: "pending",
-      orderDate: Date.now(),
-      address: req.body.address,
-    });
-
-    await newOrder.save();
-
-    res.redirect("/orders");
+      } else {
+        res.status(404).json({ error: "Address not found" });
+      }
+    } else {
+      res.status(404).json({ error: "Document not found" });
+    }
   } catch (error) {
-    console.log(error.message);
-
-    res.status(500).send("Internal Server Error");
+    console.error(error.message);
   }
 };
 
 
-module.exports = {
+
+const viewOrders= async(req,res)=>{
+try {
+ const userID=res.locals.currentUser._id;
+
  
-  viewOrders,
+ const AllOrders = await Orders.find({ user: userID })
+   .populate({
+     path: "products.product", // Ensure correct path to the Product model
+     model: "Product",
+   })
+   .exec();
+
+  console.log("All orders>>>>>>>>>"+AllOrders);
+  res.render("orders", { AllOrders });
+} catch (error) {
+   console.error(error.message);
+}
+}
+
+module.exports = {
   createOrders,
+  viewOrders,
 };
