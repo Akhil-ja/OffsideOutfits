@@ -189,9 +189,9 @@ const loadProfile = async (req, res) => {
 
      const userID = res.locals.currentUser._id;
 
-    const userDetails = await User.findOne({ _id: userID });
+     console.log("user id from res.locals>"+userID);
 
-    console.log("user Details>>"+userDetails);
+    const userDetails = await User.findOne({ _id: userID });
 
     const matchingAddress = await Address.findOne({ user: userID });
 
@@ -208,17 +208,17 @@ const loadProfile = async (req, res) => {
       .exec();
 
     if (!matchingAddress) {
-      console.error("Address not found for user:", userID);
-      res.render("profile", { pageinfo });
-    } else {
-     res.render("profile", {
-       pageinfo,
-       matchingAddress,
-       AllOrders,
-       userDetails,
-     });
+  console.error("Address not found for user:", userID);
+}
 
-    }
+res.render("profile", {
+  pageinfo,
+  matchingAddress,
+  AllOrders,
+  userDetails,
+});
+
+    
   } catch (error) {
     console.log(error.message);
   }
@@ -286,6 +286,54 @@ const loadUsers = async (req, res) => {
 
 
 
+const changePassword = async (req, res) => {
+  try {
+    const { userID, oldPassword, newPassword, confirmNewPassword } = req.body;
+
+    console.log("User ID:", userID);
+    console.log("Old Password:", oldPassword);
+    console.log("New Password:", newPassword);
+    console.log("Confirm New Password:", confirmNewPassword);
+
+    // Check if new password and confirm password match
+    if (newPassword !== confirmNewPassword) {
+      return res.status(400).json({
+        errorMessage: "New password and confirm password do not match.",
+      });
+    }
+
+    // Check if new password is the same as the old password
+    if (oldPassword === newPassword) {
+      return res.status(400).json({
+        errorMessage: "New password must be different from the old password.",
+      });
+    }
+
+    const currentUser = await User.findById(userID);
+
+    const passwordMatch = await bcrypt.compare(
+      oldPassword,
+      currentUser.password
+    );
+
+    if (passwordMatch) {
+      const newHashedPassword = await securePassword(newPassword);
+      currentUser.password = newHashedPassword;
+      await currentUser.save();
+
+      res.status(200).json({ success: true });
+    } else {
+      res.status(400).json({ errorMessage: "Old password is incorrect." });
+    }
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ errorMessage: "Internal server error." });
+  }
+};
+
+
+
+
 module.exports = {
   loadlogin,
   insertUser,
@@ -298,4 +346,5 @@ module.exports = {
   loadUsers,
   editUser,
   edit_User,
+  changePassword,
 };

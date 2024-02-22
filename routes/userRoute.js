@@ -11,8 +11,12 @@ const authRoutes=require("../services/authRoutes")
 const express = require("express");
 
 
+const userRoute = express();
 
-const userRoute=express();
+userRoute.use(express.urlencoded({ extended: true }));
+
+
+
 
 userRoute.set("view engine", "ejs");
 
@@ -101,6 +105,11 @@ userRoute.get(
 
 
 userRoute.get("/add-delete",addressController.deleteAddress);
+
+userRoute.post(
+  "/change-password",
+  userController.changePassword
+);
 
 
 
