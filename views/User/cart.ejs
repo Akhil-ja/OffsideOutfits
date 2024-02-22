@@ -148,45 +148,67 @@
                                         </tr>
                                     </thead>
 
-                                    <tbody>
+                                <tbody>
+                                    <% if (cartItems) { %>
                                         <% cartItems.forEach(cartItem=> { %>
-                                            <% cartItem.cartProducts.forEach(product=> { %>
-                                                <tr data-cart-item="<%= cartItem._id %>"
-                                                    data-product-id="<%= product.productDetail._id %>">
-                                                    <td class="product-col">
-                                                        <div class="product">
-                                                            <h3 class="product-title">
-                                                                <a href="#">
-                                                                    <%= product.productDetail.pname %>
-                                                                </a>
-                                                            </h3><!-- End .product-title -->
-                                                        </div><!-- End .product -->
-                                                    </td>
-                                                    <td class="price-col">
-                                                        <%= product.productDetail.price %>
-                                                    </td>
-                                                <td class="quantity-col">
-                                                    <div class="cart-product-quantity">
-                                                        <input type="number" class="form-control" value="<%= product.quantity %>" min="1" max="5" step="1"
-                                                            data-decimals="0" required data-cart-id="<%= cartItem._id %>"
-                                                            data-product-id="<%= product.productDetail._id %>">
-                                                    </div>
-                                                </td>
-
-                                                    <td class="total-col">
-                                                        <%= product.productDetail.price * product.quantity %>
-                                                    </td>
-                                                    <td class="remove-col">
-                                                        <button class="btn-remove"
-                                                            onclick="removeProduct('<%= cartItem._id %>', '<%= product.productDetail._id %>')">
-                                                            <i class="icon-close"></i>
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                                <% }); %>
+                                            <% if (cartItem.cartProducts && cartItem.cartProducts.length> 0) { %>
+                                                <% cartItem.cartProducts.forEach(product=> { %>
+                                                    <tr data-cart-item="<%= cartItem._id %>" data-product-id="<%= product.productDetail._id %>">
+                                                        <td class="product-col">
+                                                            <div class="product">
+                                                                <h3 class="product-title">
+                                                                    <a href="#">
+                                                                        <%= product.productDetail.pname %>
+                                                                    </a>
+                                                                </h3><!-- End .product-title -->
+                                                            </div><!-- End .product -->
+                                                        </td>
+                                                        <td class="price-col">
+                                                            <%= product.productDetail.price %>
+                                                        </td>
+                                                        <td class="quantity-col">
+                                                            <div class="cart-product-quantity">
+                                                                <input type="number" class="form-control" value="<%= product.quantity %>" min="1"
+                                                                    max="5" step="1" data-decimals="0" required data-cart-id="<%= cartItem._id %>"
+                                                                    data-product-id="<%= product.productDetail._id %>">
+                                                            </div>
+                                                        </td>
+                                                        <td class="total-col">
+                                                            <%= product.productDetail.price * product.quantity %>
+                                                        </td>
+                                                        <td class="remove-col">
+                                                            <button class="btn-remove"
+                                                                onclick="removeProduct('<%= cartItem._id %>', '<%= product.productDetail._id %>')">
+                                                                <i class="icon-close"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
                                                     <% }); %>
-                                    </tbody>
-                                </table>
+                                                        <% } else { %>
+                                                        <tr>
+                                                            <td colspan="5" class="text-center">
+                                                                <div class="alert alert-warning">
+                                                                    <strong>Cart Is empty</strong>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+
+                                                            <% } %>
+                                                                <% }); %>
+                                                                    <% } else { %>
+                                                                        <tr>
+                                                                            <td colspan="5" class="text-center">
+                                                                                <div class="alert alert-warning">
+                                                                                    <strong>Cart Is empty</strong>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+
+
+                                                                        <% } %>
+                                </tbody>
+                                                            </table>
 
                                 <div class="cart-bottom">
                                     <div class="cart-discount">
@@ -695,28 +717,37 @@
             });
     }
 
-      function removeProduct(cartId, productId) {
-            fetch('/remove-from-cart', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    cartId: cartId,
-                    productId: productId
-                })
-            })
-                .then(response => response.json())
-                .then(result => {
-                    console.log(result);
-                    window.location.reload();
-                    updateCartTotal();
-                    location.reload();
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        }
+      
+     function removeProduct(cartId, productId) {
+              fetch('/remove-from-cart', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                      cartId: cartId,
+                      productId: productId
+                  })
+              })
+                  .then(response => response.json())
+                  .then(result => {
+                      console.log(result);
+
+                      // Update cart count dynamically
+                      const cartCountElement = document.getElementById('cart-count');
+                      if (cartCountElement) {
+                          cartCountElement.textContent = result.cartCount;
+                      }
+
+                      window.location.reload(); // Reload might not be necessary, check if it's needed
+                      updateCartTotal();
+                      location.reload();
+                  })
+                  .catch(error => {
+                      console.error('Error:', error);
+                  });
+          }
+
 
 
     window.addEventListener('DOMContentLoaded', () => {

@@ -101,14 +101,14 @@
                                 <i class="icon-heart-o"></i>
                             </a>
 
-                <div class="cart-dropdown position-relative">
-                    <a href="/cart" class="dropdown-toggle" role="button" style="position: relative; display: inline-block;">
-                        <i class="icon-shopping-cart">
-                            <span hidden class="badge badge-danger"
-                                style="position: absolute; top: 0; right: 0; font-size: 10px; padding: 2px 5px;">Cart count</span>
-                        </i>
-                    </a>
-                </div>
+            <div class="cart-dropdown position-relative">
+                <a href="/cart" class="dropdown-toggle" role="button" style="position: relative; display: inline-block;">
+                    <i class="icon-shopping-cart">
+                        <span id="cart-count" class="badge badge-danger"
+                            style="position: absolute; top: 0; right: 0; font-size: 10px; padding: 2px 5px;"></span>
+                    </i>
+                </a>
+            </div>
 
 
 
@@ -508,11 +508,7 @@
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
 
     <!-- Mobile Menu -->
-    <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
-
-    <div class="mobile-menu-container">
-        <div class="mobile-menu-wrapper">
-            <span class="mobile-menu-close"><i class="icon-close"></i></span>
+    
 
         
 
@@ -555,9 +551,23 @@
             });
         });
     </script>
+
+<script>
+    function getElementValue(id) {
+        const element = document.getElementById(id);
+        return element ? element.value : null;
+    }
+
+    function updateCartCount(count) {
+        const cartCountElement = document.getElementById('cart-count');
+        if (cartCountElement) {
+            cartCountElement.textContent = count;
+        }
+    }
+
+</script>
+
+
 </body>
-
-
-
 
 </html>

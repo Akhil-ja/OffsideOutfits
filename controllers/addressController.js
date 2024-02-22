@@ -126,13 +126,42 @@ const setDefault = async (req, res) => {
   }
 };
 
+const deleteAddress=async(req,res)=>{
+  try {
+
+    console.log("in delete add");
+
+    const userId=res.locals.currentUser._id;
+
+     const addressId = req.query.addressId;
+
+     console.log("user id:" + userId);
+
+     console.log("address id:"+addressId);
+
+    const updatedUser = await Address.findOneAndUpdate(
+      { user: userId },
+      { $pull: { address: { _id: addressId } } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Address not found" });
+    }
+
+    res.status(200).json({ message: 'Address deleted successfully' });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+
+}
 
 module.exports = {
- 
   addAddress,
   add_Address,
   editAddress,
   edit_Address,
   setDefault,
-
+  deleteAddress,
 };

@@ -156,7 +156,7 @@ const loadDashboard = async (req, res) => {
 
 const loadProducts = async (req, res) => {
   try {
-    console.log("Hello");
+   
     const products = await Product.find();
     res.render("products", { products });
   } catch (error) {

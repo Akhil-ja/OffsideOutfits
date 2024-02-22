@@ -144,11 +144,11 @@
                             <h3 class="product-title">
                                 <%= product.product.pname %>
                             </h3>
-                            <span class="product-price">$<%= product.price %></span>
+                            <span class="product-price">Rs:<%= product.price %></span>-/
                             <span class="Quantity">
                                 <%= product.quantity %> units
                             </span>
-                            <span class="total-price">Total: $<%= product.price * product.quantity %></span>
+                            <span class="total-price">Total: Rs:<%= product.price * product.quantity %></span>-/
                         </div>
                     </div>
                     <% }); %>
@@ -200,10 +200,7 @@
 
         
     <div class="mt-4 ml-5">
-        <form action="/orders" method="get">
-<button class="btn btn-primary mb-5">View Orders</button>
-
-        </form>
+        <a href="/profile?selected=orders" class="btn btn-secondary m-5">View Orders</a>
         
     </div>
     </div><!-- End .container -->

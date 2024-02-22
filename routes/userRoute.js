@@ -72,6 +72,8 @@ userRoute.get(
   authRoutes.isLogin,
   addressController.editAddress
 );
+
+
 userRoute.post("/edit-address", authRoutes.isLogin, addressController.edit_Address);
 userRoute.post("/set-default-address/:addressId", addressController.setDefault);
 
@@ -87,19 +89,18 @@ userRoute.post("/remove-from-cart", cartController.cartRemove);
 
 
 
+userRoute.post("/place-order", orderController.createOrders);
 
-userRoute.get("/orders", authRoutes.isLogin, orderController.viewOrders);
-userRoute.post(
-  "/place-order",
-  orderController.createOrders
+
+
+userRoute.get(
+  "/order-details",
+  authRoutes.isLogin,
+  orderController.getOrderDetails
 );
 
 
-
-
-
-
-
+userRoute.get("/add-delete",addressController.deleteAddress);
 
 
 

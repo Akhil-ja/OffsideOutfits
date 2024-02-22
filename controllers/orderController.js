@@ -68,7 +68,7 @@ const viewOrders= async(req,res)=>{
 try {
  const userID=res.locals.currentUser._id;
 
- 
+
  const AllOrders = await Orders.find({ user: userID })
    .populate({
      path: "products.product", // Ensure correct path to the Product model
@@ -83,7 +83,36 @@ try {
 }
 }
 
+
+const getOrderDetails=async(req,res)=>{
+  try {
+
+    const orderId = req.query.orderID;
+    const orderDetails = await Orders.findById(orderId).populate({
+      path: "products.product",
+      model: "Product",
+    });
+
+     if (!orderDetails) {
+       return res.status(404).send("Order not found");
+     }
+      const TotalAmount = (products) => {
+        let totalAmount = 0;
+        products.forEach((productInfo) => {
+          totalAmount += productInfo.price * productInfo.quantity;
+        });
+        return totalAmount;
+      };
+     const totalAmount = TotalAmount(orderDetails.products);
+     res.render("viewOrder", { orderDetails, totalAmount });
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+
 module.exports = {
   createOrders,
   viewOrders,
+  getOrderDetails,
 };

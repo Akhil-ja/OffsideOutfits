@@ -294,8 +294,8 @@
                                             
                                             <div class="form-group col-sm-2">
                                                 <label for="PIN">PIN*</label>
-                                                <input type="text" id="PIN" name="PIN" class="form-control" value=""
-                                                    required>
+                                                <input type="text" id="PIN" name="PIN" class="form-control" value="" required>
+                                                <p id="pin-error" class="error-message" style="color: red;"></p>
                                             </div>
 
                                             <button type="submit" class="btn btn-outline-primary-2">
@@ -482,6 +482,51 @@
             tabAddressPane.classList.add("active", "show");
         });
     </script>
+
+<script>
+    function getElementValue(id) {
+        const element = document.getElementById(id);
+        return element.value;
+    }
+
+    function validatePIN() {
+        const pinInput = getElementValue('PIN');
+        const pinError = document.getElementById('pin-error');
+
+        const pinPattern = /^\d{6}$/;
+
+        let isValid = true;
+
+        if (!pinPattern.test(pinInput)) {
+            pinError.innerText = 'Please enter a valid 6-digit PIN code.';
+            isValid = false;
+        } else if (pinInput.trim() === '') {
+            pinError.innerText = 'PIN code cannot be empty.';
+            isValid = false;
+        } else {
+            pinError.innerText = '';
+        }
+
+        return isValid;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const pinInput = document.getElementById('PIN');
+
+        pinInput.addEventListener('change', validatePIN);
+    });
+
+    function submitForm() {
+        if (validatePIN()) {
+            document.getElementById('add-address-form').submit();
+        } else {
+            alert('Cannot submit. Please fix errors in the form.');
+        }
+    }
+</script>
+
+
+
 </body>
 
 

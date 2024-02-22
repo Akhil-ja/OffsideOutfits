@@ -62,7 +62,7 @@
                                     <li class="megamenu-container ">
                                         <a href="/home" class="">Home</a>
                                     </li>
-                                    <li class="active">
+                                    <li class="">
                                         <a href="" class=" ">Shop</a>
 
 
@@ -130,75 +130,104 @@
         </header><!-- End .header -->
 
 
-        <main>
 
+        <!-- order-details.ejs -->
+        
+    <!-- order-details.ejs -->
+    
+<main class="main">
+    <div class="container">
+        <h2 class="title mb-3">Order Details</h2>
 
-            <main class="main">
-                <div class="container">
-                    <h2 class="title mb-3">Orders List</h2>
-            
-                    <!-- Order List Section -->
-                <ul class="list-group">
-                    <% AllOrders.forEach(order=> { %>
+        <!-- Display Order Details based on order ID -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <h4 class="card-title">Order Placed Date: <%= orderDetails.orderDate.toLocaleDateString() %>
+                </h4>
+                <h4 class="card-title">Status:
+                    <span class="badge badge-pill badge-warning">
+                        <%= orderDetails.status %>
+                    </span>
+                </h4>
+            </div>
+        </div>
+
+        <!-- Display Address Information -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <h4 class="card-title">Shipping Address</h4>
+                <!-- Address details here -->
+            </div>
+        </div>
+
+        <!-- Display Product Information -->
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Ordered Products</h4>
+                <ul class="list-group list-group-flush">
+                    <% orderDetails.products.forEach(productInfo=> { %>
                         <li class="list-group-item">
-                            <% order.products.forEach(productInfo=> { %>
-                                <p>Product Name: <%= productInfo.product.pname %>
-                                </p>
-                                <p>Quantity: <%= productInfo.quantity %>
-                                </p>
-                                <p>Price: <%= productInfo.price %>
-                                </p>
-                                <!-- Add other product details as needed -->
-                                <% }); %>
+                            <!-- Product details here -->
                         </li>
                         <% }); %>
                 </ul>
-                </div>
-            </main>
+            </div>
+        </div>
 
-        </main>
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Total Amount</h4>
+                <p class="card-text" style="font-weight: 600;text-decoration: underline;">
+                    Rs: <%= totalAmount %>/-
+                </p>
+            </div>
+        </div>
+
+        <!-- Back button -->
+        <a href="/profile?selected=orders" class="btn btn-secondary m-5">Back</a>
+    </div><!-- End .container -->
+</main><!-- End .main -->
 
 
-        <footer class="footer">
+
+
+
+        <footer class="footer footer-2">
             <div class="footer-middle">
-                <div class="container">
+                <div class="container-fluid">
                     <div class="row">
-                        <div class="col-sm-6 col-lg-3">
+                        <div class="col-sm-12 col-lg-4">
                             <div class="widget widget-about">
-                                <img src="assets/images/logo.png" class="footer-logo" alt="Footer Logo" width="105" height="25">
+                                <img src="assets/images/LogoFooter.png" class="footer-logo" alt="Footer Logo" width="280"
+                                    height="25">
                                 <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate
-                                    magna eros eu erat. </p>
+                                    magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan
+                                    porttitor, facilisis luctus, metus. </p>
         
-                                <div class="social-icons">
-                                    <a href="#" class="social-icon" target="_blank" title="Facebook"><i
-                                            class="icon-facebook-f"></i></a>
-                                    <a href="#" class="social-icon" target="_blank" title="Twitter"><i
-                                            class="icon-twitter"></i></a>
-                                    <a href="#" class="social-icon" target="_blank" title="Instagram"><i
-                                            class="icon-instagram"></i></a>
-                                    <a href="#" class="social-icon" target="_blank" title="Youtube"><i
-                                            class="icon-youtube"></i></a>
-                                    <a href="#" class="social-icon" target="_blank" title="Pinterest"><i
-                                            class="icon-pinterest"></i></a>
-                                </div><!-- End .soial-icons -->
+                                <div class="widget-about-info">
+                                    <div class="row">
+        
+        
+                                    </div><!-- End .row -->
+                                </div><!-- End .widget-about-info -->
                             </div><!-- End .widget about-widget -->
-                        </div><!-- End .col-sm-6 col-lg-3 -->
+                        </div><!-- End .col-sm-12 col-lg-4 -->
         
-                        <div class="col-sm-6 col-lg-3">
+                        <div class="col-sm-4 col-lg-2">
                             <div class="widget">
-                                <h4 class="widget-title">Useful Links</h4><!-- End .widget-title -->
+                                <h4 class="widget-title">Information</h4><!-- End .widget-title -->
         
                                 <ul class="widget-list">
                                     <li><a href="about.html">About Molla</a></li>
                                     <li><a href="#">How to shop on Molla</a></li>
-                                    <li><a href="#">FAQ</a></li>
+                                    <li><a href="faq.html">FAQ</a></li>
                                     <li><a href="contact.html">Contact us</a></li>
                                     <li><a href="login.html">Log in</a></li>
                                 </ul><!-- End .widget-list -->
                             </div><!-- End .widget -->
-                        </div><!-- End .col-sm-6 col-lg-3 -->
+                        </div><!-- End .col-sm-4 col-lg-2 -->
         
-                        <div class="col-sm-6 col-lg-3">
+                        <div class="col-sm-4 col-lg-2">
                             <div class="widget">
                                 <h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
         
@@ -211,34 +240,144 @@
                                     <li><a href="#">Privacy Policy</a></li>
                                 </ul><!-- End .widget-list -->
                             </div><!-- End .widget -->
-                        </div><!-- End .col-sm-6 col-lg-3 -->
+                        </div><!-- End .col-sm-4 col-lg-2 -->
         
-                        <div class="col-sm-6 col-lg-3">
+                        <div class="col-sm-4 col-lg-2">
                             <div class="widget">
                                 <h4 class="widget-title">My Account</h4><!-- End .widget-title -->
         
                                 <ul class="widget-list">
                                     <li><a href="#">Sign In</a></li>
-                                    <li><a href="cart.html">View Cart</a></li>
+                                    <li><a href="">View Cart</a></li>
                                     <li><a href="#">My Wishlist</a></li>
                                     <li><a href="#">Track My Order</a></li>
                                     <li><a href="#">Help</a></li>
                                 </ul><!-- End .widget-list -->
                             </div><!-- End .widget -->
-                        </div><!-- End .col-sm-6 col-lg-3 -->
+                        </div><!-- End .col-sm-4 col-lg-2 -->
+        
+                        <div class="col-sm-6 col-lg-2">
+                            <div class="widget widget-newsletter">
+                                <h4 class="widget-title">Newsletter</h4><!-- End .widget-title -->
+        
+                                <p>Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan.</p>
+        
+                                <form action="#">
+                                    <div class="input-group">
+                                        <input type="email" class="form-control" placeholder="Enter your Email Address"
+                                            aria-label="Email Adress" required>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-dark" type="submit"><i
+                                                    class="icon-long-arrow-right"></i></button>
+                                        </div><!-- .End .input-group-append -->
+                                    </div><!-- .End .input-group -->
+                                </form>
+                            </div><!-- End .widget -->
+                        </div><!-- End .col-sm-6 col-lg-2 -->
                     </div><!-- End .row -->
-                </div><!-- End .container -->
+                </div><!-- End .container-fluid -->
             </div><!-- End .footer-middle -->
         
             <div class="footer-bottom">
-                <div class="container">
+                <div class="container-fluid">
                     <p class="footer-copyright">Copyright.</p>
                     <!-- End .footer-copyright -->
-                    <figure class="footer-payments">
-                        <img src="assets/images/payments.png" alt="Payment methods" width="272" height="20">
-                    </figure><!-- End .footer-payments -->
-                </div><!-- End .container -->
+                    <ul class="footer-menu">
+                        <li><a href="#">Terms Of Use</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul><!-- End .footer-menu -->
+        
+                    <div class="social-icons social-icons-color">
+                        <span class="social-label">Socials</span>
+                        <a href="#" class="social-icon social-facebook" title="Facebook" target="_blank"><i
+                                class="icon-facebook-f"></i></a>
+                        <a href="#" class="social-icon social-twitter" title="Twitter" target="_blank"><i
+                                class="icon-twitter"></i></a>
+                        <a href="#" class="social-icon social-instagram" title="Instagram" target="_blank"><i
+                                class="icon-instagram"></i></a>
+                        <a href="#" class="social-icon social-youtube" title="Youtube" target="_blank"><i
+                                class="icon-youtube"></i></a>
+                        <a href="#" class="social-icon social-pinterest" title="Pinterest" target="_blank"><i
+                                class="icon-pinterest"></i></a>
+                    </div><!-- End .soial-icons -->
+                </div><!-- End .container-fluid -->
             </div><!-- End .footer-bottom -->
         </footer><!-- End .footer -->
         </div><!-- End .page-wrapper -->
         <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+        <script src="assets/js/jquery.min.js"></script>
+        <script src="assets/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/js/jquery.hoverIntent.min.js"></script>
+        <script src="assets/js/jquery.waypoints.min.js"></script>
+        <script src="assets/js/superfish.min.js"></script>
+        <script src="assets/js/owl.carousel.min.js"></script>
+        <script src="assets/js/wNumb.js"></script>
+        <script src="assets/js/bootstrap-input-spinner.js"></script>
+        <script src="assets/js/jquery.magnific-popup.min.js"></script>
+        <script src="assets/js/nouislider.min.js"></script>
+        <!-- Main JS File -->
+        <script src="assets/js/main.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        
+        
+      <script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/jquery.hoverIntent.min.js"></script>
+<script src="assets/js/jquery.waypoints.min.js"></script>
+<script src="assets/js/superfish.min.js"></script>
+<script src="assets/js/owl.carousel.min.js"></script>
+<script src="assets/js/wNumb.js"></script>
+<script src="assets/js/bootstrap-input-spinner.js"></script>
+<script src="assets/js/jquery.magnific-popup.min.js"></script>
+<script src="assets/js/nouislider.min.js"></script>
+<!-- Main JS File -->
+<script src="assets/js/main.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+<script>
+
+    function setDefaultType(addressId) {
+        fetch(`/set-default-address/${addressId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => response.json())
+            .then(result => {
+                console.log(result);
+                Swal.fire({
+                    icon: "success",
+                    title: "Success!",
+                    text: "Address type set to default.",
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+
+</script>
+
+
+
+
+</body>
+
+
+
+
+</html>
+        
+        
+        </body>
+        
+        
+        
+        
+        </html>

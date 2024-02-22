@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
+const Orders = require("../models/ordersModel");
 const Address = require("../models/addressModel");
 const sendEmail = require("../services/sendEmail");
 const authRoutes = require("../services/authRoutes");
@@ -156,6 +157,9 @@ const verifyLogin = async (req, res) => {
   }
 };
 
+
+
+
 const loadHome = async (req, res) => {
   try {
     const products = await Product.find();
@@ -165,25 +169,7 @@ const loadHome = async (req, res) => {
   }
 };
 
-const loadProfile = async (req, res) => {
-  try {
-    const selectedValue = req.query.selected;
-    console.log(selectedValue);
-    const userId = res.locals.currentUser._id.toString();
 
-    const matchingAddress = await Address.findOne({ user: userId });
-    let pageinfo = selectedValue;
-
-    if (!matchingAddress) {
-      console.error("Address not found for user:", userId);
-      res.render("profile", { pageinfo });
-    } else {
-      res.render("profile", { pageinfo, matchingAddress });
-    }
-  } catch (error) {
-    console.log(error.message);
-  }
-};
 
 const userLogout = async (req, res) => {
   try {
@@ -196,6 +182,47 @@ const userLogout = async (req, res) => {
 
 
 
+const loadProfile = async (req, res) => {
+  try {
+    const selectedValue = req.query.selected;
+  
+
+     const userID = res.locals.currentUser._id;
+
+    const userDetails = await User.findOne({ _id: userID });
+
+    console.log("user Details>>"+userDetails);
+
+    const matchingAddress = await Address.findOne({ user: userID });
+
+    let pageinfo = selectedValue;
+
+   
+    console.log(userID);
+
+    const AllOrders = await Orders.find({ user: userID })
+      .populate({
+        path: "products.product",
+        model: "Product",
+      })
+      .exec();
+
+    if (!matchingAddress) {
+      console.error("Address not found for user:", userID);
+      res.render("profile", { pageinfo });
+    } else {
+     res.render("profile", {
+       pageinfo,
+       matchingAddress,
+       AllOrders,
+       userDetails,
+     });
+
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 
 

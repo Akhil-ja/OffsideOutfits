@@ -72,12 +72,12 @@
                                 
                                 </li>
                                 <li>
-                                    <a href="/category" class="">Shop</a>
+                                    <a href="/products" class="">Shop</a>
 
                                 
                                 </li>
                                 <li>
-                                    <a href="product.html" class="">Product</a>
+                                    <a href="" class="">Product</a>
 
                                    
                                 </li>
@@ -123,13 +123,14 @@
                         <i class="icon-heart-o"></i>
                     </a>
                 
-                    <div class=" cart-dropdown">
-                        <a href="/cart" class="dropdown-toggle" role="button" aria-haspopup="true"
-                            aria-expanded="false" data-display="static">
-                            <i class="icon-shopping-cart"></i>
-                        </a>
-                    </div>
-                
+                <div class="cart-dropdown position-relative">
+                    <a href="/cart" class="dropdown-toggle" role="button" style="position: relative; display: inline-block;">
+                        <i class="icon-shopping-cart">
+                            <span id="cart-count" class="badge badge-danger"
+                                style="position: absolute; top: 0; right: 0; font-size: 10px; padding: 2px 5px;"></span>
+                        </i>
+                    </a>
+                </div>
                     <div class=" cart-dropdown">
                         <a href="/profile" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false" data-display="static">
@@ -419,7 +420,6 @@
 <script>
     async function addToCart(productId) {
         const userId = '<%=currentUser._id %>';
-
         const data = {
             productId: productId,
             userId: userId
@@ -438,19 +438,23 @@
                 const result = await response.json();
 
                 if (result.alreadyExists) {
-                  
                     Swal.fire({
                         icon: 'info',
                         title: 'Already Exists',
                         text: 'This product is already in your cart.',
                     });
                 } else {
-                   
+                    // Update cart count dynamically
+                    const cartCountElement = document.getElementById('cart-count');
+                    if (cartCountElement) {
+                        cartCountElement.textContent = result.cartCount;
+                    }
+
                     Swal.fire({
                         icon: 'success',
                         title: 'Added to Cart',
                         text: 'Product added to your cart successfully!',
-                          showConfirmButton: false,
+                        showConfirmButton: false,
                         timer: 1000
                     });
                 }
@@ -461,6 +465,22 @@
             console.error('Error:', error);
         }
     }
+
+
+    </script>
+
+    <script>
+        function getElementValue(id) {
+            const element = document.getElementById(id);
+            return element ? element.value : null;
+        }
+
+        function updateCartCount(count) {
+            const cartCountElement = document.getElementById('cart-count');
+            if (cartCountElement) {
+                cartCountElement.textContent = count;
+            }
+        }
 
     </script>
 
