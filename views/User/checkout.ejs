@@ -188,52 +188,60 @@
                             <div class="row">
                                 <input type="text" name="userID" value="<%= currentUser._id %>" hidden>
                         
-                                <div class="col-lg-9">
-                                    <h2 class="checkout-title">Address Details</h2>
+                        <div class="col-lg-9">
+                            <h2 class="checkout-title">Address Details</h2>
                         
-                                    <!-- Iterate over user addresses and create radio buttons -->
-                                    <div class="row">
-                                        <% userAddresses.forEach((userAddress, index)=> { %>
-                                            <% userAddress.address.forEach((address, addressIndex)=> { %>
-                                                <div class="col-lg-6 mb-4">
-                                                    <div class="card">
-                                                        <div class="card-body">
-                                                            <h5 class="card-title">
-                                                                <%= address.AddName %>
-                                                            </h5>
-                                                            <p class="card-text"><strong>House:</strong>
-                                                                <%= address.House %>
-                                                            </p>
-                                                            <p class="card-text"><strong>Street:</strong>
-                                                                <%= address.street %>
-                                                            </p>
-                                                            <p class="card-text"><strong>City:</strong>
-                                                                <%= address.city %>
-                                                            </p>
-                                                            <p class="card-text"><strong>State:</strong>
-                                                                <%= address.state %>
-                                                            </p>
-                                                            <p class="card-text"><strong>PIN:</strong>
-                                                                <%= address.PIN %>
-                                                            </p>
+                            <% if (userAddresses.length> 0) { %>
+                              
+                                <div class="row">
+                                    <% userAddresses.forEach((userAddress, index)=> { %>
+                                        <% userAddress.address.forEach((address, addressIndex)=> { %>
+                                            <div class="col-lg-6 mb-4">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">
+                                                            <%= address.AddName %>
+                                                        </h5>
+                                                        <p class="card-text"><strong>House:</strong>
+                                                            <%= address.House %>
+                                                        </p>
+                                                        <p class="card-text"><strong>Street:</strong>
+                                                            <%= address.street %>
+                                                        </p>
+                                                        <p class="card-text"><strong>City:</strong>
+                                                            <%= address.city %>
+                                                        </p>
+                                                        <p class="card-text"><strong>State:</strong>
+                                                            <%= address.state %>
+                                                        </p>
+                                                        <p class="card-text"><strong>PIN:</strong>
+                                                            <%= address.PIN %>
+                                                        </p>
                         
-                                                            <div class="form-check m-3">
-                                                                <input class="form-check-input" type="radio" name="address"
-                                                                    id="<%= `address${index}-${addressIndex}` %>" value="<%= address._id %>"
-                                                                    required>
-                                                                <label class="form-check-label" for="<%= `address${index}-${addressIndex}` %>">
-                                                                    Select
-                                                                </label>
-                                                            </div>
+                                                        <div class="form-check m-3">
+                                                            <input class="form-check-input" type="radio" name="address"
+                                                                id="<%= `address${index}-${addressIndex}` %>" value="<%= address._id %>"
+                                                                required>
+                                                            <label class="form-check-label" for="<%= `address${index}-${addressIndex}` %>">
+                                                                Select
+                                                            </label>
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <% }); %>
                                                 <% }); %>
-                                                    <% }); %>
-                                    </div>
-                        
-
                                 </div>
+                                <% } else { %>
+                                    <!-- Display a button to add an address if there are no addresses -->
+                                    <div class="text-center m-5">
+                                        <p>You have no saved addresses. Please add an address to place orders.</p>
+                                        <a href="/profile?selected=Address" class="btn btn-primary m-4">Add Address</a>
+                                    </div>
+                                    <% } %>
+                        </div>
+
+
                         
                              
                                 <aside class="col-lg-3">

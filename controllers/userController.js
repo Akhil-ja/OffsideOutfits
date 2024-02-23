@@ -189,7 +189,7 @@ const loadProfile = async (req, res) => {
 
      const userID = res.locals.currentUser._id;
 
-     console.log("user id from res.locals>"+userID);
+     
 
     const userDetails = await User.findOne({ _id: userID });
 
@@ -235,6 +235,8 @@ const edit_User = async (req, res) => {
   try {
     const id = req.query.id;
     const existingUser = await User.findById(id);
+
+   
 
     if (!existingUser) {
       return res.status(404).send("User not found.");
@@ -295,14 +297,14 @@ const changePassword = async (req, res) => {
     console.log("New Password:", newPassword);
     console.log("Confirm New Password:", confirmNewPassword);
 
-    // Check if new password and confirm password match
+    
     if (newPassword !== confirmNewPassword) {
       return res.status(400).json({
         errorMessage: "New password and confirm password do not match.",
       });
     }
 
-    // Check if new password is the same as the old password
+   
     if (oldPassword === newPassword) {
       return res.status(400).json({
         errorMessage: "New password must be different from the old password.",
@@ -332,6 +334,31 @@ const changePassword = async (req, res) => {
 };
 
 
+const editUserDetails = async (req, res) => {
+  try {
+    console.log("in edit user details");
+    const { userID, name, phone } = req.body;
+    
+
+    try {
+      const user = await User.findById(userID);
+      user.name = name;
+      user.phone = phone; 
+      await user.save();
+
+      res.status(200).send("Profile updated");
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Internal server error");
+    }
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal server error");
+  }
+};
+
+
+
 
 
 module.exports = {
@@ -347,4 +374,5 @@ module.exports = {
   editUser,
   edit_User,
   changePassword,
+  editUserDetails,
 };

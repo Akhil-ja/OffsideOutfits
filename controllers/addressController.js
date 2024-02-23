@@ -47,7 +47,7 @@ const add_Address = async (req, res, next) => {
     }
 
     let pageinfo = "Address";
-    res.render("profile", { pageinfo });
+    res.redirect("/profile?selected=Address");
   } catch (error) {
     console.log(error.message);
   }

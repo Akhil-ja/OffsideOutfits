@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="assets/css/plugins/magnific-popup/magnific-popup.css">
     <link rel="stylesheet" href="assets/css/plugins/nouislider/nouislider.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 </head>
 
 <body>
@@ -174,19 +175,36 @@
                             <div class="col-md-8 col-lg-9">
                                 <div class="tab-content">
 
-                                    <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel"
-                                        aria-labelledby="tab-dashboard-link">
-                                        <h1 class="display-4">Hello <span class="font-weight-normal text-dark">
-                                                <%= userDetails.name %>
-                                            </span></h1>
+                                    <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
+                                    
+                                    <span id="nameDisplay">
+                                        <input type="text" id="userID" value="<%= userDetails._id %>" hidden>
+                                        <span style="font-size: xx-large; font-weight: 700;">
+                                            <%= userDetails.name %>
+                                        </span>
+                                        <i class="fas fa-edit edit-icon" onclick="toggleEditMode(nameInput)"></i>
+                                    </span>
+                                    <div id="nameInput" style="display: none;">
+                                        <input type="text" id="nameEdit" value="<%= userDetails.name %>" />
+                                        <button onclick="submitEdit('nameEdit', 'nameDisplay', nameInput)">Save</button>
+                                    </div>
+
                                         <p class="lead">
                                             <strong>Email:</strong>
                                             <%= userDetails.email %> <br>
                                                 <strong>Phone:</strong>
-                                                <%= userDetails.phone %>
+                                                <span id="userPhone">
+                                                    <%= userDetails.phone %>
+                                                        <!-- <i class="fas fa-edit edit-icon" onclick="toggleEditMode(phoneInput)"></i> -->
+                                                </span>
                                         </p>
-
+                                        <div id="phoneInput" style="display: none;">
+                                            <input type="text" id="phoneEdit" value="<%= userDetails.phone %>" />
+                                            <button onclick="submitEdit('phoneEdit', 'userPhone', phoneInput)">Save</button>
+                                        </div>
+                                    
                                     </div>
+
 
 
 
@@ -195,46 +213,47 @@
 
 
 
-                                        <div class="container-fluid">
-                                            <h2 class="title mb-3">Orders List</h2>
-
-                                            <ul class="list-group">
-                                                <% AllOrders.forEach(order=> { %>
-                                                    <li class="list-group-item mb-3"
-                                                        onclick="window.location='/order-details?orderID=<%= order._id %>'"
-                                                        style="cursor: pointer; border: 1px solid #dee2e6; border-radius: 2rem;">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <div class="text-right">
-                                                                <p class="mb-0">
-                                                                    <strong>Product Names:</strong>
-                                                                    <%= order.products.map(productInfo=>
-                                                                        productInfo.product.pname).join(', ') %>
-                                                                </p>
+                                    <div class="container-fluid">
+                                        <h2 class="title mb-3">Orders List</h2>
+                                    
+                                        <% if (AllOrders.length===0) { %>
+                                            <p>You have not ordered anything yet.</p>
+                                            <% } else { %>
+                                                <ul class="list-group">
+                                                    <% AllOrders.forEach(order=> { %>
+                                                        <li class="list-group-item mb-3" onclick="window.location='/order-details?orderID=<%= order._id %>'"
+                                                            style="cursor: pointer; border: 1px solid #dee2e6; border-radius: 2rem;">
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <div class="text-right">
+                                                                    <p class="mb-0">
+                                                                        <strong>Product Names:</strong>
+                                                                        <%= order.products.map(productInfo=>
+                                                                            productInfo.product.pname).join(', ') %>
+                                                                    </p>
+                                                                </div>
+                                                                <div>
+                                                                    <a href="/order-details?orderID=<%= order._id %>" class="text-decoration-none">
+                                                                        <strong>Order ID:</strong>
+                                                                        <%= order._id %>
+                                                                    </a>
+                                                                    <p class="mb-1">
+                                                                        <strong>Status:</strong>
+                                                                        <span class="badge badge-primary">
+                                                                            <%= order.status %>
+                                                                        </span>
+                                                                    </p>
+                                                                    <p class="mb-0">
+                                                                        <strong>Order Date:</strong>
+                                                                        <%= new Date(order.orderDate).toLocaleDateString() %>
+                                                                    </p>
+                                                                </div>
                                                             </div>
-                                                            <div>
-                                                                <a href="/order-details?orderID=<%= order._id %>"
-                                                                    class="text-decoration-none">
-                                                                    <strong>Order ID:</strong>
-                                                                    <%= order._id %>
+                                                        </li>
+                                                        <% }); %>
+                                                </ul>
+                                                <% } %>
+                                    </div>
 
-                                                                </a>
-                                                                <p class="mb-1">
-                                                                    <strong>Status:</strong>
-                                                                    <span class="badge badge-primary">
-                                                                        <%= order.status %>
-                                                                    </span>
-                                                                </p>
-                                                                <p class="mb-0">
-                                                                    <strong>Order Date:</strong>
-                                                                    <%= new Date(order.orderDate).toLocaleDateString()
-                                                                        %>
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <% }); %>
-                                            </ul>
-                                        </div>
 
 
                                     </div><!-- .End .tab-pane -->
@@ -381,6 +400,8 @@
                                                 });
                                             </script>
                                             <%}%>
+                                           
+
         </main>
         <footer class="footer footer-2">
             <div class="footer-middle">
@@ -494,7 +515,7 @@
             </div><!-- End .footer-bottom -->
         </footer><!-- End .footer -->
 
-
+       
     </div><!-- End .page-wrapper -->
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
 
@@ -617,7 +638,46 @@
     });
 </script>
 
+<script>
+    async function submitEdit(inputId, displayId, inputContainerElement) {
+        const inputValue = document.getElementById(inputId).value;
+        const userID = document.getElementById('userID').value;
+        const phoneNO=document.getElementById('phoneEdit').value
+        const displayElement = document.getElementById(displayId);
 
+        console.log("name >>" + inputValue);
+        console.log("phone no >>" + phoneNO);
+
+        displayElement.textContent = inputValue;
+        inputContainerElement.style.display = 'none';
+
+        try {
+            const response = await fetch('/edit-user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: inputValue,
+                    userID: userID,
+                    phone: phoneNO
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update profile');
+            }
+           location.reload()
+            console.log('Profile updated successfully');
+
+        } catch (err) {
+            console.error(err);
+            alert('Failed to update profile');
+        }
+    }
+
+    function toggleEditMode(inputContainerElement) {
+        inputContainerElement.style.display = 'block';
+    }
+</script>
 
 </body>
 

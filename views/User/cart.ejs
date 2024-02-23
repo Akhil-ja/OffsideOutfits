@@ -123,80 +123,71 @@
                 </div><!-- End .header-middle -->
             </div>
         </header><!-- End .header -->
-<main class="main">
-    <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
-        <div class="container-fluid">
-            <h1 class="page-title"><span>Cart</span></h1>
-        </div><!-- End .container-fluid -->
-    </div>
-    <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 m-1"></nav><!-- End .breadcrumb-nav -->
-    <div class="page-content">
-        <div class="container-fluid">
+        <main class="main">
+            <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+                <div class="container-fluid">
+                    <h1 class="page-title"><span>Cart</span></h1>
+                </div><!-- End .container-fluid -->
+            </div>
+            <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 m-1"></nav><!-- End .breadcrumb-nav -->
             <div class="page-content">
-                <div class="cart">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-9">
-                                <table class="table table-cart table-mobile">
-                                    <thead>
-                                        <tr>
-                                            <th>Product</th>
-                                            <th>Price</th>
-                                            <th>Quantity</th>
-                                            <th>Total</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
+                <div class="container-fluid">
+                    <div class="page-content">
+                        <div class="cart">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-lg-9">
+                                        <table class="table table-cart table-mobile">
+                                            <thead>
+                                                <tr>
+                                                    <th>Product</th>
+                                                    <th>Price</th>
+                                                    <th>Quantity</th>
+                                                    <th>Total</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
 
-                                <tbody>
-                                    <% if (cartItems) { %>
-                                        <% cartItems.forEach(cartItem=> { %>
-                                            <% if (cartItem.cartProducts && cartItem.cartProducts.length> 0) { %>
-                                                <% cartItem.cartProducts.forEach(product=> { %>
-                                                    <tr data-cart-item="<%= cartItem._id %>" data-product-id="<%= product.productDetail._id %>">
-                                                        <td class="product-col">
-                                                            <div class="product">
-                                                                <h3 class="product-title">
-                                                                    <a href="#">
-                                                                        <%= product.productDetail.pname %>
-                                                                    </a>
-                                                                </h3><!-- End .product-title -->
-                                                            </div><!-- End .product -->
-                                                        </td>
-                                                        <td class="price-col">
-                                                            <%= product.productDetail.price %>
-                                                        </td>
-                                                        <td class="quantity-col">
-                                                            <div class="cart-product-quantity">
-                                                                <input type="number" class="form-control" value="<%= product.quantity %>" min="1"
-                                                                    max="5" step="1" data-decimals="0" required data-cart-id="<%= cartItem._id %>"
-                                                                    data-product-id="<%= product.productDetail._id %>">
-                                                            </div>
-                                                        </td>
-                                                        <td class="total-col">
-                                                            <%= product.productDetail.price * product.quantity %>
-                                                        </td>
-                                                        <td class="remove-col">
-                                                            <button class="btn-remove"
-                                                                onclick="removeProduct('<%= cartItem._id %>', '<%= product.productDetail._id %>')">
-                                                                <i class="icon-close"></i>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                    <% }); %>
-                                                        <% } else { %>
-                                                        <tr>
-                                                            <td colspan="5" class="text-center">
-                                                                <div class="alert alert-warning">
-                                                                    <strong>Cart Is empty</strong>
+                                    <tbody>
+                                        <% if (cartItems && cartItems.length!== 0) { %>
+                                            <% cartItems.forEach(cartItem=> { %>
+                                                <% if (cartItem.cartProducts && cartItem.cartProducts.length> 0) { %>
+                                                    <% cartItem.cartProducts.forEach(product=> { %>
+                                                        <tr data-cart-item="<%= cartItem._id %>" data-product-id="<%= product.productDetail._id %>">
+                                                            <td class="product-col">
+                                                                <div class="product">
+                                                                    <h3 class="product-title">
+                                                                        <a href="#">
+                                                                            <%= product.productDetail.pname %>
+                                                                        </a>
+                                                                    </h3>
                                                                 </div>
                                                             </td>
+                                                            <td class="price-col">
+                                                                <%= product.productDetail.price %>
+                                                            </td>
+                                                            <td class="quantity-col">
+                                                                <div class="cart-product-quantity">
+                                                                    <input type="number" class="form-control" value="<%= product.quantity %>" min="1"
+                                                                        max="5" step="1" data-decimals="0" required data-cart-id="<%= cartItem._id %>"
+                                                                        data-product-id="<%= product.productDetail._id %>">
+                                                                </div>
+                                                            </td>
+                                                            <td class="total-col">
+                                                                <%= product.productDetail.price * product.quantity %>
+                                                            </td>
+                                                            <td class="remove-col">
+                                                                <button class="btn-remove"
+                                                                    onclick="removeProduct('<%= cartItem._id %>', '<%= product.productDetail._id %>')">
+                                                                    <i class="icon-close"></i>
+                                                                </button>
+                                                            </td>
                                                         </tr>
-
-
+                                                        <% }); %>
                                                             <% } %>
                                                                 <% }); %>
                                                                     <% } else { %>
+                                                                       
                                                                         <tr>
                                                                             <td colspan="5" class="text-center">
                                                                                 <div class="alert alert-warning">
@@ -204,78 +195,78 @@
                                                                                 </div>
                                                                             </td>
                                                                         </tr>
-
-
                                                                         <% } %>
-                                </tbody>
-                                                            </table>
+                                    </tbody>
 
-                                <div class="cart-bottom">
-                                    <div class="cart-discount">
-                                        <form action="#">
-                                            <div class="input-group">
-                                                <input type="text" class="form-control" required
-                                                    placeholder="coupon code">
-                                                <div class="input-group-append">
-                                                    <button class="btn btn-outline-primary-2" type="submit"><i
-                                                            class="icon-long-arrow-right"></i></button>
-                                                </div><!-- .End .input-group-append -->
-                                            </div><!-- End .input-group -->
-                                        </form>
-                                    </div><!-- End .cart-discount -->
-                                </div><!-- End .cart-bottom -->
-                            </div><!-- End .col-lg-9 -->
+                                        </table>
 
-                            <aside class="col-lg-3">
-                                <div class="summary summary-cart">
-                                    <h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
+                                        <div class="cart-bottom">
+                                            <div class="cart-discount">
+                                                <form action="#">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" required
+                                                            placeholder="coupon code">
+                                                        <div class="input-group-append">
+                                                            <button class="btn btn-outline-primary-2" type="submit"><i
+                                                                    class="icon-long-arrow-right"></i></button>
+                                                        </div><!-- .End .input-group-append -->
+                                                    </div><!-- End .input-group -->
+                                                </form>
+                                            </div><!-- End .cart-discount -->
+                                        </div><!-- End .cart-bottom -->
+                                    </div><!-- End .col-lg-9 -->
 
-                                    <table class="table table-summary">
-                                        <tbody>
-                                            <tr class="summary-subtotal">
-                                                <td>Subtotal:</td>
-                                                <td id="dynamicTotal"></td>
-                                            </tr>
-                                            <tr class="summary-shipping">
-                                                <td>Shipping:</td>
-                                                <td>&nbsp;</td>
-                                            </tr>
+                                    <aside class="col-lg-3">
+                                        <div class="summary summary-cart">
+                                            <h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
 
-                                            <!-- Add your dynamic shipping rows here -->
+                                            <table class="table table-summary">
+                                                <tbody>
+                                                    <tr class="summary-subtotal">
+                                                        <td>Subtotal:</td>
+                                                        <td id="dynamicTotal"></td>
+                                                    </tr>
+                                                    <tr class="summary-shipping">
+                                                        <td>Shipping:</td>
+                                                        <td>&nbsp;</td>
+                                                    </tr>
 
-                                            <tr class="summary-shipping-estimate">
-                                                <td>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                        fill="currentColor" class="bi bi-geo-fill"
-                                                        viewBox="0 0 16 16"></svg>
-                                                    <p id="currentAddress"></p><br>
-                                                    <a href="/profile?selected=Address">Change address</a>
-                                                </td>
-                                                <td>&nbsp;</td>
-                                            </tr><!-- End .summary-shipping-estimate -->
+                                                    <!-- Add your dynamic shipping rows here -->
 
-                                            <tr class="summary-total">
-                                                <td>Total:</td>
-                                                <td style="font-weight: 900;">
-                                                    <span id="dynamicTotal"></span>
-                                                </td>
-                                            </tr><!-- End .summary-total -->
-                                        </tbody>
-                                    </table><!-- End .table table-summary -->
+                                                    <tr class="summary-shipping-estimate">
+                                                        <td>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                                                height="16" fill="currentColor" class="bi bi-geo-fill"
+                                                                viewBox="0 0 16 16"></svg>
+                                                            <p id="currentAddress"></p><br>
+                                                            <a href="/profile?selected=Address">Change address</a>
+                                                        </td>
+                                                        <td>&nbsp;</td>
+                                                    </tr><!-- End .summary-shipping-estimate -->
 
-                                    <a href="/checkout" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO
-                                        CHECKOUT</a>
-                                </div><!-- End .summary -->
+                                                    <tr class="summary-total">
+                                                        <td>Total:</td>
+                                                        <td style="font-weight: 900;">
+                                                            <span id="dynamicTotal"></span>
+                                                        </td>
+                                                    </tr><!-- End .summary-total -->
+                                                </tbody>
+                                            </table><!-- End .table table-summary -->
 
-                                <a href="/products" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE
-                                        SHOPPING</span></i></a>
-                            </aside>
-                        </div><!-- End .row -->
-                    </div><!-- End .container -->
-                </div><!-- End .cart -->
-            </div><!-- End .page-content -->
-        </div>
-</main><!-- End .main -->
+                                            <a href="/checkout"
+                                                class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO
+                                                CHECKOUT</a>
+                                        </div><!-- End .summary -->
+
+                                        <a href="/products" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE
+                                                SHOPPING</span></i></a>
+                                    </aside>
+                                </div><!-- End .row -->
+                            </div><!-- End .container -->
+                        </div><!-- End .cart -->
+                    </div><!-- End .page-content -->
+                </div>
+        </main><!-- End .main -->
 
         <footer class="footer">
             <div class="footer-middle">
@@ -674,114 +665,114 @@
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
 
-<script>
-    function calculateTotal() {
-        let total = 0;
-        const cartItems = document.querySelectorAll('.table-cart tbody tr');
+    <script>
+        function calculateTotal() {
+            let total = 0;
+            const cartItems = document.querySelectorAll('.table-cart tbody tr');
 
-        cartItems.forEach(item => {
-            const quantityInput = item.querySelector('.cart-product-quantity input');
-            const priceCell = item.querySelector('.price-col');
-            const totalCell = item.querySelector('.total-col');
-            const quantity = parseInt(quantityInput.value);
-            const price = parseFloat(priceCell.textContent.replace('Rs', ''));
+            cartItems.forEach(item => {
+                const quantityInput = item.querySelector('.cart-product-quantity input');
+                const priceCell = item.querySelector('.price-col');
+                const totalCell = item.querySelector('.total-col');
+                const quantity = parseInt(quantityInput.value);
+                const price = parseFloat(priceCell.textContent.replace('Rs', ''));
 
-            const itemTotal = price * quantity;
-            total += itemTotal;
-            totalCell.textContent = itemTotal.toFixed(2);
-        });
-
-        return total.toFixed(2);
-    }
-
-    function updateQuantityOnServer(cartId, productId, newQuantity) {
-        fetch('/update-cart-quantity', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                cartId: cartId,
-                productId: productId,
-                newQuantity: newQuantity
-            })
-        })
-            .then(response => response.json())
-            .then(result => {
-                console.log(result);
-                
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                
+                const itemTotal = price * quantity;
+                total += itemTotal;
+                totalCell.textContent = itemTotal.toFixed(2);
             });
-    }
 
-      
-     function removeProduct(cartId, productId) {
-              fetch('/remove-from-cart', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({
-                      cartId: cartId,
-                      productId: productId
-                  })
-              })
-                  .then(response => response.json())
-                  .then(result => {
-                      console.log(result);
+            return total.toFixed(2);
+        }
 
-                      // Update cart count dynamically
-                      const cartCountElement = document.getElementById('cart-count');
-                      if (cartCountElement) {
-                          cartCountElement.textContent = result.cartCount;
-                      }
+        function updateQuantityOnServer(cartId, productId, newQuantity) {
+            fetch('/update-cart-quantity', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    cartId: cartId,
+                    productId: productId,
+                    newQuantity: newQuantity
+                })
+            })
+                .then(response => response.json())
+                .then(result => {
+                    console.log(result);
 
-                      window.location.reload(); // Reload might not be necessary, check if it's needed
-                      updateCartTotal();
-                      location.reload();
-                  })
-                  .catch(error => {
-                      console.error('Error:', error);
-                  });
-          }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+
+                });
+        }
 
 
+        function removeProduct(cartId, productId) {
+            fetch('/remove-from-cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    cartId: cartId,
+                    productId: productId
+                })
+            })
+                .then(response => response.json())
+                .then(result => {
+                    console.log(result);
 
-    window.addEventListener('DOMContentLoaded', () => {
-        const dynamicTotalElement = document.getElementById('dynamicTotal');
-        dynamicTotalElement.textContent = 'Rs' + calculateTotal();
-    });
+                    // Update cart count dynamically
+                    const cartCountElement = document.getElementById('cart-count');
+                    if (cartCountElement) {
+                        cartCountElement.textContent = result.cartCount;
+                    }
 
-    const quantityInputs = document.querySelectorAll('.cart-product-quantity input');
+                    window.location.reload(); // Reload might not be necessary, check if it's needed
+                    updateCartTotal();
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
 
-    quantityInputs.forEach(input => {
-        input.addEventListener('change', () => {
+
+
+        window.addEventListener('DOMContentLoaded', () => {
             const dynamicTotalElement = document.getElementById('dynamicTotal');
             dynamicTotalElement.textContent = 'Rs' + calculateTotal();
-
-            const cartId = input.getAttribute('data-cart-id');
-            const productId = input.getAttribute('data-product-id');
-            const newQuantity = parseInt(input.value);
-
-            updateQuantityOnServer(cartId, productId, newQuantity);
         });
 
-        input.addEventListener('input', () => {
-            const item = input.closest('tr');
-            const priceCell = item.querySelector('.price-col');
-            const totalCell = item.querySelector('.total-col');
-            const price = parseFloat(priceCell.textContent.replace('Rs', ''));
+        const quantityInputs = document.querySelectorAll('.cart-product-quantity input');
 
-            const quantity = parseInt(input.value);
-            const itemTotal = price * quantity;
-            totalCell.textContent = itemTotal.toFixed(2);
+        quantityInputs.forEach(input => {
+            input.addEventListener('change', () => {
+                const dynamicTotalElement = document.getElementById('dynamicTotal');
+                dynamicTotalElement.textContent = 'Rs' + calculateTotal();
+
+                const cartId = input.getAttribute('data-cart-id');
+                const productId = input.getAttribute('data-product-id');
+                const newQuantity = parseInt(input.value);
+
+                updateQuantityOnServer(cartId, productId, newQuantity);
+            });
+
+            input.addEventListener('input', () => {
+                const item = input.closest('tr');
+                const priceCell = item.querySelector('.price-col');
+                const totalCell = item.querySelector('.total-col');
+                const price = parseFloat(priceCell.textContent.replace('Rs', ''));
+
+                const quantity = parseInt(input.value);
+                const itemTotal = price * quantity;
+                totalCell.textContent = itemTotal.toFixed(2);
+            });
         });
-    });
 
-</script>
+    </script>
 
 
 </body>

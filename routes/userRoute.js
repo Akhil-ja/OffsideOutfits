@@ -111,6 +111,7 @@ userRoute.post(
   userController.changePassword
 );
 
+userRoute.post("/edit-user",userController.editUserDetails)
 
 
 module.exports= userRoute;

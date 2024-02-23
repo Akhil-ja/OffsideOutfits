@@ -139,7 +139,6 @@
     <div class="container">
         <h2 class="title mb-3">Order Details</h2>
 
-        <!-- Display Order Details based on order ID -->
         <div class="card mb-3">
             <div class="card-body">
                 <h4 class="card-title">Order Placed Date: <%= orderDetails.orderDate.toLocaleDateString() %>
@@ -152,22 +151,26 @@
             </div>
         </div>
 
-        <!-- Display Address Information -->
         <div class="card mb-3">
             <div class="card-body">
                 <h4 class="card-title">Shipping Address</h4>
-                <!-- Address details here -->
+                <p class="card-text m-2">
+                    <%= orderDetails.address.AddName %><br>
+                        <%= orderDetails.address.House %>, <%= orderDetails.address.street %><br>
+                                <%= orderDetails.address.city %>, <%= orderDetails.address.state %><br>
+                                        <%= orderDetails.address.PIN %>
+                </p>
             </div>
         </div>
 
-        <!-- Display Product Information -->
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Ordered Products</h4>
-                <ul class="list-group list-group-flush">
+                <ul class="list-group list-group-flush m-2">
                     <% orderDetails.products.forEach(productInfo=> { %>
                         <li class="list-group-item">
-                            <!-- Product details here -->
+                            <%= productInfo.product.pname %> -
+                                <%= productInfo.quantity %> units at <%= productInfo.product.price %>/unit
                         </li>
                         <% }); %>
                 </ul>
@@ -187,6 +190,7 @@
         <a href="/profile?selected=orders" class="btn btn-secondary m-5">Back</a>
     </div><!-- End .container -->
 </main><!-- End .main -->
+
 
 
 
