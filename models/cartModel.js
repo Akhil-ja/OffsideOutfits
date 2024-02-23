@@ -16,12 +16,12 @@ const cartSchema = new mongoose.Schema(
           type: Number,
           default: 1,
         },
+        size: {
+          type: String,
+         default:'XS'
+        },
       },
     ],
-    // cartTotal: {
-    //   type: Number,
-    //   required: true,
-    // },
   },
   {
     strictPopulate: false,

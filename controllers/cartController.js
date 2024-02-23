@@ -53,7 +53,7 @@ const loadCart = async (req, res) => {
 
 const addToCart = async (req, res) => {
   try {
-    const { productId, userId } = req.body;
+    const { productId, userId, size } = req.body;
 
     const user = await User.findById(userId);
     if (!user) {
@@ -69,7 +69,12 @@ const addToCart = async (req, res) => {
     if (!cart) {
       cart = new Cart({
         user: userId,
-        cartProducts: [{ product: productId }],
+        cartProducts: [
+          {
+            product: productId,
+            size: size,
+          },
+        ],
       });
     } else {
       if (cart.cartProducts.some((item) => item.product.equals(productId))) {
@@ -79,22 +84,23 @@ const addToCart = async (req, res) => {
         });
       }
 
-      cart.cartProducts.push({ product: productId });
+      cart.cartProducts.push({ product: productId, size: size }); // Set the size for the new product
     }
 
     await cart.save();
 
-  return res.status(200).json({
-    alreadyExists: false,
-    success: true,
-    message: "Product added to cart.",
-    cartCount: cart.cartProducts.length, // Add this line to return the updated cart count
-  });
+    return res.status(200).json({
+      alreadyExists: false,
+      success: true,
+      message: "Product added to cart.",
+      cartCount: cart.cartProducts.length,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error." });
   }
 };
+
 
 
 

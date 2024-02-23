@@ -21,6 +21,7 @@
     <!-- Main CSS File -->
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/plugins/nouislider/nouislider.css">
+    <link rel="stylesheet" href="path/to/select2.min.css">
 </head>
 
 <body>
@@ -221,14 +222,17 @@
                                 <div class="details-filter-row details-row-size mb-md-1">
                                     <label>Size:</label>
                                 
-                                    <div class="product-size">
-                                        <a  title="Small" onclick="getSize('S')">S</a>
-                                        <a title="Medium" onclick="getSize('M')">M</a>
-                                        <a  title="Large" onclick="getSize('L')">L</a>
-                                        <a title="Extra Large" onclick="getSize('XL')">XL</a>
-                                    </div>
+                                    <select id="sizeDropdown" class="js-select2">
+                                        <option value="XS">XS</option>
+                                        <option value="S">S</option>
+                                        <option value="M">M</option>
+                                        <option value="L">L</option>
+                                        <option value="XL">XL</option>
+                                        <option value="XXL">XXL</option>
+                                       
+                                    </select>
                                 
-                                    <a href="#" class="size-guide"><i class="icon-th-list"></i>size guide</a>
+                                    
                                 </div>
                                 </div>
 
@@ -415,14 +419,26 @@
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    
+    <script src="path/to/select2.min.js"></script>
 
+<script>
+
+  // Initialize Select2
+  $(document).ready(function() {
+    $('.js-select2').select2();
+  });
+</script>
 
 <script>
     async function addToCart(productId) {
         const userId = '<%=currentUser._id %>';
+        const size = document.getElementById('sizeDropdown').value; // Get the selected size
+
         const data = {
             productId: productId,
-            userId: userId
+            userId: userId,
+            size: size, 
         };
 
         try {
@@ -444,7 +460,7 @@
                         text: 'This product is already in your cart.',
                     });
                 } else {
-                    // Update cart count dynamically
+                   
                     const cartCountElement = document.getElementById('cart-count');
                     if (cartCountElement) {
                         cartCountElement.textContent = result.cartCount;
@@ -465,9 +481,9 @@
             console.error('Error:', error);
         }
     }
+</script>
 
 
-    </script>
 
     <script>
         function getElementValue(id) {

@@ -141,7 +141,9 @@
                                             <thead>
                                                 <tr>
                                                     <th>Product</th>
+                                                    <th>Size</th>
                                                     <th>Price</th>
+                                                   
                                                     <th>Quantity</th>
                                                     <th>Total</th>
                                                     <th></th>
@@ -162,6 +164,9 @@
                                                                         </a>
                                                                     </h3>
                                                                 </div>
+                                                            </td>
+                                                            <td class="size-col">
+                                                              <b><%= product.size %></b>  
                                                             </td>
                                                             <td class="price-col">
                                                                 <%= product.productDetail.price %>
