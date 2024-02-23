@@ -139,17 +139,18 @@
                                 <div class="row">
                                     <div class="col-lg-9">
                                         <table class="table table-cart table-mobile">
-                                            <thead>
-                                                <tr>
-                                                    <th>Product</th>
-                                                    <th>Size</th>
-                                                    <th>Price</th>
-                                                   
-                                                    <th>Quantity</th>
-                                                    <th>Total</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
+                                        <thead>
+                                            <tr>
+                                                <th>Image</th>
+                                                <th>Product</th>
+                                                <th>Size</th>
+                                                <th>Price</th>
+                                                <th>Quantity</th>
+                                                <th>Total</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+
 
                                     <tbody>
                                         <% if (cartItems && cartItems.length!== 0) { %>
@@ -157,10 +158,17 @@
                                                 <% if (cartItem.cartProducts && cartItem.cartProducts.length> 0) { %>
                                                     <% cartItem.cartProducts.forEach(product=> { %>
                                                         <tr data-cart-item="<%= cartItem._id %>" data-product-id="<%= product.productDetail._id %>">
+                                                            <td class="image-col">
+                                                                <img src="/productAssets/<%= product.productDetail.images[0] %>" alt="Product Image"
+                                                                    style="width: 50px; height: 50px;">
+                                                            </td>
                                                             <td class="product-col">
                                                                 <div class="product">
                                                                     <h3 class="product-title">
-                                                                        <a href="#">
+                                                                        
+                                                                            
+                                                                        
+                                                                        <a href="/products/<%= product.productDetail._id %>">
                                                                             <%= product.productDetail.pname %>
                                                                         </a>
                                                                     </h3>
@@ -230,12 +238,9 @@
                                                 <tbody>
                                                     <tr class="summary-subtotal">
                                                         <td>Subtotal:</td>
-                                                        <td id="dynamicTotal"></td>
+                                                        <td style="font-weight: 800;" id="dynamicTotal"></td>
                                                     </tr>
-                                                    <tr class="summary-shipping">
-                                                        <td>Shipping:</td>
-                                                        <td>&nbsp;</td>
-                                                    </tr>
+                                                    
 
                                                     <!-- Add your dynamic shipping rows here -->
 
@@ -249,13 +254,12 @@
                                                         </td>
                                                         <td>&nbsp;</td>
                                                     </tr><!-- End .summary-shipping-estimate -->
-
+<!-- 
                                                     <tr class="summary-total">
                                                         <td>Total:</td>
-                                                        <td style="font-weight: 900;">
-                                                            <span id="dynamicTotal"></span>
-                                                        </td>
-                                                    </tr><!-- End .summary-total -->
+                                                        <td id="dynamicTotal" style="font-weight: 900;">
+                                                            
+                                                        </tr> -->
                                                 </tbody>
                                             </table><!-- End .table table-summary -->
 
@@ -269,7 +273,7 @@
                                     </aside>
                                 </div><!-- End .row -->
                             </div><!-- End .container -->
-                        </div><!-- End .cart -->
+                        </div>
                     </div><!-- End .page-content -->
                 </div>
         </main><!-- End .main -->
@@ -673,6 +677,8 @@
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script defer src="your-script.js"></script>
+
 
 
     <script>
@@ -685,7 +691,7 @@
                 const priceCell = item.querySelector('.price-col');
                 const totalCell = item.querySelector('.total-col');
                 const quantity = parseInt(quantityInput.value);
-                const price = parseFloat(priceCell.textContent.replace('Rs', ''));
+                const price = parseFloat(priceCell.textContent.replace('Rs:', ''));
 
                 const itemTotal = price * quantity;
                 total += itemTotal;
@@ -750,13 +756,13 @@
                 .then(result => {
                     console.log(result);
 
-                    // Update cart count dynamically
+                    
                     const cartCountElement = document.getElementById('cart-count');
                     if (cartCountElement) {
                         cartCountElement.textContent = result.cartCount;
                     }
 
-                    window.location.reload(); // Reload might not be necessary, check if it's needed
+                    window.location.reload(); 
                     updateCartTotal();
                     location.reload();
                 })
@@ -769,7 +775,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             const dynamicTotalElement = document.getElementById('dynamicTotal');
-            dynamicTotalElement.textContent = 'Rs' + calculateTotal();
+            dynamicTotalElement.textContent = 'Rs:' + calculateTotal();
         });
 
         const quantityInputs = document.querySelectorAll('.cart-product-quantity input');
@@ -777,7 +783,7 @@
         quantityInputs.forEach(input => {
             input.addEventListener('change', () => {
                 const dynamicTotalElement = document.getElementById('dynamicTotal');
-                dynamicTotalElement.textContent = 'Rs' + calculateTotal();
+                dynamicTotalElement.textContent = 'Rs:' + calculateTotal();
 
                 const cartId = input.getAttribute('data-cart-id');
                 const productId = input.getAttribute('data-product-id');
@@ -790,7 +796,7 @@
                 const item = input.closest('tr');
                 const priceCell = item.querySelector('.price-col');
                 const totalCell = item.querySelector('.total-col');
-                const price = parseFloat(priceCell.textContent.replace('Rs', ''));
+                const price = parseFloat(priceCell.textContent.replace('Rs:', ''));
 
                 const quantity = parseInt(input.value);
                 const itemTotal = price * quantity;

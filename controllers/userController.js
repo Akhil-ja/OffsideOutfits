@@ -197,10 +197,7 @@ const loadProfile = async (req, res) => {
   try {
     const selectedValue = req.query.selected;
   
-
-     const userID = res.locals.currentUser._id;
-
-     
+    const userID = res.locals.currentUser._id;
 
     const userDetails = await User.findOne({ _id: userID });
 
@@ -208,7 +205,6 @@ const loadProfile = async (req, res) => {
 
     let pageinfo = selectedValue;
 
-   
     console.log(userID);
 
     const AllOrders = await Orders.find({ user: userID })

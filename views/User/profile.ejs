@@ -187,6 +187,8 @@
                                     <div id="nameInput" style="display: none;">
                                         <input type="text" id="nameEdit" value="<%= userDetails.name %>" />
                                         <button onclick="submitEdit('nameEdit', 'nameDisplay', nameInput)">Save</button>
+                                        <div id="emptyNameError" style="color: red;"></div>
+                                        <div id="invalidNameError" style="color: red;"></div>        
                                     </div>
 
                                         <p class="lead">
@@ -647,6 +649,21 @@
 
         console.log("name >>" + inputValue);
         console.log("phone no >>" + phoneNO);
+
+        if (inputValue.trim() === '') {
+            emptyNameError.textContent = 'Name cannot be empty.';
+            invalidNameError.textContent = '';
+            return;
+        }
+
+       
+        const nameRegex = /^[A-Za-z\s]+$/;
+        if (!nameRegex.test(inputValue)) {
+            emptyNameError.textContent = '';
+            invalidNameError.textContent = 'Please enter a valid name with only letters.';
+            return;
+        }
+
 
         displayElement.textContent = inputValue;
         inputContainerElement.style.display = 'none';
