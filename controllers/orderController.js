@@ -68,10 +68,9 @@ const viewOrders= async(req,res)=>{
 try {
  const userID=res.locals.currentUser._id;
 
-
  const AllOrders = await Orders.find({ user: userID })
    .populate({
-     path: "products.product", // Ensure correct path to the Product model
+     path: "products.product", 
      model: "Product",
    })
    .exec();
@@ -110,9 +109,105 @@ const getOrderDetails=async(req,res)=>{
   }
 }
 
+const adminViewOrders = async (req, res) => {
+  try {
+    const AllOrders = await Orders.find()
+      .populate({
+        path: "user",
+        model: "User",
+      })
+      .populate({
+        path: "products.product",
+        model: "Product",
+      })
+      .exec();
+
+    console.log("All orders>>>>>>>>>" + AllOrders);
+    res.render("orders", { AllOrders });
+  } catch (error) {
+    console.error(error.message);
+  }
+};
+
+
+const adminGetOrderDetails = async (req, res) => {
+  try {
+    const orderId = req.query.orderID;
+   
+    const AllOrders = await Orders.findOne({ _id: orderId }) // Use findOne to find a specific order by ID
+      .populate({
+        path: "user",
+        model: "User",
+      })
+      .populate({
+        path: "products.product",
+        model: "Product",
+      })
+      .exec();
+
+    if (!AllOrders) {
+      return res.status(404).send("Order not found");
+    }
+
+    const TotalAmount = (products) => {
+      let totalAmount = 0;
+      products.forEach((productInfo) => {
+        totalAmount += productInfo.price * productInfo.quantity;
+      });
+      return totalAmount;
+    };
+
+    const totalAmount = TotalAmount(AllOrders.products);
+
+    res.render("orderDetails", { AllOrders, totalAmount });
+  } catch (error) {
+    console.error(error.message);
+  }
+};
+
+const UpdateOrderStatus=async(req,res)=>{
+  try {
+     const orderId = req.query.orderId;
+     const newStatus = req.query.status;
+
+     console.log("in order update");
+     const allowedStatusValues = [
+       "pending",
+       "completed",
+       "cancelled",
+       "delivered",
+     ];
+     if (!allowedStatusValues.includes(newStatus)) {
+       return res.status(400).send("Invalid status value");
+     }
+
+     const updatedOrder = await Orders.findByIdAndUpdate(
+       orderId,
+       { $set: { status: newStatus } },
+       { new: true }
+     );
+
+     if (!updatedOrder) {
+       return res.status(404).send("Order not found");
+     }
+
+     res
+       .status(200)
+       .json({ message: "Status updated successfully", updatedOrder });
+  } catch (error) {
+     console.error(error.message);
+  }
+}
+
+
+
+
 
 module.exports = {
   createOrders,
   viewOrders,
   getOrderDetails,
+  adminViewOrders,
+  adminGetOrderDetails,
+  UpdateOrderStatus,
 };

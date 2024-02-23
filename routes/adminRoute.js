@@ -31,6 +31,7 @@ adminRoute.set("views", "./views/admin");
 
 
 
+
 adminRoute.get("*", authRoutes.checkUser);
 
 
@@ -110,8 +111,21 @@ adminRoute.post(
 
 
 adminRoute.post("/category", categoryController.createCategory);
+
 adminRoute.get(
   "/logout",  adminController.adminLogout
 );
+
+adminRoute.get("/orders", orderController.adminViewOrders);
+
+adminRoute.get("/orders/details", orderController.adminGetOrderDetails);
+
+adminRoute.patch(
+  "/orders/details/update-status",
+  orderController.UpdateOrderStatus
+);
+
+
+
 
 module.exports = adminRoute;
