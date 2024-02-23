@@ -1,9 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
-
-<!-- molla/login.html  22 Nov 2019 10:04:03 GMT -->
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,11 +8,8 @@
     <meta name="keywords" content="HTML5 Template">
     <meta name="description" content="Molla - Bootstrap eCommerce Template">
     <meta name="author" content="p-themes">
-    <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href=" /productAssets/User-icon.svg">
-    <!-- Plugins CSS File -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <!-- Main CSS File -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
@@ -78,7 +71,11 @@
 
                                 <form action="/register" method="post" id="register">
                                     <p id="main-error" class="error-message" style="color: red;"></p>
+                                <% if(errorMessage){ %>
                                 
+                                    <p style="color: red;font-size: large; font-weight: 400;"><%= errorMessage %></p>
+
+                               <%  } %>
                                     <div class="form-group">
                                         <label for="fullname">Full Name *</label>
                                         <p id="fullname-error" class="error-message" style="color: red;"></p>
@@ -121,10 +118,6 @@
                                     </div>
                                 </form>
                                 </div>
-
-
-
-
                             </div>
                         </div><!-- End .tab-content -->
                     </div><!-- End .form-tab -->
@@ -139,8 +132,7 @@
                 <div class="row">
                     <div class="col-sm-6 col-lg-3">
                         <div class="widget widget-about">
-                            <img src="assets/images/logo.png" class="footer-logo" alt="Footer Logo" width="105"
-                                height="25">
+                            <img src="assets/images/LogoFooter.png" class="footer-logo" alt="Footer Logo" width="280" height="25">
                             <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate
                                 magna eros eu erat. </p>
 
@@ -229,7 +221,6 @@
     <script src="assets/js/jquery.waypoints.min.js"></script>
     <script src="assets/js/superfish.min.js"></script>
     <script src="assets/js/owl.carousel.min.js"></script>
-    <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
 
     <script>

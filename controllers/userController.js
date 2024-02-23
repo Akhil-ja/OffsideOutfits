@@ -21,7 +21,9 @@ const securePassword = async (password) => {
 const loadlogin = async (req, res) => {
   try {
     res.cookie("jwt", "", { maxAge: 1 });
-    res.render("loginRegister");
+     return res.render("loginRegister", {
+       errorMessage: null,
+     });
   } catch (error) {
     console.log(error.message);
   }
@@ -55,6 +57,15 @@ const initialSignUp = async (req, res) => {
       is_verified: 0,
       otp: randomCode,
     };
+
+    const existingUser = await User.findOne({ email: req.body.email });
+
+    if (existingUser) {
+      
+      return res.render("loginRegister", {
+        errorMessage: "Email already exists. Please use a different email.",
+      });
+    }
 
     req.session.save();
     if (req.session.tempUserDetails) {
