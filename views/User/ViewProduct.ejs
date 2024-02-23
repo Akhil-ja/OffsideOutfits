@@ -219,21 +219,25 @@
                                     <div class="product-content">
                                         <p><%=product.description%></p>
                                     </div>
-                                <div class="details-filter-row details-row-size mb-md-1">
-                                    <label>Size:</label>
-                                
-                                    <select id="sizeDropdown" class="js-select2">
-                                        <option value="XS">XS</option>
-                                        <option value="S">S</option>
-                                        <option value="M">M</option>
-                                        <option value="L">L</option>
-                                        <option value="XL">XL</option>
-                                        <option value="XXL">XXL</option>
-                                       
-                                    </select>
-                                
-                                    
-                                </div>
+                        <div class="details-filter-row details-row-size mb-md-1">
+                            <label>Size:</label>
+                            <% if (product.sizes && product.sizes.length> 0) { %>
+                                <select id="sizeDropdown" class="js-select2">
+                                    <% product.sizes.forEach(size=> { %>
+                                        <% if (size.quantity> 0) { %>
+                                            <option value="<%= size.size %>">
+                                                <%= size.size %>
+                                            </option>
+                                            <% } else { %>
+                                                <option value="<%= size.size %>" disabled>(Out of Stock)</option>
+                                                <% } %>
+                                                    <% }); %>
+                                </select>
+                                <% } else { %>
+                                    <p class="out-of-stock-message">Product is out of stock</p>
+                                    <% } %>
+                        </div>
+
                                 </div>
 
                                 <div class="col-md-6">
@@ -499,6 +503,9 @@
         }
 
     </script>
+
+
+
 
 </body>
 

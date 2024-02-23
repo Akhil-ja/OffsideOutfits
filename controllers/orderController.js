@@ -7,16 +7,12 @@ const productModel = require("../models/productModel");
 
 const createOrders = async (req, res) => {
   try {
-    console.log("create order");
+    const { userID, address } = req.body;
 
-    const { userID, address, totalAmount } = req.body;
-
-    console.log(totalAmount);
-
- const cart = await Cart.findOne({ user: userID }).populate({
-   path: "cartProducts.product",
-   model: "Product",
- });
+    const cart = await Cart.findOne({ user: userID }).populate({
+      path: "cartProducts.product",
+      model: "Product",
+    });
 
     const orderDocument = await Address.findOne({
       "address._id": address,
@@ -29,28 +25,66 @@ const createOrders = async (req, res) => {
 
       if (orderAddress) {
         const orderProducts = cart.cartProducts.map((cartProduct) => ({
-          product: cartProduct.product, 
+          product: cartProduct.product,
           quantity: cartProduct.quantity,
           price: cartProduct.product.price,
+          size: cartProduct.size,
         }));
 
-        const newOrder = new Orders({
-          user: userID,
-          products: orderProducts,
-          status: "pending",
-          address: orderAddress,
-          orderDate: Date.now(),
-        });
+       
 
-        await newOrder.save();
-           cart.cartProducts = [];
-           await cart.save();
-        res.render("orderConfirmation", {
-          orderAddress,
-          orderProducts,
-          newOrder,
-        });
+        try {
+        
+          for (const orderProduct of orderProducts) {
+            const product = orderProduct.product;
 
+            
+            const sizeInfoIndex = product.sizes.findIndex(
+              (sizeObj) => sizeObj.size === orderProduct.size
+            );
+
+            if (
+              sizeInfoIndex === -1 ||
+              product.sizes[sizeInfoIndex].quantity < orderProduct.quantity
+            ) {
+              throw new Error(
+                `Insufficient stock for size ${orderProduct.size}`
+              );
+            }
+
+           
+            product.sizes[sizeInfoIndex].quantity -= orderProduct.quantity;
+
+            await product.save();
+          }
+
+          const newOrder = new Orders({
+            user: userID,
+            products: orderProducts,
+            status: "pending",
+            address: orderAddress,
+            orderDate: Date.now(),
+          });
+
+          await newOrder.save();
+
+         
+          cart.cartProducts = [];
+          await cart.save();
+
+          
+
+          res.render("orderConfirmation", {
+            orderAddress,
+            orderProducts,
+            newOrder,
+          });
+        } catch (error) {
+          
+
+          console.error(error);
+          res.status(400).json({ error: error.message });
+        }
       } else {
         res.status(404).json({ error: "Address not found" });
       }
@@ -59,6 +93,7 @@ const createOrders = async (req, res) => {
     }
   } catch (error) {
     console.error(error.message);
+    res.status(500).json({ error: "Internal server error." });
   }
 };
 
