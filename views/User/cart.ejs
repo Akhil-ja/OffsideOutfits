@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="assets/css/plugins/owl-carousel/owl.carousel.css">
     <link rel="stylesheet" href="assets/css/plugins/magnific-popup/magnific-popup.css">
     <link rel="stylesheet" href="assets/css/plugins/nouislider/nouislider.css">
+    <link rel="stylesheet" href="path/to/sweetalert2.min.css">
 </head>
 
 <body>
@@ -667,8 +668,12 @@
     <script src="assets/js/superfish.min.js"></script>
     <script src="assets/js/owl.carousel.min.js"></script>
     <script src="assets/js/bootstrap-input-spinner.js"></script>
+    
+    <script src="path/to/sweetalert2.all.min.js"></script>
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 
     <script>
         function calculateTotal() {
@@ -691,27 +696,43 @@
         }
 
         function updateQuantityOnServer(cartId, productId, newQuantity) {
-            fetch('/update-cart-quantity', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    cartId: cartId,
-                    productId: productId,
-                    newQuantity: newQuantity
+                fetch('/update-cart-quantity', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        cartId: cartId,
+                        productId: productId,
+                        newQuantity: newQuantity
+                    })
                 })
-            })
-                .then(response => response.json())
-                .then(result => {
-                    console.log(result);
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Failed to update quantity. Error: ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
+                    .then(result => {
+                        console.log(result);
 
-                })
-                .catch(error => {
-                    console.error('Error:', error);
+                       
 
-                });
-        }
+                    })
+                   .catch(error => {
+                        console.error('Error:', error);
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Failed to update quantity',
+                            text: 'Stock Not Available',
+                        }).then(() => {
+                           
+                            location.reload();
+                        });
+                    });
+
+            }
 
 
         function removeProduct(cartId, productId) {

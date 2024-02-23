@@ -84,7 +84,7 @@ const addToCart = async (req, res) => {
         });
       }
 
-      cart.cartProducts.push({ product: productId, size: size }); // Set the size for the new product
+      cart.cartProducts.push({ product: productId, size: size }); 
     }
 
     await cart.save();
@@ -107,8 +107,13 @@ const addToCart = async (req, res) => {
 const cartQuantity = async (req, res) => {
   const { cartId, productId, newQuantity } = req.body;
 
+  console.log("in cart quantity");
+
   try {
-    let cart = await Cart.findById(cartId);
+    let cart = await Cart.findById(cartId).populate({
+      path: "cartProducts.product",
+      model: "Product",
+    });
 
     if (!cart) {
       return res.status(404).json({ error: "Cart not found." });
@@ -122,6 +127,26 @@ const cartQuantity = async (req, res) => {
       return res.status(404).json({ error: "Product not found in the cart." });
     }
 
+    const selectedSize = productInCart.size;
+    const sizesArray = productInCart.product.sizes;
+
+    let availableStock;
+
+    for (const sizeObj of sizesArray) {
+      if (sizeObj.size === selectedSize) {
+        availableStock = sizeObj.quantity;
+        break; 
+      }
+    }
+
+    console.log(`Stock for ${selectedSize}: ${availableStock}`);
+
+    if (newQuantity > availableStock) {
+      return res
+        .status(400)
+        .json({ error: "Requested quantity exceeds available stock." });
+    }
+
     productInCart.quantity = newQuantity;
 
     await cart.save();
@@ -129,13 +154,14 @@ const cartQuantity = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Quantity updated successfully.",
-      cartCount: cart.cartProducts.length, // Add this line to return the updated cart count
+      cartCount: cart.cartProducts.length,
     });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error." });
   }
 };
+
 
 
 

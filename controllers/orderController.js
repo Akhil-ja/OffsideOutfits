@@ -13,10 +13,10 @@ const createOrders = async (req, res) => {
 
     console.log(totalAmount);
 
-    const cart = await Cart.findOne({ user: userID }).populate({
-      path: "cartProducts.product",
-      model: "Product",
-    });
+ const cart = await Cart.findOne({ user: userID }).populate({
+   path: "cartProducts.product",
+   model: "Product",
+ });
 
     const orderDocument = await Address.findOne({
       "address._id": address,
