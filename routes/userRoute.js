@@ -15,10 +15,11 @@ const userRoute = express();
 
 userRoute.use(express.urlencoded({ extended: true }));
 
-
-
-
 userRoute.set("view engine", "ejs");
+
+
+
+
 
 userRoute.set("views","./views/User");
 

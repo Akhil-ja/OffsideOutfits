@@ -147,15 +147,19 @@
                 </ul>
             </div>
         </header>
-        <form action="/admin/products/edit-product?id=<%= product._id %>" method="post">
-            <!-- Other form fields -->
+        <form action="/admin/products/edit-product?id=<%= product._id %>" id="productForm" method="post">
+          
             <section class="content-main">
                 <div class="row">
                     <div class="col-9">
                         <div class="content-header">
+                            
                             <h2 class="content-title">Edit Product</h2>
+                            <p id="main-error" class="text-centre" style="color: red;"></p>
+                        
                             <div>
-                                <button type="submit" class="btn btn-md rounded font-sm hover-up">
+                              
+                                <button type="button" onclick="submitForm(this)" class="btn btn-md rounded font-sm hover-up">
                                     EDIT
                                 </button>
                             </div>
@@ -227,10 +231,12 @@
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div class="mb-4">
+                                    <p id="productPriceError" class="error-message" style="color: red;"></p>
+
                                     <label class="form-label">Price</label>
                                     <input type="text" placeholder="Type here" name="ProductPrice" id="productPrice"
                                         value="<%=product.price%>" class="form-control" required />
-
+                                       
                                 </div>
 
                                 <!-- Status -->
@@ -358,20 +364,109 @@
             }
         }
 
-        // Event listener for the price input to disallow negative numbers
-        document.getElementById("productPrice").addEventListener("input", function () {
-            var priceInput = document.getElementById("productPrice");
-            var price = parseFloat(priceInput.value);
-            if (isNaN(price) || price < 0) {
-                alert("Please enter a valid, non-negative price.");
-                priceInput.value = "";
+      
+    </script>
+
+    <script>
+        function getElementValue(id) {
+            const element = document.getElementById(id);
+            return element.value;
+        }
+
+        function validateInput(inputId, pattern, errorId, errorMessage) {
+            const inputValue = getElementValue(inputId);
+            const errorElement = document.getElementById(errorId);
+
+            if (inputValue.trim() === '') {
+                errorElement.innerText = errorMessage + ' is required.';
+                return false;
+            } else if (pattern && !pattern.test(inputValue)) {
+                errorElement.innerText = 'Please enter a valid ' + errorMessage.toLowerCase() + '.';
+                return false;
+            } else {
+                errorElement.innerText = '';
+                return true;
             }
+        }
+
+        function validateStock(id) {
+            const stockInput = document.getElementById(id);
+            const errorId = id + 'Error';
+            const errorElement = document.getElementById(errorId);
+
+            if (stockInput.value.trim() === '') {
+                errorElement.innerText = 'Stock is required.';
+                return false;
+            } else if (parseInt(stockInput.value) < 0 || parseInt(stockInput.value) === -0) {
+                errorElement.innerText = 'Stock cannot be negative.';
+                return false;
+            } else if (parseInt(stockInput.value) > 1000) {
+                errorElement.innerText = 'Stock should be <1000.';
+                return false;
+            } else {
+                errorElement.innerText = '';
+                return true;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const titleInput = document.getElementById('ProductName');
+            const brandInput = document.getElementById('ProductBrand');
+            const descriptionInput = document.getElementById('ProductDetails');
+            const priceInput = document.getElementById('productPrice');
+
+            const stockInputs = ['size_xs', 'size_s', 'size_m', 'size_l', 'size_xl', 'size_xxl'];
+
+            titleInput.addEventListener('input', function () {
+                validateInput('ProductName', null, 'productTitleError', 'Product title');
+            });
+
+            brandInput.addEventListener('input', function () {
+                validateInput('ProductBrand', /^[A-Za-z\s]+$/, 'productBrandError', 'Brand');
+            });
+
+            descriptionInput.addEventListener('input', function () {
+                validateInput('ProductDetails', null, 'productDescriptionError', 'Description');
+            });
+
+            priceInput.addEventListener('input', function () {
+               validateInput('productPrice', /^\d+(\.\d{1,2})?$/, 'productPriceError', 'Price');
+
+            });
+
+            stockInputs.forEach(function (id) {
+                const stockInput = document.getElementById(id);
+                const errorId = id + 'Error';
+
+                stockInput.addEventListener('input', function () {
+                    validateStock(id);
+                });
+
+                stockInput.addEventListener('blur', function () {
+                    validateStock(id);
+                });
+            });
         });
+
+        function submitForm() {
+            const stockInputs = ['size_xs', 'size_s', 'size_m', 'size_l', 'size_xl', 'size_xxl'];
+            let isValid = true;
+
+            stockInputs.forEach(function (id) {
+                isValid = isValid && validateStock(id);
+            });
+
+            if (
+                validateInput('productPrice', /^(0*[1-9]\d*)$/, 'productPriceError', 'Price') &&
+                isValid) {
+                document.getElementById('productForm').submit();
+            } else {
+                document.getElementById('main-error').innerText = 'CANNOT SUBMIT';
+            }
+        }
+
     </script>
 
 
 </body>
-
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:32 GMT -->
-
 </html>

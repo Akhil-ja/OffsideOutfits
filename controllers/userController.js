@@ -20,14 +20,19 @@ const securePassword = async (password) => {
 
 const loadlogin = async (req, res) => {
   try {
-    res.cookie("jwt", "", { maxAge: 1 });
-     return res.render("loginRegister", {
-       errorMessage: null,
-     });
+    const jwtCookie = req.cookies.jwt;
+    if (jwtCookie) {
+      return res.redirect("/home");
+    }
+    return res.render("loginRegister", {
+      errorMessage: null,
+    });
   } catch (error) {
     console.log(error.message);
+    res.status(500).send("Internal Server Error");
   }
 };
+
 
 const generateRandomCode = () => {
   return Math.floor(1000 + Math.random() * 9000).toString(); 

@@ -162,8 +162,8 @@
                        
                     </div>
                 </header> 
-<% users.forEach(user=> { %>
-            <article class="itemlist">
+<% users.filter(user=> user.is_admin === '0').forEach(user => { %>
+                 <article class="itemlist">
                
                     <div class="row align-items-center user-item">
                         <div class="col col-check flex-grow-0">
