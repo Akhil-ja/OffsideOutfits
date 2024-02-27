@@ -161,9 +161,9 @@ const loadProducts = async (req, res) => {
         if (req.query.priceSort || req.query.nameSort) {
             return sortProducts(req, res);
         }
-
+         const categories = await Category.find();
         const products = await Product.find();
-        res.render("products", { products });
+        res.render("products", { products, categories });
     } catch (error) {
         console.error(error.message);
         res.status(500).send("Internal Server Error");
@@ -173,19 +173,33 @@ const loadProducts = async (req, res) => {
 
 const sortProducts = async (req, res) => {
   try {
-    const { priceSort, nameSort } = req.query;
+    let products = null;
+    const { priceSort, nameSort, categories } = req.query;
+
+    console.log("Name sort:" + nameSort);
+    console.log("Price sort:" + priceSort);
+    console.log("Categories:" + categories);
+
     let sortObject = {};
 
-    if (priceSort) {
+    if (priceSort !== "undefined") {
       sortObject.price = priceSort === "lowToHigh" ? 1 : -1;
     }
-    if (nameSort) {
-      sortObject.pname = nameSort === "aToZ" ? 1 : -1; 
+
+    if (nameSort !== "undefined") {
+      sortObject.pname = nameSort === "aToZ" ? 1 : -1;
+      console.log(`Name sorting selected: ${nameSort}`);
     }
 
-    const products = await Product.find().sort(sortObject);
-
-     
+    if (categories && categories.length > 0) {
+      const categoryIds = categories.split(",");
+      products = await Product.find({ category: { $in: categoryIds } }).sort(
+        sortObject
+      );
+      console.log(`Categories selected: ${categoryIds}`);
+    } else {
+      products = await Product.find().sort(sortObject);
+    }
 
     res.json({ products });
   } catch (error) {
