@@ -154,13 +154,43 @@ const loadDashboard = async (req, res) => {
   }
 };
 
+
 const loadProducts = async (req, res) => {
+    try {
+       
+        if (req.query.priceSort || req.query.nameSort) {
+            return sortProducts(req, res);
+        }
+
+        const products = await Product.find();
+        res.render("products", { products });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+
+const sortProducts = async (req, res) => {
   try {
-   
-    const products = await Product.find();
-    res.render("products", { products });
+    const { priceSort, nameSort } = req.query;
+    let sortObject = {};
+
+    if (priceSort) {
+      sortObject.price = priceSort === "lowToHigh" ? 1 : -1;
+    }
+    if (nameSort) {
+      sortObject.pname = nameSort === "aToZ" ? 1 : -1; 
+    }
+
+    const products = await Product.find().sort(sortObject);
+
+     
+
+    res.json({ products });
   } catch (error) {
-    error.message;
+    console.error(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -168,8 +198,10 @@ const loadProducts = async (req, res) => {
 
 
 
-module.exports = {
 
+
+
+module.exports = {
   loadProduct,
   loadProducts,
   loadDashboard,
@@ -179,4 +211,5 @@ module.exports = {
   editProduct,
   deleteProduct,
   add_Product,
+  sortProducts,
 };

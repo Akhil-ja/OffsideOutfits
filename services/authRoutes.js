@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const { Long } = require("mongodb");
 const maxAge = 3 * 24 * 60 * 60;
 const User = require("../models/userModel");
-const Cart=require("../models/cartModel")
+
 
 
 const createToken = (id) => {
@@ -10,6 +10,8 @@ const createToken = (id) => {
     expiresIn: maxAge,
   });
 };
+
+
 
 
 const isLogin = (req, res, next) => {
@@ -81,9 +83,6 @@ const isAdminLogin = (req, res, next) => {
 
     
     const isBlocked = async (req, res, next) => {
-
-        
-
          const token = req.cookies.jwt;
     
         jwt.verify(token, "secret", async (err, decodedToken) => {

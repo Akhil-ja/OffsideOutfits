@@ -137,6 +137,8 @@ const insertUser = async (req, res) => {
   }
 };
 
+
+
 const verifyLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -154,10 +156,12 @@ const verifyLogin = async (req, res) => {
           console.log(userData.name);
 
           const token = authRoutes.createToken(userID);
+
           res.cookie("jwt", token, {
             httpOnly: true,
             maxAge: authRoutes.maxAge * 1000,
           });
+          
 
           res.status(200).json({ success: true });
         }

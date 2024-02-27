@@ -177,7 +177,7 @@
 
                     </div><!-- End .toolbox -->
 
-                    <!-- views/products.ejs -->
+                    
                     <div class="products">
                         <div class="row">
                             <% products.forEach(product=> { %>
@@ -218,8 +218,7 @@
                                     <% } %>
                                         <% }); %>
                         </div><!-- End .row -->
-                    </div><!-- End .products -->
-
+                    </div>
 
 
                     <div class="load-more-container text-center">
@@ -233,76 +232,76 @@
                 <aside class="sidebar-shop sidebar-filter">
                     <div class="sidebar-filter-wrapper">
                         <div class="widget widget-clean">
-                            <a href=""><label><i class="icon-close"></i>Filters</label></a>
-                            <a href="#" class="sidebar-filter-clear">Clean All</a>
+                           
+<a href="#" class="sidebar-filter-clear" onclick="clearAll()">Clear All</a>
                         </div>
                 
                         <!-- Price Filter -->
-                        <div class="widget widget-collapsible">
-                            <h3 class="widget-title">
-                                <a data-toggle="collapse" href="" role="button" aria-expanded="true" aria-controls="widget-1">
-                                    Price
-                                </a>
-                            </h3>
-                            <div class="collapse show" id="widget-1">
-                                <div class="widget-body">
-                                    <div class="filter-items filter-items-count">
-                                        <div class="filter-item">
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" class="custom-control-input" id="price-hl" name="price-sort"
-                                                    value="highToLow">
-                                                <label class="custom-control-label" for="price-hl">High to Low</label>
-                                            </div>
+                    <div class="widget widget-collapsible">
+                        <h3 class="widget-title">
+                            <a data-toggle="collapse" href="#widget-1" role="button" aria-expanded="true" aria-controls="widget-1">
+                                Price
+                            </a>
+                        </h3>
+                        <div class="collapse show" id="widget-1">
+                            <div class="widget-body">
+                                <div class="filter-items filter-items-count">
+                                    <div class="filter-item">
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" class="custom-control-input" id="price-hl" name="price-sort"
+                                                value="highToLow">
+                                            <label class="custom-control-label" for="price-hl">High to Low</label>
                                         </div>
-                                        <div class="filter-item">
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" class="custom-control-input" id="price-lh" name="price-sort"
-                                                    value="lowToHigh">
-                                                <label class="custom-control-label" for="price-lh">Low to High</label>
-                                            </div>
+                                    </div>
+                                    <div class="filter-item">
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" class="custom-control-input" id="price-lh" name="price-sort"
+                                                value="lowToHigh">
+                                            <label class="custom-control-label" for="price-lh">Low to High</label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+
                 
                         <!-- Name Filter -->
-                        <div class="widget widget-collapsible">
-                            <h3 class="widget-title">
-                                <a data-toggle="collapse" href="#widget-2" role="button" aria-expanded="true" aria-controls="widget-2">
-                                    Name
-                                </a>
-                            </h3>
-                            <div class="collapse show" id="widget-2">
-                                <div class="widget-body">
-                                    <div class="filter-items">
-                                        <div class="filter-item">
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" class="custom-control-input" id="name-az" name="name-sort"
-                                                    value="aToZ">
-                                                <label class="custom-control-label" for="name-az">A-Z</label>
-                                            </div>
+                    <div class="widget widget-collapsible">
+                        <h3 class="widget-title">
+                            <a data-toggle="collapse" href="#widget-2" role="button" aria-expanded="true" aria-controls="widget-2">
+                                Name
+                            </a>
+                        </h3>
+                        <div class="collapse show" id="widget-2">
+                            <div class="widget-body">
+                                <div class="filter-items">
+                                    <div class="filter-item">
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" class="custom-control-input" id="name-az" name="name-sort" value="aToZ">
+                                            <label class="custom-control-label" for="name-az">A-Z</label>
                                         </div>
-                                        <div class="filter-item">
-                                            <div class="custom-control custom-radio">
-                                                <input type="radio" class="custom-control-input" id="name-za" name="name-sort"
-                                                    value="zToA">
-                                                <label class="custom-control-label" for="name-za">Z-A</label>
-                                            </div>
+                                    </div>
+                                    <div class="filter-item">
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" class="custom-control-input" id="name-za" name="name-sort" value="zToA">
+                                            <label class="custom-control-label" for="name-za">Z-A</label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                
-                        
-                        <button onclick="applyFilters()">Apply Filter</button>
+                    </div>
+                    
+                    <button onclick="applyFilters()">Apply Filter</button>
                     </div>
                 </aside>
 
             </div><!-- End .container-fluid -->
-    </div><!-- End .page-content -->
-    </main><!-- End .main -->
+    </div>
+    </main>
+
+
 
     <footer class="footer footer-2">
         <div class="footer-middle">
@@ -443,19 +442,7 @@
     <script src="assets/js/main.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-    <script>
-        $(document).ready(function () {
-            // Close sidebar when clicking the close icon
-            $('.sidebar-shop .widget-clean label i').on('click', function () {
-                $('.sidebar-shop').removeClass('open');
-            });
-
-            // Open sidebar when clicking the "Filters" label
-            $('.sidebar-shop .widget-clean label').on('click', function () {
-                $('.sidebar-shop').toggleClass('open');
-            });
-        });
-    </script>
+    
 
 <script>
     function getElementValue(id) {
@@ -470,6 +457,64 @@
         }
     }
 
+</script>
+
+
+<script>
+    function applyFilters() {
+        const priceSort = document.querySelector('input[name="price-sort"]:checked')?.value;
+const nameSort = document.querySelector('input[name="pname-sort"]:checked')?.value; 
+
+fetch(`/products/sort?priceSort=${priceSort}&nameSort=${nameSort}`)
+            .then(response => response.json())
+            .then(data => {
+                const productsContainer = document.querySelector('.products .row');
+
+                productsContainer.innerHTML = '';
+
+                data.products.forEach(updatedProduct => {
+                    if (updatedProduct.is_listed === "1") {
+                        const productItem = document.createElement('div');
+                        productItem.classList.add('col-6', 'col-md-4', 'col-lg-4', 'col-xl-3', 'col-xxl-2', 'product-item');
+                        productItem.innerHTML = `
+                            <div class="product">
+                                <div class="card card-product-grid">
+                                    <a href="/products/${updatedProduct._id}">
+                                        <img src="/productAssets/${updatedProduct.images[0]}" alt="Product image" class="product-image" style="height: 280px; width: 285px;">
+                                    </a>
+                                    <div class="product-action-vertical">
+                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                    </div>
+                                </div>
+                                <div class="product-body">
+                                    <div class="product-cat">
+                                        <a href="#">${updatedProduct.brand}</a>
+                                    </div>
+                                    <h3 class="product-title">
+                                        <a href="/product/${updatedProduct._id}">${updatedProduct.pname}</a>
+                                    </h3>
+                                    <div class="product-price">
+                                        Rs:${updatedProduct.price}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        productsContainer.appendChild(productItem);
+                    }
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+     function clearAll() {
+           
+            document.querySelectorAll('input[type="radio"]:checked').forEach(input => {
+                input.checked = false;
+            });
+
+           
+            location.reload();
+        }
 </script>
 
 

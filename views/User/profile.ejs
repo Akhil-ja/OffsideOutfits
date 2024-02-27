@@ -357,26 +357,28 @@
                                             <div class="row">
                                                 <div class="col-sm-5">
                                                     <label>New Password *</label>
-                                                    <input type="password" class="form-control" name="newPassword"
-                                                        required maxlength="20" pattern="(?=.*\d)(?=.*[A-Z]).{8,}"
-                                                        title="Password must contain at least one digit and one uppercase letter, and be at least 8 characters long">
+                                                <input type="password" class="form-control" name="newPassword" required maxlength="20"
+                                                    pattern="^(?!\s+$)(?=.*\d)(?=.*[A-Z])\S{8,}$"
+                                                    title="Password must contain at least one digit and one uppercase letter, and be at least 8 characters long. No spaces at the beginning or in the middle are allowed.">
+
+
                                                     <small class="form-text text-muted">
                                                         Password must contain at least one digit and one uppercase
                                                         letter, and be at least 8 characters
                                                         long.
                                                     </small>
-                                                </div><!-- End .col-sm-5 -->
-                                            </div><!-- End .row -->
+                                                </div>
+                                            </div>
 
                                             <div class="row">
                                                 <div class="col-sm-5">
                                                     <label>Confirm New Password *</label>
                                                     <input type="password" class="form-control"
                                                         name="confirmNewPassword" required maxlength="20"
-                                                        pattern="(?=.*\d)(?=.*[A-Z]).{8,}"
+                                                        pattern="^(?!\s+$)(?=.*\d)(?=.*[A-Z])\S{8,}$"
                                                         title="Password must contain at least one digit and one uppercase letter, and be at least 8 characters long">
-                                                </div><!-- End .col-sm-5 -->
-                                            </div><!-- End .row -->
+                                                </div>
+                                            </div>
                                             <button type="submit" class="btn btn-primary mt-3">Change Password</button>
                                         </form>
                                     </div>
@@ -620,9 +622,7 @@
                         window.location.href = '/profile?selected=Address';
                     });
                 } else {
-                    console.error('Error:', data.errorMessage);
-
-                   
+                    console.error('Error:', data.errorMessage); 
                     if (data.errorMessage.includes("different from the old password")) {
                         Swal.fire({
                             icon: 'error',

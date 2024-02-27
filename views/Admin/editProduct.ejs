@@ -203,18 +203,17 @@
                             <div class="card-body">
                                 <div>
                                     <label class="form-label">Images</label>
-                                    <!-- Display current images -->
+                                 
                                     <% product.images.forEach(image=> { %>
                                         <div>
-                                            <img src="/productAssets/<%= image %>" alt="<%= image %>">
+                                            <img src="/productAssets/<%= image %>" alt="<%= image %>" style="height: 50px;">
                                             <label>Current Image: <%= image %></label>
-                                            <!-- Add a checkbox to mark images for removal -->
                                             <input type="checkbox" name="removeImage" value="<%= image %>">
                                             <label>Remove</label>
                                         </div>
                                         <% }); %>
 
-                                            <!-- Allow user to upload new images -->
+                                            
                                             <input class="form-control" type="file" multiple name="newImages"
                                                 accept="image/*">
                                 </div>
@@ -389,25 +388,27 @@
             }
         }
 
-        function validateStock(id) {
-            const stockInput = document.getElementById(id);
-            const errorId = id + 'Error';
-            const errorElement = document.getElementById(errorId);
 
-            if (stockInput.value.trim() === '') {
-                errorElement.innerText = 'Stock is required.';
-                return false;
-            } else if (parseInt(stockInput.value) < 0 || parseInt(stockInput.value) === -0) {
-                errorElement.innerText = 'Stock cannot be negative.';
-                return false;
-            } else if (parseInt(stockInput.value) > 1000) {
-                errorElement.innerText = 'Stock should be <1000.';
-                return false;
-            } else {
-                errorElement.innerText = '';
-                return true;
-            }
+    function validateStock(id) {
+        const stockInput = document.getElementById(id);
+        const errorId = id + 'Error';
+        const errorElement = document.getElementById(errorId);
+
+        if (stockInput.value.trim() === '') {
+            errorElement.innerText = 'Stock is required.';
+            return false;
+        } else if (parseInt(stockInput.value) < 0 ) {  
+            errorElement.innerText = 'Stock should not be negative.';
+            return false;
+        } else if (parseInt(stockInput.value) > 1000) {
+            errorElement.innerText = 'Stock should be less than or equal to 1000.';
+            return false;
+        } else {
+            errorElement.innerText = '';
+            return true;
         }
+    }
+
 
         document.addEventListener('DOMContentLoaded', function () {
             const titleInput = document.getElementById('ProductName');

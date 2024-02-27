@@ -23,7 +23,7 @@ userRoute.set("view engine", "ejs");
 
 userRoute.set("views","./views/User");
 
-userRoute.get("*", authRoutes.checkUser);
+userRoute.use(authRoutes.checkUser);
 
 
 
@@ -51,6 +51,13 @@ userRoute.get(
   authRoutes.isBlocked,
   authRoutes.isLogin,
   productController.loadProducts
+);
+
+userRoute.get(
+  "/products/sort",
+  authRoutes.isBlocked,
+  authRoutes.isLogin,
+  productController.sortProducts
 );
 
 userRoute.get("/cart", authRoutes.isLogin, cartController.loadCart);
