@@ -154,36 +154,35 @@
 
             <div class="pt-2 pb-3">
                 <div class="container">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="banner banner-overlay">
-                                <a href="#">
-                                    <img src="assets\images\category\2.png" style="height: 600px;" alt="Banner">
-                                </a>
-
-                                <div class="banner-content banner-content-center">
-                                    <h4 class="banner-subtitle text-white"><a href="#">New in</a></h4>
-                                    <h3 class="banner-title text-white"><a href="#"><strong>Club's</strong></a></h3>
-                                    <a href="#" class="btn btn-outline-white banner-link underline">Shop Now</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="banner banner-overlay">
-                                <a href="#">
-                                    <img src="assets\images\category\3.png" style="height: 600px;" alt="Banner">
-                                </a>
-                                </a>
-
-                                <div class="banner-content banner-content-center">
-                                    <h4 class="banner-subtitle text-white"><a href="#">New in</a></h4>
-                                    <h3 class="banner-title text-white"><a href="#"><strong>Nation's</strong></a></h3>
-                                    <a href="#" class="btn btn-outline-white banner-link underline">Shop Now</a>
-                                </div>
-                            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="banner banner-overlay">
+                        <a href="#">
+                            <img src="assets\images\category\2.png" style="height: 600px;" alt="Banner">
+                        </a>
+                        <div class="banner-content banner-content-center">
+                            <h4 class="banner-subtitle text-white"><a href="#">New in</a></h4>
+                            <h3 class="banner-title text-white"><a href="#"><strong>Club's</strong></a></h3>
+                            <a href="#" class="btn btn-outline-white banner-link underline"
+                                onclick="redirectToProductPage('65c0effe07b942e4b30613e3')">Shop Now</a>
                         </div>
                     </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="banner banner-overlay">
+                        <a href="#">
+                            <img src="assets\images\category\3.png" style="height: 600px;" alt="Banner">
+                        </a>
+                        <div class="banner-content banner-content-center">
+                            <h4 class="banner-subtitle text-white"><a href="#">New in</a></h4>
+                            <h3 class="banner-title text-white"><a href="#"><strong>Nation's</strong></a></h3>
+                            <a href="#" class="btn btn-outline-white banner-link underline"
+                                onclick="redirectToProductPage('65c0f00b07b942e4b30613e6')">Shop Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
                     <hr class="mt-0 mb-0">
                 </div>
             </div>
@@ -413,6 +412,14 @@
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
     <script src="assets/js/demos/demo-12.js"></script>
+<script>
+    function redirectToProductPage(categoryId) {
+        const newUrl = `/products?selectedCategories=${categoryId}`;
+        window.location.href = newUrl;
+    }
+</script>
+
+
 </body>
 
 

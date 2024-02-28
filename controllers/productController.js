@@ -1,5 +1,6 @@
 const Product = require("../models/productModel");
 const Category = require("../models/categoryModel");
+const categoryModel = require("../models/categoryModel");
 
 
 
@@ -156,29 +157,35 @@ const loadDashboard = async (req, res) => {
 
 
 const loadProducts = async (req, res) => {
-    try {
-       
-        if (req.query.priceSort || req.query.nameSort) {
-            return sortProducts(req, res);
-        }
-         const categories = await Category.find();
-        const products = await Product.find();
-        res.render("products", { products, categories });
-    } catch (error) {
-        console.error(error.message);
-        res.status(500).send("Internal Server Error");
+  try {
+    let products;
+    const { priceSort, nameSort, selectedCategories } = req.query;
+
+    if (priceSort || nameSort) {
+      return sortProducts(req, res);
+    } else if (selectedCategories) {
+      products = await Product.find({ category: selectedCategories });
+    } else {
+      products = await Product.find();
     }
+
+    const categories = await Category.find();
+    res.render("products", { products, categories });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
 };
+
 
 
 const sortProducts = async (req, res) => {
   try {
-    let products = null;
-    const { priceSort, nameSort, categories } = req.query;
+    const { priceSort, nameSort, selectedCategories, ajax } = req.query;
 
     console.log("Name sort:" + nameSort);
     console.log("Price sort:" + priceSort);
-    console.log("Categories:" + categories);
+    console.log("selectedCategories:" + selectedCategories);
 
     let sortObject = {};
 
@@ -191,22 +198,25 @@ const sortProducts = async (req, res) => {
       console.log(`Name sorting selected: ${nameSort}`);
     }
 
-    if (categories && categories.length > 0) {
-      const categoryIds = categories.split(",");
+    if (selectedCategories && selectedCategories.length > 0) {
+      const categoryIds = selectedCategories.split(",");
       products = await Product.find({ category: { $in: categoryIds } }).sort(
         sortObject
       );
-      console.log(`Categories selected: ${categoryIds}`);
+      console.log(`selectedCategories selected: ${categoryIds}`);
     } else {
       products = await Product.find().sort(sortObject);
     }
 
-    res.json({ products });
+      res.json({ products });
+      console.log("Fetch");
+    
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 
 
 

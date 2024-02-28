@@ -485,7 +485,7 @@
 
         const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter"]:checked')).map(checkbox => checkbox.value);
 
-        fetch(`/products/sort?priceSort=${priceSort}&nameSort=${nameSort}&categories=${selectedCategories.join(',')}`)
+        fetch(`/products/sort?priceSort=${priceSort}&nameSort=${nameSort}&selectedCategories=${selectedCategories.join(',')}`)
             .then(response => response.json())
             .then(data => {
                 const productsContainer = document.querySelector('.products .row');
@@ -527,16 +527,27 @@
     }
 
     function clearAll() {
-        document.querySelectorAll('input[type="radio"]:checked').forEach(input => {
-            input.checked = false;
-        });
+           
+            window.location.href =  '/products';
+        }
 
-        document.querySelectorAll('input[name="category-filter"]:checked').forEach(checkbox => {
-            checkbox.checked = false;
-        });
+</script>
 
-        location.reload();
-    }
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedCategories = urlParams.get('selectedCategories');
+
+        if (selectedCategories) {
+            const categoryIds = selectedCategories.split(',');
+            categoryIds.forEach(categoryId => {
+                const checkbox = document.getElementById(categoryId);
+                if (checkbox) {
+                    checkbox.checked = true;
+                }
+            });
+        }
+    });
 </script>
 
 
