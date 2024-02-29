@@ -9,19 +9,27 @@ const loadCart = async (req, res) => {
   try {
     console.log("in cart");
 
-    const cartItems = await Cart.find();
+    const currentUser = res.locals.currentUser._id;
 
-    const productIds = cartItems.reduce((ids, item) => {
-      const itemProductIds = item.cartProducts.map(
-        (product) => product.product
-      );
-      return [...ids, ...itemProductIds];
-    }, []);
+    console.log("curr:" + currentUser);
+
+    const cartItems = await Cart.findOne({ user: currentUser });
+
+    console.log("cart items", cartItems);
+
+    if (!cartItems) {
+      // Handle the case where no cart items are found for the user
+      console.log("No cart items found for the current user");
+      return res.render("cart", { cartItems: [] }); // or handle it accordingly
+    }
+
+    const productIds = cartItems.cartProducts.map((product) => product.product);
 
     const products = await Product.find({ _id: { $in: productIds } });
 
-    const cartWithProductDetails = cartItems.map((cartItem) => {
-      const cartProducts = cartItem.cartProducts.map((product) => {
+    const cartWithProductDetails = {
+      ...cartItems.toObject(),
+      cartProducts: cartItems.cartProducts.map((product) => {
         const productDetail = products.find((p) =>
           p._id.equals(product.product)
         );
@@ -29,17 +37,12 @@ const loadCart = async (req, res) => {
           ...product.toObject(),
           productDetail: productDetail || null,
         };
-      });
-
-      return {
-        ...cartItem.toObject(),
-        cartProducts,
-      };
-    });
+      }),
+    };
 
     console.log("cart Items", cartWithProductDetails);
 
-    res.render("cart", { cartItems: cartWithProductDetails });
+    res.render("cart", { cartItems: [cartWithProductDetails] });
   } catch (error) {
     console.log(error.message);
     res.status(500).send("Internal Server Error");
@@ -199,7 +202,7 @@ const loadCheckout = async (req, res) => {
     const userId = res.locals.currentUser._id.toString();
     const userAddresses = await Address.find({ user: userId });
     console.log("User Addresses:", userAddresses);
-    const cartItems = await Cart.find();
+    const cartItems = await Cart.find({ user: userId });
 
     const productIds = cartItems.reduce((ids, item) => {
       const itemProductIds = item.cartProducts.map(
@@ -209,11 +212,11 @@ const loadCheckout = async (req, res) => {
     }, []);
     const products = await Product.find({ _id: { $in: productIds } });
 
-    let totalAmount = 0; 
+    let totalAmount = 0;
 
     const cartWithProductDetails = await Promise.all(
       cartItems.map(async (cartItem) => {
-        let totalAmountPerCart = 0; 
+        let totalAmountPerCart = 0;
 
         const cartProducts = await Promise.all(
           cartItem.cartProducts.map(async (product) => {
@@ -221,9 +224,11 @@ const loadCheckout = async (req, res) => {
               p._id.equals(product.product)
             );
 
+         
+
             const productAmount = productDetail.price * product.quantity;
-            totalAmountPerCart += productAmount; 
-            totalAmount += productAmount; 
+            totalAmountPerCart += productAmount;
+            totalAmount += productAmount;
             return {
               ...product.toObject(),
               productDetail: productDetail,
@@ -243,6 +248,7 @@ const loadCheckout = async (req, res) => {
     console.log("Total Amount:", totalAmount);
     console.log("cart=", cartWithProductDetails);
 
+    
     res.render("checkout", {
       userAddresses,
       cartItems: cartWithProductDetails,
@@ -254,6 +260,8 @@ const loadCheckout = async (req, res) => {
   }
 };
 
+
+   
 
 module.exports = {
 

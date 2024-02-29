@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="assets/css/plugins/owl-carousel/owl.carousel.css">
     <link rel="stylesheet" href="assets/css/plugins/magnific-popup/magnific-popup.css">
     <link rel="stylesheet" href="assets/css/plugins/nouislider/nouislider.css">
+    
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <style>
         .form-check {
@@ -95,9 +97,8 @@
                                     <li class="megamenu-container ">
                                         <a href="/home" class="">Home</a>
                                     </li>
-                                    <li class="">
+                                    <li>
                                         <a href="/products" class=" ">Shop</a>
-
 
                                     </li>
                                     <li>
@@ -184,7 +185,7 @@
                             </form>
                         </div><!-- End .checkout-discount -->
                        
-                        <form action="/place-order" method="post">
+                        <form id="orderForm" action="/place-order" method="post">
                             <div class="row">
                                 <input type="text" name="userID" value="<%= currentUser._id %>" hidden>
                         
@@ -280,6 +281,47 @@
                                         <div class="accordion-summary" id="accordion-payment">
                                           
                                         </div>
+                                        <div class="accordion-summary" id="accordion-payment">
+                                        
+                                        
+                                            
+                                        
+                                            <div class="card">
+                                                <div class="card-header" id="heading-3">
+                                                    <h2 class="card-title">
+                                                        <input class="collapsed mb-1" type="radio" name="PaymentType" value="COD" checked data-toggle="collapse"
+                                                            href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+                                                        Cash on delivery
+                                                        </input>
+
+                                                    </h2>
+                                                </div><!-- End .card-header -->
+                                                <div id="collapse-3" class="collapse " aria-labelledby="heading-3" data-parent="#accordion-payment">
+                                                    <div class="card-body">
+                                                        Cash on delivery (COD) is a type of transaction where a customer pays for a product upon delivery.
+                                                    </div><!-- End .card-body -->
+                                                </div><!-- End .collapse -->
+                                            </div><!-- End .card -->
+                                        
+                                            <div class="card">
+                                                <div class="card-header" id="heading-4">
+                                                    <h2 class="card-title">
+                                                        <input class="collapsed" type="radio" value="RazorPay" name="PaymentType" data-toggle="collapse" href="#collapse-4"
+                                                            aria-expanded="false" aria-controls="collapse-4">
+                                                        RazorPay <small class="float-right paypal-link"></small>
+                                                        </input>
+                                                    </h2>
+                                                </div><!-- End .card-header -->
+                                                <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
+                                                    <div class="card-body">
+                                                        All payment modes including credit card, debit card, netbanking, UPI and popular wallets including JioMoney, Mobikwik,
+                                                        Airtel Money, ...
+                                                    </div><!-- End .card-body -->
+                                                </div><!-- End .collapse -->
+                                            </div><!-- End .card -->
+                                        
+                                           
+                                        </div><!-- End .accordion -->
                         
                                         <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
                                                Place Order
@@ -392,8 +434,13 @@
     <script src="assets/js/superfish.min.js"></script>
     <script src="assets/js/owl.carousel.min.js"></script>
     <script src="assets/js/bootstrap-input-spinner.js"></script>
+    <!-- Include SweetAlert library from CDN -->
+  
+
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
+
+    
 </body>
 
 

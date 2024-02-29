@@ -2,13 +2,17 @@ const Orders = require("../models/ordersModel");
 const Cart = require("../models/cartModel");
 const Product = require("../models/productModel");
 const Address = require("../models/addressModel");
-const { findById } = require("../models/userModel");
 const productModel = require("../models/productModel");
+
 
 const createOrders = async (req, res) => {
   try {
-    const { userID, address } = req.body;
+    const { userID, address, PaymentType } = req.body;
 
+   
+    console.log("Payment Type: " + PaymentType);
+
+   
     const cart = await Cart.findOne({ user: userID }).populate({
       path: "cartProducts.product",
       model: "Product",
@@ -18,12 +22,14 @@ const createOrders = async (req, res) => {
       "address._id": address,
     });
 
+   
     if (orderDocument) {
       const orderAddress = orderDocument.address.find(
         (addr) => addr._id.toString() === address
       );
 
       if (orderAddress) {
+      
         const orderProducts = cart.cartProducts.map((cartProduct) => ({
           product: cartProduct.product,
           quantity: cartProduct.quantity,
@@ -31,14 +37,11 @@ const createOrders = async (req, res) => {
           size: cartProduct.size,
         }));
 
-       
-
         try {
         
           for (const orderProduct of orderProducts) {
             const product = orderProduct.product;
 
-            
             const sizeInfoIndex = product.sizes.findIndex(
               (sizeObj) => sizeObj.size === orderProduct.size
             );
@@ -47,17 +50,18 @@ const createOrders = async (req, res) => {
               sizeInfoIndex === -1 ||
               product.sizes[sizeInfoIndex].quantity < orderProduct.quantity
             ) {
-              throw new Error(
-                `Insufficient stock for size ${orderProduct.size}`
-              );
+             
+              return res.status(400).json({
+                success: false,
+                message: `Sorry, we don't have enough stock  in size ${orderProduct.size}. Please choose a lower quantity.`,
+              });
             }
 
-           
             product.sizes[sizeInfoIndex].quantity -= orderProduct.quantity;
-
             await product.save();
           }
 
+         
           const newOrder = new Orders({
             user: userID,
             products: orderProducts,
@@ -68,34 +72,49 @@ const createOrders = async (req, res) => {
 
           await newOrder.save();
 
-         
+          // Clearing cart after successful order
           cart.cartProducts = [];
           await cart.save();
 
-          
-
-          res.render("orderConfirmation", {
-            orderAddress,
-            orderProducts,
-            newOrder,
+          // Responding with success and order details
+          return res.status(200).json({
+            success: true,
+            message: "Order placed successfully",
+            orderDetails: { orderAddress, orderProducts, newOrder },
           });
         } catch (error) {
-          
-
+          // Handling and responding with an error message
           console.error(error);
-          res.status(400).json({ error: error.message });
+          return res
+            .status(400)
+            .json({ success: false, message: error.message });
         }
       } else {
-        res.status(404).json({ error: "Address not found" });
+        // Responding with an error if address is not found
+        return res.status(404).json({
+          success: false,
+          message: "Address not found. Please choose a valid address.",
+        });
       }
     } else {
-      res.status(404).json({ error: "Document not found" });
+      // Responding with an error if document is not found
+      return res.status(404).json({
+        success: false,
+        message: "Document not found. Please try again.",
+      });
     }
   } catch (error) {
+    // Responding with an internal server error if an exception occurs
     console.error(error.message);
-    res.status(500).json({ error: "Internal server error." });
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error." });
   }
 };
+
+
+
+
 
 
 
