@@ -111,6 +111,8 @@ userRoute.get(
   orderController.getOrderDetails
 );
 
+userRoute.get("/checkQuantities", cartController.checkQuantities);
+
 
 userRoute.get("/add-delete",addressController.deleteAddress);
 

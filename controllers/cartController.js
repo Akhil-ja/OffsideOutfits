@@ -138,16 +138,17 @@ const cartQuantity = async (req, res) => {
     for (const sizeObj of sizesArray) {
       if (sizeObj.size === selectedSize) {
         availableStock = sizeObj.quantity;
-        break; 
+        break;
       }
     }
 
     console.log(`Stock for ${selectedSize}: ${availableStock}`);
 
-    if (newQuantity > availableStock) {
-      return res
-        .status(400)
-        .json({ error: "Requested quantity exceeds available stock." });
+    if (newQuantity > availableStock && newQuantity > productInCart.quantity) {
+      return res.status(400).json({
+        error: "Requested quantity exceeds available stock.",
+        type: "insufficientStock",
+      });
     }
 
     productInCart.quantity = newQuantity;
@@ -164,6 +165,9 @@ const cartQuantity = async (req, res) => {
     res.status(500).json({ error: "Internal server error." });
   }
 };
+
+
+
 
 
 
@@ -260,15 +264,68 @@ const loadCheckout = async (req, res) => {
   }
 };
 
+const checkQuantities = async (req, res) => {
+  try {
+    const cartItems = await Cart.find({
+      user: res.locals.currentUser._id,
+    }).populate({
+      path: "cartProducts.product",
+      model: "Product",
+    });
+
+    const errors = [];
+
+    for (const cartItem of cartItems) {
+      for (const item of cartItem.cartProducts) {
+        const product = item.product; // Access the populated product details
+
+        const selectedSize = item.size;
+        const selectedQuantity = item.quantity;
+
+        const sizeInfo = product.sizes.find(
+          (size) => size.size === selectedSize
+        );
+
+        if (!sizeInfo) {
+          errors.push({
+            product: product.pname,
+            error: `Size info error ${selectedSize} not available for product ${product.pname}`,
+          });
+        }
+
+        const availableStock = sizeInfo.quantity;
+
+        if (selectedQuantity > availableStock) {
+          errors.push({
+            
+            error: `Insufficient stock for product ${product.pname} size ${selectedSize}`,
+          });
+        }
+      }
+    }
+
+    if (errors.length > 0) {
+      res.status(400).send(errors);
+    } else {
+      res
+        .status(200)
+        .send("All products have sufficient stock. Proceed to checkout.");
+    }
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
 
    
 
 module.exports = {
-
   loadCart,
   loadCheckout,
   addToCart,
   cartRemove,
   cartQuantity,
-
+  checkQuantities,
 };
