@@ -103,6 +103,8 @@ userRoute.post("/remove-from-cart", cartController.cartRemove);
 
 userRoute.post("/place-order", orderController.createOrders);
 
+userRoute.post("/payment", orderController.Payment);
+
 
 
 userRoute.get(

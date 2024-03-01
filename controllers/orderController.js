@@ -3,11 +3,15 @@ const Cart = require("../models/cartModel");
 const Product = require("../models/productModel");
 const Address = require("../models/addressModel");
 const productModel = require("../models/productModel");
+const RazorPay = require("razorpay");
 
 
 const createOrders = async (req, res) => {
   try {
     const { userID, address, PaymentType } = req.body;
+
+    console.log("create order");
+
 
    
     console.log("Payment Type: " + PaymentType);
@@ -72,39 +76,39 @@ const createOrders = async (req, res) => {
 
           await newOrder.save();
 
-          // Clearing cart after successful order
+          
           cart.cartProducts = [];
           await cart.save();
 
-          // Responding with success and order details
-          return res.status(200).json({
-            success: true,
-            message: "Order placed successfully",
-            orderDetails: { orderAddress, orderProducts, newOrder },
-          });
+         
+         return res.render("orderConfirmation", {
+           orderAddress,
+           orderProducts,
+           newOrder,
+         });
         } catch (error) {
-          // Handling and responding with an error message
+        
           console.error(error);
           return res
             .status(400)
             .json({ success: false, message: error.message });
         }
       } else {
-        // Responding with an error if address is not found
+       
         return res.status(404).json({
           success: false,
           message: "Address not found. Please choose a valid address.",
         });
       }
     } else {
-      // Responding with an error if document is not found
+     
       return res.status(404).json({
         success: false,
         message: "Document not found. Please try again.",
       });
     }
   } catch (error) {
-    // Responding with an internal server error if an exception occurs
+  
     console.error(error.message);
     return res
       .status(500)
@@ -188,7 +192,7 @@ const adminGetOrderDetails = async (req, res) => {
   try {
     const orderId = req.query.orderID;
    
-    const AllOrders = await Orders.findOne({ _id: orderId }) // Use findOne to find a specific order by ID
+    const AllOrders = await Orders.findOne({ _id: orderId }) 
       .populate({
         path: "user",
         model: "User",
@@ -218,6 +222,8 @@ const adminGetOrderDetails = async (req, res) => {
     console.error(error.message);
   }
 };
+
+
 
 const UpdateOrderStatus=async(req,res)=>{
   try {
@@ -255,6 +261,151 @@ const UpdateOrderStatus=async(req,res)=>{
 
 
 
+const razorpay = new RazorPay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
+
+
+
+
+const Payment = async (req, res) => {
+  try {
+    const { userID, selectedAddress, paymentType } = req.body;
+
+    console.log("Order Log:", { userID, selectedAddress, paymentType });
+
+    const cart = await Cart.findOne({ user: userID }).populate({
+      path: "cartProducts.product",
+      model: "Product",
+    });
+
+    const orderDocument = await Address.findOne({
+      "address._id": selectedAddress,
+    });
+
+    let orderProducts = [];
+    let total = 0;
+    let orderAddress = "";
+
+    if (orderDocument) {
+      orderAddress = orderDocument.address.find(
+        (addr) => addr._id.toString() === selectedAddress
+      );
+
+      if (orderAddress) {
+        orderProducts = cart.cartProducts.map((cartProduct) => ({
+          product: cartProduct.product,
+          quantity: cartProduct.quantity,
+          price: cartProduct.product.price,
+          size: cartProduct.size,
+        }));
+
+        console.log("ordered products:", orderProducts);
+
+        orderProducts.forEach((product) => {
+          total += product.price * product.quantity;
+        });
+        console.log("The Total:", total);
+
+        for (const orderProduct of orderProducts) {
+          const product = orderProduct.product;
+
+          const sizeInfoIndex = product.sizes.findIndex(
+            (sizeObj) => sizeObj.size === orderProduct.size
+          );
+
+          if (
+            sizeInfoIndex === -1 ||
+            product.sizes[sizeInfoIndex].quantity < orderProduct.quantity
+          ) {
+            return res.status(400).json({
+              success: false,
+              message: `Sorry, we don't have enough stock in size ${orderProduct.size}. Please choose a lower quantity.`,
+            });
+          }
+        }
+      }
+    }
+
+    console.log("entering razorpay");
+
+    if (paymentType === "RazorPay") {
+      console.log("entered razorpay");
+      const options = {
+        amount: total * 100,
+        currency: "INR",
+        receipt: "razorUser@gmail.com",
+      };
+
+      console.log("options", options);
+
+      razorpay.orders.create(options, async (err, order) => {
+        if (err) {
+          console.error(err);
+          return res
+            .status(500)
+            .json({ success: false, message: "Error creating order." });
+        }
+
+        const orderID = order.id;
+
+        return res.status(200).json({
+          success: true,
+          msg: "Order created successfully",
+          order_id: orderID,
+          amount: total,
+          key_id: process.env.RAZORPAY_KEY_ID,
+          contact: 8469237811,
+          name: "Offside Outfits",
+          email: "akhiljagadish124@gmail.com",
+        });
+      });
+    } else {
+      console.log("else");
+      const newOrder = new Orders({
+        user: userID,
+        products: orderProducts,
+        status: "pending",
+        address: orderAddress,
+        orderDate: Date.now(),
+        paymentStatus: "pending",
+      });
+
+      try {
+        const savedOrder = await newOrder.save();
+
+        cart.cartProducts = [];
+        await cart.save();
+
+        console.log("Order saved successfully:", savedOrder);
+
+        
+        return res.render("orderConfirmation", {
+          orderAddress,
+          orderProducts,
+          newOrder,
+        });
+        
+      } catch (saveError) {
+        console.error("Error saving order to the database:", saveError);
+        return res.status(500).json({
+          success: false,
+          message: "Error saving order to the database.",
+        });
+      }
+    }
+  } catch (error) {
+    console.error(error.message);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error." });
+  }
+};
+
+
+
+
 
 
 module.exports = {
@@ -264,4 +415,5 @@ module.exports = {
   adminViewOrders,
   adminGetOrderDetails,
   UpdateOrderStatus,
+  Payment,
 };

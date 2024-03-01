@@ -130,82 +130,81 @@
         </header><!-- End .header -->
 
 
-<main class="main">
-    <div class="container">
-        <h2 class="title mb-3">Order Confirmation</h2>
+    <main class="main">
+        <div class="container">
+            <h2 class="title mb-3">Order Confirmation</h2>
 
-        <!-- Product Display Section -->
-        <div class="row">
-            <% if (orderProducts && orderProducts.length> 0) { %>
-                <% orderProducts.forEach(product=> { %>
-                    <div class="col-md-4">
-                        <div class="product">
-                            <img src="<%= product.product.images[0] %>" alt="Product Image" class="img-fluid">
-                            <h3 class="product-title">
-                                <%= product.product.pname %>
-                            </h3>
-                            <span class="product-price">Rs:<%= product.price %></span>-/
-                            <span class="Quantity">
-                                <%= product.quantity %> units
-                            </span>
-                            <span class="total-price">Total: Rs:<%= product.price * product.quantity %></span>-/
+            <!-- Product Display Section -->
+            <div class="row">
+                <% if (orderProducts && orderProducts.length> 0) { %>
+                    <% orderProducts.forEach(product=> { %>
+                        <div class="col-md-4">
+                            <div class="product">
+                                <img src="<%= product.product.images[0] %>" alt="Product Image" class="img-fluid">
+                                <h3 class="product-title">
+                                    <%= product.product.pname %>
+                                </h3>
+                                <span class="product-price">Rs:<%= product.price %></span>-/
+                                <span class="Quantity">
+                                    <%= product.quantity %> units
+                                </span>
+                                <span class="total-price">Total: Rs:<%= product.price * product.quantity %></span>-/
+                            </div>
                         </div>
-                    </div>
-                    <% }); %>
-                        <% } else { %>
-                            <p>No products in the order.</p>
-                            <% } %>
+                        <% }); %>
+                            <% } else { %>
+                                <p>No products in the order.</p>
+                                <% } %>
+            </div>
+
+          
+            <div class="mt-5">
+                <h4 class="mb-3">Order Details</h4>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Order Placed Date:
+                        <span class="badge badge-primary">
+                            <%= new Date(newOrder.orderDate).toLocaleDateString() %>
+                        </span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Order Placed Time:
+                        <span class="badge badge-primary badge-pill">
+                            <%= new Date(newOrder.orderDate).toLocaleTimeString() %>
+                        </span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Shipping Address:
+                        <span class="badge ">
+                            <%= orderAddress.AddName %> <br>
+                                <%= orderAddress.House %> <br>
+                                    <%= orderAddress.street %> <br>
+                                        <%= orderAddress.state %>, <%= orderAddress.city %>,
+                                                <%= orderAddress.PIN %> <br>
+                        </span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Total Payable Amount:
+                    
+                        <% let total=0; %>
+                            <% orderProducts.forEach(product=> { %>
+                                <% total +=product.price * product.quantity; %>
+                                    <% }); %>
+                    
+                                        <span style="font-weight: 800;">
+                                            Rs:<%= total %>
+                                        </span>
+                    </li>
+                </ul>
+            </div>
+
+            
+        <div class="mt-4 ml-5">
+            <a href="/profile?selected=orders" class="btn btn-secondary m-5">View Orders</a>
+            
         </div>
-
-        <!-- Order Details Section -->
-        <div class="mt-5">
-            <h4 class="mb-3">Order Details</h4>
-            <ul class="list-group">
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Order Placed Date:
-                    <span class="badge badge-primary">
-                        <%= new Date(newOrder.orderDate).toLocaleDateString() %>
-                    </span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Order Placed Time:
-                    <span class="badge badge-primary badge-pill">
-                        <%= new Date(newOrder.orderDate).toLocaleTimeString() %>
-                    </span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Shipping Address:
-                    <span class="badge ">
-                        <%= orderAddress.AddName %> <br>
-                            <%= orderAddress.House %> <br>
-                                <%= orderAddress.street %> <br>
-                                    <%= orderAddress.state %>, <%= orderAddress.city %>,
-                                            <%= orderAddress.PIN %> <br>
-                    </span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Total Payable Amount:
-                
-                    <% let total=0; %>
-                        <% orderProducts.forEach(product=> { %>
-                            <% total +=product.price * product.quantity; %>
-                                <% }); %>
-                
-                                    <span style="font-weight: 800;">
-                                        Rs:<%= total %>
-                                    </span>
-                </li>
-            </ul>
-        </div>
-
-        
-    <div class="mt-4 ml-5">
-        <a href="/profile?selected=orders" class="btn btn-secondary m-5">View Orders</a>
-        
-    </div>
-    </div><!-- End .container -->
-</main><!-- End .main -->
-
+        </div><!-- End .container -->
+    </main>
 
 
 

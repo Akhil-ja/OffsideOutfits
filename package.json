@@ -28,6 +28,7 @@
     "nodemon": "^3.0.3",
     "otp-generator": "^4.0.1",
     "randomatic": "^3.1.1",
+    "razorpay": "^2.9.2",
     "swal": "^0.1.0",
     "uuid": "^9.0.1"
   }
