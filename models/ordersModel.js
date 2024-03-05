@@ -24,6 +24,10 @@ const orderSchema = new mongoose.Schema(
         },
       },
     ],
+    orderTotal: {
+      type: Number,
+      default: 0,
+    },
     status: {
       type: String,
       enum: ["pending", "completed", "cancelled", "delivered"],
@@ -33,15 +37,15 @@ const orderSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-
     address: {
       type: Object,
-      required: true,
+      required: false,
     },
   },
   {
     strictPopulate: false,
   }
 );
+
 
 module.exports = mongoose.model("Orders", orderSchema);

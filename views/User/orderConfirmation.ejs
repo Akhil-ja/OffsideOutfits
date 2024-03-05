@@ -135,27 +135,29 @@
             <h2 class="title mb-3">Order Confirmation</h2>
 
             <!-- Product Display Section -->
-            <div class="row">
-                <% if (orderProducts && orderProducts.length> 0) { %>
-                    <% orderProducts.forEach(product=> { %>
-                        <div class="col-md-4">
-                            <div class="product">
-                                <img src="<%= product.product.images[0] %>" alt="Product Image" class="img-fluid">
-                                <h3 class="product-title">
-                                    <%= product.product.pname %>
-                                </h3>
-                                <span class="product-price">Rs:<%= product.price %></span>-/
-                                <span class="Quantity">
-                                    <%= product.quantity %> units
-                                </span>
-                                <span class="total-price">Total: Rs:<%= product.price * product.quantity %></span>-/
-                            </div>
+        <div class="row">
+            <% if (orderProducts && orderProducts.length> 0) { %>
+                <% orderProducts.forEach(product=> { %>
+                    <div class="col-md-4">
+                        <div class="product">
+                            <img src="<%= product.product.images[0] %>" alt="Product Image" class="img-fluid">
+                            <h3 class="product-title">
+                                <%= product.product.pname %>
+                            </h3>
+                            <span class="product-price">Rs:<%= product.price %></span>-/
+                            <span class="Quantity">
+                                <%= product.quantity %> units
+                            </span>
+                            <% const updatedPrice=newOrder.products.find(p=> p.product.equals(product.product._id)).price; %>
+                                <span class="total-price">Total: Rs:<%= updatedPrice * product.quantity %></span>-/
                         </div>
-                        <% }); %>
-                            <% } else { %>
-                                <p>No products in the order.</p>
-                                <% } %>
-            </div>
+                    </div>
+                    <% }); %>
+                        <% } else { %>
+                            <p>No products in the order.</p>
+                            <% } %>
+        </div>
+
 
           
             <div class="mt-5">
@@ -186,14 +188,9 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         Total Payable Amount:
                     
-                        <% let total=0; %>
-                            <% orderProducts.forEach(product=> { %>
-                                <% total +=product.price * product.quantity; %>
-                                    <% }); %>
-                    
-                                        <span style="font-weight: 800;">
-                                            Rs:<%= total %>
-                                        </span>
+                        <span style="font-weight: 800;">
+                        Rs:<%= updatedTotalAmount %>
+                        </span>
                     </li>
                 </ul>
             </div>

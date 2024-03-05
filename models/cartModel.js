@@ -18,10 +18,15 @@ const cartSchema = new mongoose.Schema(
         },
         size: {
           type: String,
-         default:'XS'
+          default: "XS",
         },
       },
     ],
+    cartTotal: {
+      type: Number,
+      required: false,
+      default:0
+    },
   },
   {
     strictPopulate: false,

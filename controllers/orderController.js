@@ -35,6 +35,9 @@ const createOrders = async (req, res) => {
       console.log("orderAddress:" + orderAddress);
 
       if (orderAddress) {
+       
+        const totalAmount = cart.cartTotal;
+
         const orderProducts = cart.cartProducts.map((cartProduct) => ({
           product: cartProduct.product,
           quantity: cartProduct.quantity,
@@ -70,6 +73,7 @@ const createOrders = async (req, res) => {
             status: "pending",
             address: orderAddress,
             orderDate: Date.now(),
+            orderTotal: totalAmount,
           });
 
           await newOrder.save();
@@ -77,11 +81,11 @@ const createOrders = async (req, res) => {
           cart.cartProducts = [];
           await cart.save();
 
-         
           return res.render("orderConfirmation", {
             orderAddress,
             orderProducts,
             newOrder,
+            updatedTotalAmount: totalAmount, 
           });
         } catch (error) {
           console.error(error);
@@ -108,8 +112,6 @@ const createOrders = async (req, res) => {
       .json({ success: false, message: "Internal server error." });
   }
 };
-
-
 
 
 
@@ -295,7 +297,7 @@ const Payment = async (req, res) => {
     });
 
     let orderProducts = [];
-    let total = 0;
+    let total = cart.cartTotal;
     let orderAddress = "";
 
     if (orderDocument) {
@@ -317,10 +319,7 @@ const Payment = async (req, res) => {
 
         console.log("ordered products:", orderProducts);
 
-        orderProducts.forEach((product) => {
-          total += product.price * product.quantity;
-        });
-        console.log("The Total:", total);
+        
 
         for (const orderProduct of orderProducts) {
           const product = orderProduct.product;

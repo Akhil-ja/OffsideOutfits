@@ -2,7 +2,8 @@ const Cart = require("../models/cartModel");
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
 const Address = require("../models/addressModel");
-
+const Coupon=require("../models/couponModel")
+const Order=require("../models/ordersModel")
 
 
 const loadCart = async (req, res) => {
@@ -320,6 +321,83 @@ const checkQuantities = async (req, res) => {
   }
 };
 
+const Applycoupon = async (req, res) => {
+  try {
+    const { couponCode, userID } = req.body;
+
+    const cartItems = await Cart.find({ user: userID });
+    const productIds = cartItems.reduce((_ids_, _item_) => {
+      const itemProductIds = _item_.cartProducts.map(
+        (_product_) => _product_.product
+      );
+      return [..._ids_, ...itemProductIds];
+    }, []);
+    const products = await Product.find({ _id: { $in: productIds } });
+
+    let totalAmount = 0;
+
+    const cartWithProductDetails = await Promise.all(
+      cartItems.map(async (_cartItem_) => {
+        let totalAmountPerCart = 0;
+
+        const cartProducts = await Promise.all(
+          _cartItem_.cartProducts.map(async (_product_) => {
+            const productDetail = products.find((_p_) =>
+              _p_._id.equals(_product_.product)
+            );
+            const productAmount = productDetail.price * _product_.quantity;
+            totalAmountPerCart += productAmount;
+            return {
+              ..._product_.toObject(),
+              productDetail: productDetail,
+              productAmount: productAmount,
+            };
+          })
+        );
+
+        totalAmount += totalAmountPerCart;
+
+        return {
+          ..._cartItem_.toObject(),
+          cartProducts,
+          totalAmountPerCart,
+        };
+      })
+    );
+
+    const initialTotalAmount = totalAmount;
+    let newTotalAmount = initialTotalAmount;
+
+    const coupon = await Coupon.findOne({ code: couponCode });
+    if (coupon) {
+      const couponDiscount = Math.min(initialTotalAmount, coupon.discountValue);
+      newTotalAmount = initialTotalAmount - couponDiscount;
+
+      cartWithProductDetails.forEach((cartItem) => {
+        cartItem.totalAmountPerCart -= couponDiscount;
+      });
+
+      await Cart.updateOne({ user: userID }, { cartTotal: newTotalAmount });
+      couponApplied = coupon.toObject();
+    } else {
+      console.log("No such coupon exists");
+      return res.status(400).json({ error: "Coupon not found" });
+    }
+
+    const order = await Order.create({
+      user: userID,
+      cartItems: cartWithProductDetails,
+      totalAmount: newTotalAmount,
+    });
+
+    console.log("New total:", newTotalAmount);
+
+    res.json({ newTotalAmount, couponApplied });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
 
 
    
@@ -331,4 +409,5 @@ module.exports = {
   cartRemove,
   cartQuantity,
   checkQuantities,
+  Applycoupon,
 };

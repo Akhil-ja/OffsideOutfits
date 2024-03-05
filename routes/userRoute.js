@@ -124,8 +124,9 @@ userRoute.post(
   userController.changePassword
 );
 
-userRoute.post("/edit-user",userController.editUserDetails)
+userRoute.post("/edit-user", userController.editUserDetails) 
 
+userRoute.post("/applyCoupon", cartController.Applycoupon);
 
 
 
