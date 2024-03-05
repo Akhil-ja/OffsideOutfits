@@ -6,6 +6,7 @@ const categoryController = require("../controllers/categoryController");
 const productController = require("../controllers/productController");
 const orderController = require("../controllers/orderController");
 const addressController = require("../controllers/addressController");
+const couponController=require("../controllers/couponController")
 const authRoutes=require("../services/authRoutes")
 
 const express = require("express");
@@ -101,7 +102,7 @@ userRoute.post("/remove-from-cart", cartController.cartRemove);
 
 
 
-userRoute.post("/place-order", orderController.createOrders);
+userRoute.get("/place-order", authRoutes.checkUser,authRoutes.isLogin, orderController.createOrders);
 
 userRoute.post("/payment", orderController.Payment);
 
@@ -124,6 +125,8 @@ userRoute.post(
 );
 
 userRoute.post("/edit-user",userController.editUserDetails)
+
+
 
 
 module.exports= userRoute;

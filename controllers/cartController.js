@@ -18,9 +18,9 @@ const loadCart = async (req, res) => {
     console.log("cart items", cartItems);
 
     if (!cartItems) {
-      // Handle the case where no cart items are found for the user
+    
       console.log("No cart items found for the current user");
-      return res.render("cart", { cartItems: [] }); // or handle it accordingly
+      return res.render("cart", { cartItems: [] });
     }
 
     const productIds = cartItems.cartProducts.map((product) => product.product);
@@ -263,6 +263,9 @@ const loadCheckout = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
+
+
 
 const checkQuantities = async (req, res) => {
   try {

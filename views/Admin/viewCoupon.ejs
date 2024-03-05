@@ -1,9 +1,6 @@
 <!DOCTYPE HTML>
 <html lang="en">
 
-
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-categories.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:21 GMT -->
-
 <head>
     <meta charset="utf-8">
     <title>Evara Dashboard</title>
@@ -43,44 +40,45 @@
                     <a class="menu-link" href="/admin/products"> <i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Products</span>
                     </a>
-        
+
                 </li>
-        
+
                 <li class="menu-item">
                     <a class="menu-link" href="/admin/users"> <i class="icon material-icons md-person"></i>
                         <span class="text">Users</span>
                     </a>
                 </li>
-        
-                <li class="menu-item active">
+
+                <li class="menu-item">
                     <a class="menu-link" href="/admin/category"> <i class="icon material-icons md-stars"></i>
                         <span class="text">category</span> </a>
                 </li>
-        
+
                 <li class="menu-item  ">
                     <a class="menu-link" href="/admin/orders"> <i class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Orders</span>
                     </a>
-        
+
                 </li>
-            <li class="menu-item">
-                <a class="menu-link" href="/admin/coupons"> <i class="icon material-icons md-local_offer"></i>
-                    <span class="text">coupons </span>
-                </a>
-            </li>
+                <li class="menu-item active">
+                    <a class="menu-link" href="/admin/coupons"> <i class="icon material-icons md-local_offer"></i>
+                        <span class="text">coupons </span>
+                    </a>
+                </li>
                 <li class="menu-item has-submenu">
                     <a class="menu-link" href="page-form-product-1.html"> <i class="icon material-icons md-add_box"></i>
                         <span class="text">Add product</span>
                     </a>
-        
+
                 </li>
                 <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-transactions-1.html"> <i class="icon material-icons md-monetization_on"></i>
+                    <a class="menu-link" href="page-transactions-1.html"> <i
+                            class="icon material-icons md-monetization_on"></i>
                         <span class="text">Transactions</span>
                     </a>
-        
+
                 </li>
-        
+
                 <li class="menu-item">
                     <a class="menu-link" href="page-reviews.html"> <i class="icon material-icons md-comment"></i>
                         <span class="text">Reviews</span>
@@ -102,7 +100,7 @@
                     <a class="menu-link" href="#"> <i class="icon material-icons md-settings"></i>
                         <span class="text">Settings</span>
                     </a>
-        
+
                 </li>
                 <li class="menu-item">
                     <a class="menu-link" href="page-blank.html"> <i class="icon material-icons md-local_offer"></i>
@@ -124,21 +122,22 @@
                         <button class="btn btn-light bg" type="button"> <i
                                 class="material-icons md-search"></i></button>
                     </div>
-            
+
                 </form>
             </div>
             <div class="col-nav">
-                
+
                 <ul class="nav">
 
                     <li class="dropdown nav-item">
                         <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount"
-                            aria-expanded="false"> <img class="img-xs rounded-circle" src="/admin-assets/imgs/people/User-logo.png" alt="User"></a>
+                            aria-expanded="false"> <img class="img-xs rounded-circle"
+                                src="/admin-assets/imgs/people/User-logo.png" alt="User"></a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
                             <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Profile</a>
-                            
+
                             <div class="dropdown-divider"></div>
-                        <a class="dropdown-item text-danger" href="/admin/logout"><i
+                            <a class="dropdown-item text-danger" href="/admin/logout"><i
                                     class="material-icons md-exit_to_app"></i>Logout</a>
                         </div>
                     </li>
@@ -146,88 +145,58 @@
             </div>
         </header>
 
-    <section class="content-main">
-        <div class="content-header">
-            <div>
-                <h2 class="content-title card-title">Categories</h2>
-                <p></p>
-            </div>
-            <div>
-                <input type="text" placeholder="Search Categories" class="form-control bg-white">
+        <section>
+            <div class="card-body">
+
+<div class="container mt-5">
+    <h2 class="mb-4">Coupon Details</h2>
+
+    <% if (coupon) { %>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <%= coupon.name %>
+                </h5>
+                <p class="card-text"><strong>Coupon Code:</strong>
+                    <%= coupon.code %>
+                </p>
+                <p class="card-text"><strong>Discount Type:</strong>
+                    <%= coupon.discountType %>
+                </p>
+                <p class="card-text"><strong>Discount Value:</strong>
+                    <%= coupon.discountValue %>
+                </p>
+                <p class="card-text"><strong>Expiry Date:</strong>
+                    <%= coupon.expiryDate.toISOString().split('T')[0] %>
+                </p>
+                <p class="card-text"><strong>Status:</strong>
+                    <%= coupon.status %>
+                </p>
+              
             </div>
         </div>
-        <% if (errorMessage) { %>
-            <div class="alert alert-danger" role="alert">
-                <%= errorMessage %>
-            </div>
+        <% } else { %>
+            <p>No coupon found.</p>
             <% } %>
-    
-        <form action="/admin/category" method="post">
-            <div class="mb-4">
-                <label for="product_name" class="form-label">Category Name</label>
-                <input type="text" placeholder="Type here" class="form-control" name="categoryName" required />
-            </div>
-            <div class="mb-4">
-                <label class="form-label">Description</label>
-                <textarea placeholder="Type here" class="form-control" name="description" required></textarea>
-            </div>
-            <div class="d-grid container-fluid" style="width: 100px;">
-                <button type="submit" class="btn btn-primary ">Create category</button>
-            </div>
-        </form>
-   
-    
-   
-        <div class="content-header">
-            <div>
-                <h2 class="content-title card-title">Category List</h2>
-                <p></p>
-            </div>
-        </div>
-    
-        <% categories.forEach((category, index)=> { %>
-           
-            <div class="mb-4 container">
+
                 
-                   <p style="font-weight: bolder;"><%= category.cName %></p> 
-
-                <a href="/admin/category/delete?id=<%= category._id %>" class="btn btn-sm font-sm btn-light rounded delete-btn">
-                    <i class="material-icons md-delete_forever"></i> Delete
-                </a>
-             
-    
-            </div>
-            <% }) %>
-    
-    </section>
+</div>
 
 
-
-
-        <footer class="main-footer font-xs">
-            <div class="row pb-30 pt-15">
-                <div class="col-sm-6">
-                    <script>
-                        document.write(new Date().getFullYear())
-                    </script> ©, 
                 </div>
-                <div class="col-sm-6">
-                    <div class="text-sm-end">
-                        All rights reserved
-                    </div>
-                </div>
-            </div>
-        </footer>
-    </main>
-    <script src="/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
-    <script src="/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
-    <script src="/admin-assets/js/vendors/select2.min.js"></script>
-    <script src="/admin-assets/js/vendors/perfect-scrollbar.js"></script>
-    <script src="/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
-    <!-- Main Script -->
-    <script src="/admin-assets/js/main.js" type="text/javascript"></script>
-</body>
-
-
-
-</html>
+                </section>
+                
+                
+                
+                </main>
+                
+                <script src="/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
+                <script src="/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
+                <script src="/admin-assets/js/vendors/select2.min.js"></script>
+                <script src="/admin-assets/js/vendors/perfect-scrollbar.js"></script>
+                <script src="/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
+                <!-- Main Script -->
+                <script src="/admin-assets/js/main.js" type="text/javascript"></script>
+                    
+                </body>
+                </html>

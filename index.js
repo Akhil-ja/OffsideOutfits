@@ -26,9 +26,10 @@ app.use(
     secret: "your-secret-key",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }, // Set secure to true if using HTTPS
+    cookie: { secure: false }, 
   })
 );
+
 
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));

@@ -221,6 +221,7 @@ const loadProfile = async (req, res) => {
         path: "products.product",
         model: "Product",
       })
+      .sort({ orderDate: -1 })
       .exec();
 
     if (!matchingAddress) {

@@ -131,12 +131,10 @@
 
 
       
-
 <main class="main">
     <div class="container">
         <h2 class="title mb-3">Orders List</h2>
 
-        <!-- Order List Section -->
         <ul class="list-group">
             <% AllOrders.forEach(order=> { %>
                 <li class="list-group-item">
@@ -153,7 +151,6 @@
                                     <%= productInfo.quantity %><br>
                                         <strong>Price:</strong>
                                         <%= productInfo.price %><br>
-                                            <!-- Add other product details as needed -->
                             </li>
                             <% }); %>
                     </ul>
@@ -162,6 +159,7 @@
         </ul>
     </div>
 </main>
+
 
 
 

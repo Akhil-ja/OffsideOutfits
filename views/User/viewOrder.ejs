@@ -137,7 +137,8 @@
     
 <main class="main">
     <div class="container">
-        <h2 class="title mb-3">Order Details</h2>
+        <h1 class="title mb-3 mt-1" style="text-decoration: underline;font-size: xx-large;">Order Details</h1>
+        <h10 class=" mb-3" style="font-size: small;"> <b>Order Id:</b><%=orderDetails._id%></h10>
 
         <div class="card mb-3">
             <div class="card-body">
@@ -154,26 +155,45 @@
         <div class="card mb-3">
             <div class="card-body">
                 <h4 class="card-title">Shipping Address</h4>
-                <p class="card-text m-2">
-                    <%= orderDetails.address.AddName %><br>
-                        <%= orderDetails.address.House %>, <%= orderDetails.address.street %><br>
-                                <%= orderDetails.address.city %>, <%= orderDetails.address.state %><br>
-                                        <%= orderDetails.address.PIN %>
-                </p>
+                <div class="mb-3 mt-1">
+                    <strong>
+                        <%= orderDetails.address.AddName %>
+                    </strong><br>
+                    <%= orderDetails.address.House %>, <%= orderDetails.address.street %><br>
+                            <%= orderDetails.address.city %>, <%= orderDetails.address.state %>
+                                    <%= orderDetails.address.PIN %>
+                </div>
             </div>
         </div>
 
+        <h4 class="card-title">Ordered Products</h4>
         <div class="card">
             <div class="card-body">
-                <h4 class="card-title">Ordered Products</h4>
-                <ul class="list-group list-group-flush m-2">
-                    <% orderDetails.products.forEach(productInfo=> { %>
-                        <li class="list-group-item">
-                            <%= productInfo.product.pname %> -
-                                <%= productInfo.quantity %> units at <%= productInfo.price %>/unit
-                        </li>
-                        <% }); %>
-                </ul>
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="font-weight-bold">Product Name</th>
+                                <th scope="col" class="font-weight-bold">Quantity</th>
+                                <th scope="col" class="font-weight-bold">Price per Unit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% orderDetails.products.forEach(productInfo=> { %>
+                                <tr>
+                                    <td>
+                                        <%= productInfo.product.pname %>
+                                    </td>
+                                    <td>
+                                        <%= productInfo.quantity %>
+                                    </td>
+                                    <td>Rs <%= productInfo.price %>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -184,12 +204,25 @@
                     Rs: <%= totalAmount %>/-
                 </p>
             </div>
+            <% if (orderDetails.status==='pending' ) { %>
+                <div class="text-right">
+                    <a href="/cancel-order?orderID=<%= orderDetails._id %>" class="btn btn-danger"
+                        style="border-radius: 10px;">Cancel Order</a>
+                </div>
+                <% } else if (orderDetails.status==='delivered' ) { %>
+                    <div class="text-right">
+                        <a href="/return-order?orderID=<%= orderDetails._id %>" class="btn btn-primary"
+                            style="border-radius: 10px;">Return Order</a>
+                    </div>
+                    <% } %>
         </div>
 
         <!-- Back button -->
         <a href="/profile?selected=orders" class="btn btn-secondary m-5">Back</a>
     </div><!-- End .container -->
-</main><!-- End .main -->
+</main>
+
+
 
 
 

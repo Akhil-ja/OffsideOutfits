@@ -2,8 +2,6 @@
 <html lang="en">
 
 
-<!-- molla/category-fullwidth.html  22 Nov 2019 10:03:02 GMT -->
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -387,10 +385,7 @@
         </div><!-- End .mobile-menu-wrapper -->
     </div><!-- End .mobile-menu-container -->
 
-    <!-- Sign in / Register Modal -->
-   
 
-    <!-- Plugins JS File -->
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/jquery.hoverIntent.min.js"></script>
@@ -400,7 +395,7 @@
     <script src="assets/js/bootstrap-input-spinner.js"></script>
     
     <script src="path/to/sweetalert2.all.min.js"></script>
-    <!-- Main JS File -->
+    
     <script src="assets/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script defer src="your-script.js"></script>
@@ -528,11 +523,32 @@
         });
 
     </script>
+
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const checkoutBtn = document.getElementById('checkoutBtn');
 
+        
+        function isCartEmpty() {
+            const cartItems = document.querySelectorAll('.table-cart tbody tr');
+            return cartItems.length === 0;
+        }
+
         checkoutBtn.addEventListener('click', async function () {
+           
+            if (isCartEmpty()) {
+               
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Cart is Empty',
+                    text: 'Please add items to your cart before proceeding to checkout.',
+                });
+                return;
+            }
+
+        
             try {
                 const response = await fetch('/checkQuantities', {
                     method: 'GET',
@@ -541,11 +557,9 @@
                     },
                 });
 
-                if (response.ok) {  
-                  
+                if (response.ok) {
                     window.location.replace('/checkout');
                 } else {
-                    
                     if (response.status === 400) {
                         const errorMessage = await response.text();
                         Swal.fire({
@@ -573,6 +587,9 @@
         });
     });
 </script>
+
+
+
 
 
 </body>

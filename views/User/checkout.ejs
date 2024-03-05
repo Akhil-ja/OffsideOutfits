@@ -336,7 +336,7 @@
                     </div><!-- End .container -->
                 </div><!-- End .checkout -->
             </div><!-- End .page-content -->
-        </main><!-- End .main -->
+        </main>
 
         <footer class="footer">
             <div class="footer-middle">
@@ -438,6 +438,8 @@
 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
    
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const placeOrderBtn = document.getElementById('placeOrderBtn');
@@ -466,17 +468,18 @@
                     console.log("Server Response:", res);
 
                     if (res.success) {
+                    
                         var options = {
-                            "key": res.key,
+                            "key": res.key_id,
                             "amount": res.amount,
                             "currency": "INR",
                             "name": res.name,
-                            "description": res.description,
+                            "description": res.msg,
                             "image": "https://dummyimage.com/600x400/000/fff",
                             "order_id": res.order_id,
                             "handler": function (response) {
                                
-                                alert("Payment success");
+                                window.location.href = "/place-order";
                             },
                             "prefill": {
                                 "contact": res.contact,
@@ -492,15 +495,23 @@
                         };
 
                         var razorpayObject = new Razorpay(options);
+
                         razorpayObject.on('payment.failed', function (response) {
                             alert("Payment Failed");
                         });
+
                         razorpayObject.open();
                     } else {
-                        alert("Server response indicates failure. Check console for details.");
+                       
+                        if (res.redirectURL) {
+                            window.location.href = res.redirectURL;
+                        }  else {
+                       
+                        alert("Order creation failed. Check console for details.");
                         console.error(res);
-                    }
+                    }}
                 })
+            
                 .catch(error => {
                     console.error('Error during order logging:', error);
                     alert("Error during order logging. Check console for details.");

@@ -10,6 +10,7 @@ const categoryController = require("../controllers/categoryController");
 const productController = require("../controllers/productController");
 const orderController = require("../controllers/orderController");
 const userController = require("../controllers/userController");
+const couponController = require("../controllers/couponController");
 
 
 
@@ -89,7 +90,6 @@ adminRoute.get(
 
 
 
-
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "./public/productAssets/");
@@ -124,6 +124,18 @@ adminRoute.patch(
   "/orders/details/update-status",
   orderController.UpdateOrderStatus
 );
+
+adminRoute.get("/coupons", couponController.viewCoupons);
+
+adminRoute.post("/createCoupon", couponController.createCoupon);
+
+adminRoute.get("/editStatus", couponController.editCouponStatus);
+
+adminRoute.get("/viewCoupon", couponController.viewCoupon);
+
+adminRoute.get("/editCoupon", couponController.viewEditCoupon);
+adminRoute.post("/editCoupon", couponController.editCoupon);
+
 
 
 

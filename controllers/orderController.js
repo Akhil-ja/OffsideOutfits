@@ -8,32 +8,33 @@ const RazorPay = require("razorpay");
 
 const createOrders = async (req, res) => {
   try {
-    const { userID, address, PaymentType } = req.body;
-
     console.log("create order");
 
+    const userID = req.session.userID;
+    const selectedAddress = req.session.selectedAddress;
 
-   
-    console.log("Payment Type: " + PaymentType);
+    console.log("userid:" + userID);
+    console.log("address:" + selectedAddress);
 
-   
+    let orderAddress = "";
+
     const cart = await Cart.findOne({ user: userID }).populate({
       path: "cartProducts.product",
       model: "Product",
     });
 
     const orderDocument = await Address.findOne({
-      "address._id": address,
+      "address._id": selectedAddress,
     });
 
-   
     if (orderDocument) {
-      const orderAddress = orderDocument.address.find(
-        (addr) => addr._id.toString() === address
+      orderAddress = orderDocument.address.find(
+        (addr) => addr._id.toString() === selectedAddress
       );
 
+      console.log("orderAddress:" + orderAddress);
+
       if (orderAddress) {
-      
         const orderProducts = cart.cartProducts.map((cartProduct) => ({
           product: cartProduct.product,
           quantity: cartProduct.quantity,
@@ -42,7 +43,6 @@ const createOrders = async (req, res) => {
         }));
 
         try {
-        
           for (const orderProduct of orderProducts) {
             const product = orderProduct.product;
 
@@ -54,10 +54,9 @@ const createOrders = async (req, res) => {
               sizeInfoIndex === -1 ||
               product.sizes[sizeInfoIndex].quantity < orderProduct.quantity
             ) {
-             
               return res.status(400).json({
                 success: false,
-                message: `Sorry, we don't have enough stock  in size ${orderProduct.size}. Please choose a lower quantity.`,
+                message: `Sorry, we don't have enough stock in size ${orderProduct.size}. Please choose a lower quantity.`,
               });
             }
 
@@ -65,7 +64,6 @@ const createOrders = async (req, res) => {
             await product.save();
           }
 
-         
           const newOrder = new Orders({
             user: userID,
             products: orderProducts,
@@ -76,39 +74,34 @@ const createOrders = async (req, res) => {
 
           await newOrder.save();
 
-          
           cart.cartProducts = [];
           await cart.save();
 
          
-         return res.render("orderConfirmation", {
-           orderAddress,
-           orderProducts,
-           newOrder,
-         });
+          return res.render("orderConfirmation", {
+            orderAddress,
+            orderProducts,
+            newOrder,
+          });
         } catch (error) {
-        
           console.error(error);
           return res
             .status(400)
             .json({ success: false, message: error.message });
         }
       } else {
-       
         return res.status(404).json({
           success: false,
           message: "Address not found. Please choose a valid address.",
         });
       }
     } else {
-     
       return res.status(404).json({
         success: false,
         message: "Document not found. Please try again.",
       });
     }
   } catch (error) {
-  
     console.error(error.message);
     return res
       .status(500)
@@ -122,23 +115,24 @@ const createOrders = async (req, res) => {
 
 
 
-const viewOrders= async(req,res)=>{
-try {
- const userID=res.locals.currentUser._id;
+const viewOrders = async (req, res) => {
+  try {
+    const userID = res.locals.currentUser._id;
 
- const AllOrders = await Orders.find({ user: userID })
-   .populate({
-     path: "products.product", 
-     model: "Product",
-   })
-   .exec();
+    const AllOrders = await Orders.find({ user: userID })
+      .populate({
+        path: "products.product",
+        model: "Product",
+      })
+      .exec()
+      
 
-  console.log("All orders>>>>>>>>>"+AllOrders);
-  res.render("orders", { AllOrders });
-} catch (error) {
-   console.error(error.message);
-}
-}
+    console.log("All orders>>>>>>>>>" + AllOrders);
+    res.render("orders", { AllOrders });
+  } catch (error) {
+    console.error(error.message);
+  }
+};
 
 
 const getOrderDetails=async(req,res)=>{
@@ -178,6 +172,7 @@ const adminViewOrders = async (req, res) => {
         path: "products.product",
         model: "Product",
       })
+      .sort({ orderDate: -1 })
       .exec();
 
     console.log("All orders>>>>>>>>>" + AllOrders);
@@ -273,7 +268,22 @@ const Payment = async (req, res) => {
   try {
     const { userID, selectedAddress, paymentType } = req.body;
 
-    console.log("Order Log:", { userID, selectedAddress, paymentType });
+    
+    
+       console.log("Order Log:", { userID, selectedAddress, paymentType });
+
+          req.session = req.session || {};
+
+          req.session.selectedAddress = selectedAddress;
+          req.session.paymentType = paymentType;
+          req.session.userID = userID;
+
+           req.session.save();
+
+          console.log(
+            "session address in payment:" + req.session.selectedAddress
+          );
+
 
     const cart = await Cart.findOne({ user: userID }).populate({
       path: "cartProducts.product",
@@ -292,6 +302,10 @@ const Payment = async (req, res) => {
       orderAddress = orderDocument.address.find(
         (addr) => addr._id.toString() === selectedAddress
       );
+
+      console.log("The address:" + orderAddress);
+
+      
 
       if (orderAddress) {
         orderProducts = cart.cartProducts.map((cartProduct) => ({
@@ -363,30 +377,13 @@ const Payment = async (req, res) => {
       });
     } else {
       console.log("else");
-      const newOrder = new Orders({
-        user: userID,
-        products: orderProducts,
-        status: "pending",
-        address: orderAddress,
-        orderDate: Date.now(),
-        paymentStatus: "pending",
-      });
-
       try {
-        const savedOrder = await newOrder.save();
-
-        cart.cartProducts = [];
-        await cart.save();
-
-        console.log("Order saved successfully:", savedOrder);
-
-        
-        return res.render("orderConfirmation", {
-          orderAddress,
-          orderProducts,
-          newOrder,
-        });
-        
+         const redirectURL = "/place-order";
+         return res.status(303).json({
+           success: false,
+           message: "Payment type other than RazorPay. Redirecting...",
+           redirectURL: redirectURL,
+         });
       } catch (saveError) {
         console.error("Error saving order to the database:", saveError);
         return res.status(500).json({
