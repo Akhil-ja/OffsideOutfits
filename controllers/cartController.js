@@ -325,7 +325,10 @@ const Applycoupon = async (req, res) => {
   try {
     const { couponCode, userID } = req.body;
 
+    let couponApplied = null;
+    let couponDiscount = 0; 
     const cartItems = await Cart.find({ user: userID });
+
     const productIds = cartItems.reduce((_ids_, _item_) => {
       const itemProductIds = _item_.cartProducts.map(
         (_product_) => _product_.product
@@ -370,9 +373,16 @@ const Applycoupon = async (req, res) => {
 
     const coupon = await Coupon.findOne({ code: couponCode });
     if (coupon) {
-      const couponDiscount = Math.min(initialTotalAmount, coupon.discountValue);
+      
+      if (coupon.discountType === "percentage") {
+        couponDiscount = (coupon.discountValue / 100) * initialTotalAmount;
+      } else if (coupon.discountType === "fixed") {
+        couponDiscount = Math.min(initialTotalAmount, coupon.discountValue);
+      }
+
       newTotalAmount = initialTotalAmount - couponDiscount;
 
+     
       cartWithProductDetails.forEach((cartItem) => {
         cartItem.totalAmountPerCart -= couponDiscount;
       });
@@ -384,11 +394,11 @@ const Applycoupon = async (req, res) => {
       return res.status(400).json({ error: "Coupon not found" });
     }
 
-    const order = await Order.create({
-      user: userID,
-      cartItems: cartWithProductDetails,
-      totalAmount: newTotalAmount,
-    });
+    // const order = await Order.create({
+    //   user: userID,
+    //   cartItems: cartWithProductDetails,
+    //   totalAmount: newTotalAmount,
+    // });
 
     console.log("New total:", newTotalAmount);
 
@@ -398,6 +408,8 @@ const Applycoupon = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
 
 
    

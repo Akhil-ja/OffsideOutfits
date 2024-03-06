@@ -8,6 +8,7 @@ const orderController = require("../controllers/orderController");
 const addressController = require("../controllers/addressController");
 const couponController=require("../controllers/couponController")
 const authRoutes=require("../services/authRoutes")
+const wishlistController=require("../controllers/wishlistController")
 
 const express = require("express");
 
@@ -127,6 +128,8 @@ userRoute.post(
 userRoute.post("/edit-user", userController.editUserDetails) 
 
 userRoute.post("/applyCoupon", cartController.Applycoupon);
+
+userRoute.post("/addToWishlist", wishlistController.addToWishlist);
 
 
 

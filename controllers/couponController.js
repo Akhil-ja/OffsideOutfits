@@ -6,39 +6,52 @@ const Address = require("../models/addressModel");
 const productModel = require("../models/productModel");
 const Coupon =require("../models/couponModel")
 
-const viewCoupons=async(req,res)=>{
-    try {
-        const coupons=await Coupon.find();
-        res.render("coupons", { coupons });
-    } catch (error) {
-        console.error(error.message); 
-    }
-}
-
-const createCoupon = async (req, res) => {
+const viewCoupons = async (req, res) => {
   try {
-    const { name, code, discountType, discountValue, expiryDate } = req.body;
-
-    console.log(req.body);
-
-    const newCoupon = new Coupon({
-      name: name,
-      code: code,
-      discountType: discountType,
-      discountValue: discountValue,
-      expiryDate: expiryDate,
-      status: "active",
-    });
-
-    await newCoupon.save();
-
-      res.redirect("/admin/coupons")
-    
+    const coupons = await Coupon.find();
+    const error = req.query.error; 
+    res.render("coupons", { coupons, error });
   } catch (error) {
     console.error(error.message);
    
   }
 };
+
+
+const createCoupon = async (req, res) => {
+  try {
+    const { name, code, discountType, discountValue, expiryDate } = req.body;
+
+    const existingCoupon = await Coupon.findOne({ code: code.trim() });
+
+    if (existingCoupon) {
+      res.redirect("/admin/coupons?error=Coupon already exists");
+     setTimeout(() => {
+       res.redirect("/admin/coupons");
+     }, 10000); 
+    
+    }
+
+    const newCoupon = new Coupon({
+      name,
+      code,
+      discountType,
+      discountValue,
+      expiryDate,
+      status: "active",
+    });
+
+    await newCoupon.save();
+
+    res.redirect("/admin/coupons");
+  } catch (error) {
+    console.error(error.message);
+   
+  
+  }
+};
+
+
 
 const editCouponStatus = async (req, res) => {
   try {

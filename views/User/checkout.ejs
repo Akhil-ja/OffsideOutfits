@@ -543,29 +543,49 @@
                     document.getElementById('totalAmount').innerText = data.newTotalAmount;
 
                     if (data.couponApplied) {
-                       
                         const couponCodePlaceholder = document.getElementById('couponCodePlaceholder');
                         const discountValuePlaceholder = document.getElementById('discountValuePlaceholder');
 
                         couponCodePlaceholder.textContent = 'Coupon Code: ' + data.couponApplied.code;
-                        discountValuePlaceholder.textContent = 'Discount Value: Rs ' + data.couponApplied.discountValue;
+
+                        if (data.couponApplied.discountType === 'percentage') {
+                            discountValuePlaceholder.textContent = 'Discount Percent: ' + data.couponApplied.discountValue + '%';
+                        } else if (data.couponApplied.discountType === 'fixed') {
+                            discountValuePlaceholder.textContent = 'Discount Value: Rs ' + data.couponApplied.discountValue;
+                        }
 
                         document.getElementById('couponDetailsSection').style.display = 'block';
+                    } else {
+                        // Handle case where couponApplied is null
+                        console.error('Failed to apply coupon: No coupon data received');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to apply coupon. Please try again.',
+                        });
                     }
                 } else {
+                    // Handle non-OK responses (e.g., server errors)
                     console.error('Failed to apply coupon');
-                     Swal.fire({
+                    Swal.fire({
                         icon: 'error',
-                        title: 'Coupon not found',
-                        text: 'Please enter a valid coupon code.',
+                        title: 'Error',
+                        text: 'Failed to apply coupon. Please try again.',
                     });
                 }
             } catch (error) {
+               
                 console.error('Error applying coupon:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An unexpected error occurred. Please try again.',
+                });
             }
         });
     });
 </script>
+
 
 
 

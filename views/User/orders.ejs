@@ -144,13 +144,19 @@
                     </a>
                     <ul class="list-unstyled">
                         <% order.products.forEach(productInfo=> { %>
-                            <li class="mb-3">
-                                <strong>Product Name:</strong>
-                                <%= productInfo.product.pname %><br>
+                            <li class="mb-3 row">
+                                <div class="col-md-4">
+                                    <strong>Product Name:</strong>
+                                </div>
+                                <div class="col-md-8">
+                                    <span style="font-size: x-small;">
+                                        <%= productInfo.product.pname %>
+                                    </span><br>
                                     <strong>Quantity:</strong>
                                     <%= productInfo.quantity %><br>
                                         <strong>Price:</strong>
                                         <%= productInfo.price %><br>
+                                </div>
                             </li>
                             <% }); %>
                     </ul>
@@ -159,6 +165,9 @@
         </ul>
     </div>
 </main>
+
+
+
 
 
 
