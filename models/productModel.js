@@ -1,62 +1,62 @@
-const { ObjectId } = require("mongodb");
-const mongoose = require("mongoose");
+  const { ObjectId } = require("mongodb");
+  const mongoose = require("mongoose");
 
-const productSchema = new mongoose.Schema(
-  {
-    pname: {
-      type: String,
-      required: true,
-      index: true,
-    },
-
-    price: {
-      type: Number,
-      required: true,
-    },
-
-    description: {
-      type: String,
-      required: true,
-    },
-
-    images: [
-      {
+  const productSchema = new mongoose.Schema(
+    {
+      pname: {
         type: String,
+        required: true,
+        index: true,
       },
-    ],
 
-    category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "category",
-      required: true,
-    },
+      price: {
+        type: Number,
+        required: true,
+      },
 
-    brand: {
-      type: String,
-      required: false,
-    },
+      description: {
+        type: String,
+        required: true,
+      },
 
-    sizes: [
-      {
-        size: {
+      images: [
+        {
           type: String,
-          required: true,
         },
-        quantity: {
-          type: Number,
-          required: true,
-        },
+      ],
+
+      category: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "category",
+        required: true,
       },
-    ],
 
-    is_listed: {
-      type: String,
-      default: 1,
+      brand: {
+        type: String,
+        required: false,
+      },
+
+      sizes: [
+        {
+          size: {
+            type: String,
+            required: true,
+          },
+          quantity: {
+            type: Number,
+            required: true,
+          },
+        },
+      ],
+
+      is_listed: {
+        type: String,
+        default: 1,
+      },
     },
-  },
-  {
-    strictPopulate: false,
-  }
-);
+    {
+      strictPopulate: false,
+    }
+  );
 
-module.exports = mongoose.model("Product", productSchema);
+  module.exports = mongoose.model("Product", productSchema);

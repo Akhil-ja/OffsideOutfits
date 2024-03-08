@@ -63,7 +63,7 @@
                                         <a href="/home" class="">Home</a>
                                     </li>
                                     <li class="">
-                                        <a href="" class=" ">Shop</a>
+                                        <a href="/products" class=" ">Shop</a>
 
 
                                     </li>
@@ -98,9 +98,9 @@
                                 </form>
                             </div><!-- End .header-search -->
 
-                            <a href="" class="wishlist-link">
-                                <i class="icon-heart-o"></i>
-                            </a>
+                        <a href="/wishlist" class="wishlist-link">
+                            <i class="icon-heart-o"></i>
+                        </a>
 
                             <div class="cart-dropdown position-relative">
                                 <a href="/cart" class="dropdown-toggle" role="button"
@@ -173,7 +173,9 @@
                     <table class="table table-bordered text-center">
                         <thead>
                             <tr>
+                                <th scope="col" class="font-weight-bold">Product Image</th>
                                 <th scope="col" class="font-weight-bold">Product Name</th>
+                                <th scope="col" class="font-weight-bold">Size</th>
                                 <th scope="col" class="font-weight-bold">Quantity</th>
                                 <th scope="col" class="font-weight-bold">Price per Unit</th>
                             </tr>
@@ -181,18 +183,27 @@
                         <tbody>
                             <% orderDetails.products.forEach(productInfo=> { %>
                                 <tr>
-                                    <td>
+                                    <td class="align-middle">
+                                        <img  src="/productAssets/<%= productInfo.product.images[0] %>" alt="Product Image"
+                                            style="width: 100px; height: 100px; margin-left: 70px;">
+                                    </td>
+                                    <td class="align-middle">
                                         <%= productInfo.product.pname %>
                                     </td>
-                                    <td>
+                                    <td class="align-middle">
+                                        <%= productInfo.size %>
+                                    </td>
+                                    <td class="align-middle">
                                         <%= productInfo.quantity %>
                                     </td>
-                                    <td>Rs <%= productInfo.price %>
+                                    <td class="align-middle">Rs <%= productInfo.price %>
                                     </td>
                                 </tr>
                                 <% }); %>
                         </tbody>
                     </table>
+
+
                 </div>
             </div>
         </div>
@@ -217,9 +228,9 @@
                     <% } %>
         </div>
 
-        <!-- Back button -->
+        
         <a href="/profile?selected=orders" class="btn btn-secondary m-5">Back</a>
-    </div><!-- End .container -->
+    </div>
 </main>
 
 

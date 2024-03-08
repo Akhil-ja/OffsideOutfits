@@ -22,6 +22,10 @@ const orderSchema = new mongoose.Schema(
           type: Number,
           required: true,
         },
+        size: {
+          type: String,
+          required: true,
+        },
       },
     ],
     orderTotal: {
@@ -41,11 +45,14 @@ const orderSchema = new mongoose.Schema(
       type: Object,
       required: false,
     },
+    PaymentMethod:{
+type:String,
+required:true
+    }
   },
   {
     strictPopulate: false,
   }
 );
-
 
 module.exports = mongoose.model("Orders", orderSchema);

@@ -77,8 +77,10 @@ const addToCart = async (req, res) => {
           {
             product: productId,
             size: size,
+           
           },
         ],
+         
       });
     } else {
       if (cart.cartProducts.some((item) => item.product.equals(productId))) {
@@ -91,7 +93,17 @@ const addToCart = async (req, res) => {
       cart.cartProducts.push({ product: productId, size: size }); 
     }
 
+ let cartTotal = 0;
+ for (const item of cart.cartProducts) {
+   const productDoc = await Product.findById(item.product);
+   cartTotal += productDoc.price * item.quantity;
+ }
+ cart.cartTotal = cartTotal;
+    
     await cart.save();
+
+
+
 
     return res.status(200).json({
       alreadyExists: false,
@@ -124,7 +136,7 @@ const cartQuantity = async (req, res) => {
     }
 
     const productInCart = cart.cartProducts.find((product) =>
-      product.product.equals(productId)
+      product.product._id.equals(productId)
     );
 
     if (!productInCart) {
@@ -132,7 +144,8 @@ const cartQuantity = async (req, res) => {
     }
 
     const selectedSize = productInCart.size;
-    const sizesArray = productInCart.product.sizes;
+    const product = productInCart.product;
+    const sizesArray = product.sizes;
 
     let availableStock;
 
@@ -145,7 +158,7 @@ const cartQuantity = async (req, res) => {
 
     console.log(`Stock for ${selectedSize}: ${availableStock}`);
 
-    if (newQuantity > availableStock && newQuantity > productInCart.quantity) {
+    if (newQuantity > availableStock) {
       return res.status(400).json({
         error: "Requested quantity exceeds available stock.",
         type: "insufficientStock",
@@ -154,12 +167,21 @@ const cartQuantity = async (req, res) => {
 
     productInCart.quantity = newQuantity;
 
+    // Calculate the cart total
+    let cartTotal = 0;
+    for (const item of cart.cartProducts) {
+      const productDoc = await Product.findById(item.product._id);
+      cartTotal += productDoc.price * item.quantity;
+    }
+    cart.cartTotal = cartTotal;
+
     await cart.save();
 
     res.status(200).json({
       success: true,
       message: "Quantity updated successfully.",
       cartCount: cart.cartProducts.length,
+      cartTotal: cart.cartTotal,
     });
   } catch (error) {
     console.error(error);
@@ -171,30 +193,46 @@ const cartQuantity = async (req, res) => {
 
 
 
-
-
 const cartRemove = async (req, res) => {
   const { cartId, productId } = req.body;
 
   try {
-    let cart = await Cart.findById(cartId);
-    const productIndex = cart.cartProducts.findIndex((product) =>
-      product.product.equals(productId)
-    );
+    let cart = await Cart.findById(cartId).populate({
+      path: "cartProducts.product",
+      model: "Product",
+    });
 
-    if (!cart || productIndex === -1) {
-      return res.status(404).json({ error: "Cart or product not found." });
+    if (!cart) {
+      return res.status(404).json({ error: "Cart not found." });
     }
 
-    cart.cartProducts.splice(productIndex, 1);
+    const productIndex = cart.cartProducts.findIndex((product) =>
+      product.product._id.equals(productId)
+    );
+
+    if (productIndex === -1) {
+      return res.status(404).json({ error: "Product not found in the cart." });
+    }
+
+    const removedProduct = cart.cartProducts.splice(productIndex, 1)[0];
+
+    
+    let cartTotal = 0;
+    for (const item of cart.cartProducts) {
+      const productDoc = await Product.findById(item.product._id);
+      cartTotal += productDoc.price * item.quantity;
+    }
+    cart.cartTotal = cartTotal;
 
     await cart.save();
 
-  res.status(200).json({
-    success: true,
-    message: "Product removed successfully.",
-    cartCount: cart.cartProducts.length, 
-  });
+    res.status(200).json({
+      success: true,
+      message: "Product removed successfully.",
+      cartCount: cart.cartProducts.length,
+      cartTotal: cart.cartTotal,
+      removedProduct,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error." });
@@ -281,7 +319,7 @@ const checkQuantities = async (req, res) => {
 
     for (const cartItem of cartItems) {
       for (const item of cartItem.cartProducts) {
-        const product = item.product; // Access the populated product details
+        const product = item.product; 
 
         const selectedSize = item.size;
         const selectedQuantity = item.quantity;

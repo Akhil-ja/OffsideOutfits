@@ -4,6 +4,7 @@ const Product = require("../models/productModel");
 const Address = require("../models/addressModel");
 const productModel = require("../models/productModel");
 const RazorPay = require("razorpay");
+const Wallet =require("../models/walletModel")
 
 
 const createOrders = async (req, res) => {
@@ -12,9 +13,12 @@ const createOrders = async (req, res) => {
 
     const userID = req.session.userID;
     const selectedAddress = req.session.selectedAddress;
+    const paymentType = req.session.paymentType;
 
     console.log("userid:" + userID);
     console.log("address:" + selectedAddress);
+    console.log("paymenntType:" + paymentType);
+
 
     let orderAddress = "";
 
@@ -45,6 +49,12 @@ const createOrders = async (req, res) => {
           size: cartProduct.size,
         }));
 
+        
+orderProducts.forEach((orderProduct) => {
+  console.log("size:" + orderProduct.size);
+});
+
+        
         try {
           for (const orderProduct of orderProducts) {
             const product = orderProduct.product;
@@ -74,6 +84,7 @@ const createOrders = async (req, res) => {
             address: orderAddress,
             orderDate: Date.now(),
             orderTotal: totalAmount,
+            PaymentMethod: paymentType,
           });
 
           await newOrder.save();
@@ -264,7 +275,72 @@ const razorpay = new RazorPay({
 });
 
 
+const cancelOrder = async (req, res) => {
+  try {
+    console.log("in cancel order");
+    const orderId = req.query.orderID;
+    const userID = res.locals.currentUser._id;
+    console.log("userID:" + userID);
+    console.log("Cancelling order with ID: " + orderId);
 
+    const updatedOrder = await Orders.findByIdAndUpdate(
+      orderId,
+      { $set: { status: "cancelled" } },
+      { new: true }
+    )
+      .populate({
+        path: "user",
+        model: "User",
+      })
+      .populate({
+        path: "products.product",
+        model: "Product",
+      });
+
+    console.log("Updated order:", updatedOrder);
+
+    for (const product of updatedOrder.products) {
+      const productId = product.product._id;
+      const quantityOrdered = product.quantity;
+
+      console.log(
+        `Updating product stock for product ID ${productId} with quantity ${quantityOrdered}`
+      );
+
+      await Product.findByIdAndUpdate(
+        productId,
+        { $inc: { "sizes.$[size].quantity": quantityOrdered } },
+        {
+          arrayFilters: [{ "size.size": product.size }],
+          new: true,
+        }
+      );
+    }
+
+    if(updatedOrder.PaymentMethod!=="COD"){
+let userWallet = await Wallet.findOne({ user: userID });
+
+if (!userWallet) {
+  userWallet = new Wallet({
+    user: userID,
+    money: updatedOrder.orderTotal,
+  });
+} else {
+  userWallet.money += updatedOrder.orderTotal;
+}
+
+await userWallet.save();
+
+    }
+
+    
+    console.log("Order cancellation successful");
+
+    res.redirect(`/order-details?orderID=${orderId}`);
+  } catch (error) {
+    console.error("Error cancelling order:", error.message);
+  }
+};
 
 const Payment = async (req, res) => {
   try {
@@ -403,7 +479,6 @@ const Payment = async (req, res) => {
 
 
 
-
 module.exports = {
   createOrders,
   viewOrders,
@@ -412,4 +487,5 @@ module.exports = {
   adminGetOrderDetails,
   UpdateOrderStatus,
   Payment,
+  cancelOrder,
 };

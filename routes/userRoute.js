@@ -107,6 +107,7 @@ userRoute.get("/place-order", authRoutes.checkUser,authRoutes.isLogin, orderCont
 
 userRoute.post("/payment", orderController.Payment);
 
+userRoute.get("/cancel-order", orderController.cancelOrder);
 
 
 userRoute.get(
@@ -131,6 +132,11 @@ userRoute.post("/applyCoupon", cartController.Applycoupon);
 
 userRoute.post("/addToWishlist", wishlistController.addToWishlist);
 
+userRoute.get("/wishlist", wishlistController.viewWishlist);
 
+
+
+
+userRoute.post("/remove-from-wishlist", wishlistController.removeFromwishlist);
 
 module.exports= userRoute;

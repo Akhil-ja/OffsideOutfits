@@ -2,6 +2,7 @@ const User = require("../models/userModel");
 const Product = require("../models/productModel");
 const Orders = require("../models/ordersModel");
 const Address = require("../models/addressModel");
+const Wallet = require("../models/walletModel");
 const sendEmail = require("../services/sendEmail");
 const authRoutes = require("../services/authRoutes");
 
@@ -212,6 +213,10 @@ const loadProfile = async (req, res) => {
 
     const matchingAddress = await Address.findOne({ user: userID });
 
+   const walletDetails = await Wallet.findOne({ user: userID });
+      
+   console.log("walletDetails:" + walletDetails);
+
     let pageinfo = selectedValue;
 
     console.log(userID);
@@ -233,6 +238,7 @@ res.render("profile", {
   matchingAddress,
   AllOrders,
   userDetails,
+  walletDetails,
 });
 
     
