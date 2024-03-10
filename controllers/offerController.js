@@ -156,7 +156,7 @@ const toggleStatus = async (req, res) => {
   try {
 
     console.log("in toggle");
-    console.log("toggle status");
+    console.log("toggle status");   
     const { offerId } = req.body;
     console.log("offerId:" + offerId);
 
@@ -172,29 +172,14 @@ const toggleStatus = async (req, res) => {
 
    
     offer.isActive = !offer.isActive;
-
-   if (offer.isActive===true) {
-    if (offer.categoryOffer) {
-      const category = offer.categoryOffer.category;
-      const productsToUpdate = await Product.find({ category: category._id });
-
-      for (const product of productsToUpdate) {
-        product.discountPercentage = offer.categoryOffer.discountPercentage;
-        await product.save();
-      }
-    } else if (offer.productOffer) {
-      const productsToUpdate = offer.productOffer.products;
-
-      for (const product of productsToUpdate) {
-        product.discountPercentage = offer.productOffer.discountPercentage;
-        await product.save();
-      }
-    }
-
-   }
-    
-   
+   console.log("status changes");
     await offer.save();
+
+
+    if (offer.isActive)
+     await applyActiveOffersToProducts(offerId);
+else
+removeInactiveOffersFromProducts(offerId);
 
     res.json({ success: true });
   } catch (error) {
@@ -203,6 +188,132 @@ const toggleStatus = async (req, res) => {
   }
 };
 
+
+
+const applyActiveOffersToProducts = async (offerId) => {
+  try {
+    console.log("in apply offer");
+    const offer = await Offer.findById(offerId)
+      .populate({
+        path: "productOffer.products",
+        model: "Product",
+      })
+      .populate({
+        path: "categoryOffer.category",
+        model: "category",
+      });
+
+    let discountPercentage;
+
+    if (offer.categoryOffer && offer.categoryOffer.category) {
+      discountPercentage = offer.categoryOffer.discountPercentage;
+      const categoryId = offer.categoryOffer.category._id;
+      const categoryOfferProducts = await Product.find({
+        category: categoryId,
+      });
+
+      const appliedOfferDetails = {
+        offer: offer._id,
+        discountPercentage: discountPercentage,
+      };
+
+      await Product.updateMany(
+        { category: categoryId },
+        { $push: { appliedOffers: appliedOfferDetails } }
+      );
+    }
+
+    if (offer.productOffer && offer.productOffer.products) {
+      discountPercentage = offer.productOffer.discountPercentage;
+      const productIds = offer.productOffer.products.map(
+        (product) => product._id
+      );
+
+      const appliedOfferDetails = {
+        offer: offer._id,
+        discountPercentage: discountPercentage,
+      };
+
+      await Product.updateMany(
+        { _id: { $in: productIds } },
+        { $push: { appliedOffers: appliedOfferDetails } }
+      );
+    }
+await updateProductDiscount();
+    console.log("Active offers applied to products successfully.");
+  } catch (error) {
+    console.error("Error applying active offers to products:", error);
+  }
+};
+
+
+const removeInactiveOffersFromProducts = async (offerId) => {
+  try {
+    console.log("Removing inactive offer from products...");
+    const offer = await Offer.findById(offerId)
+      .populate({
+        path: "productOffer.products",
+        model: "Product",
+      })
+      .populate({
+        path: "categoryOffer.category",
+        model: "category",
+      });
+
+    if (!offer) {
+      console.error(`Offer with ID ${offerId} not found.`);
+      return;
+    }
+
+    if (offer.categoryOffer && offer.categoryOffer.category) {
+      const categoryId = offer.categoryOffer.category._id;
+      const result = await Product.updateMany(
+        {
+          category: categoryId,
+          appliedOffers: { $elemMatch: { offer: offerId } },
+        },
+        { $pull: { appliedOffers: { offer: offerId } } }
+      );
+      
+    }
+
+    if (offer.productOffer && offer.productOffer.products.length > 0) {
+      const productIds = offer.productOffer.products.map(
+        (product) => product._id
+      );
+      const result = await Product.updateMany(
+        {
+          _id: { $in: productIds },
+          appliedOffers: { $elemMatch: { offer: offerId } },
+        },
+        { $pull: { appliedOffers: { offer: offerId } } }
+      );
+     
+    }
+await updateProductDiscount();
+    console.log(" offers removed from products successfully.");
+  } catch (error) {
+    console.error("Error removing inactive offers from products:", error);
+  }
+};
+
+const updateProductDiscount = async () => {
+  try {
+    const products = await Product.find();
+
+    for (const product of products) {
+      const highestDiscountPercentage = product.appliedOffers.reduce(
+        (maxDiscount, offer) => Math.max(maxDiscount, offer.discountPercentage),
+        0
+      );
+
+      product.discountPercentage = highestDiscountPercentage;
+      await product.save();
+    }
+  } catch (error) {
+    console.error("Error updating product discountPercentage:", error);
+  }
+};
 
 
 

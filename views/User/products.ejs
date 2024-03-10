@@ -186,20 +186,18 @@
                                 <% if (product.is_listed==="1" ) { %>
                                     <div class="col-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
                                         <div class="product">
-                                            <div class="card card-product-grid"">
-                                                <a href=" /products/<%=product._id %>"">
-                                                <img src=" /productAssets/<%=product.images[0] %>" alt="Product image"
-                                                    class="product-image" style="height: 280px;width: 285px;">
+                                            <div class="card card-product-grid">
+                                                <a href="/products/<%= product._id %>">
+                                                    <img src="/productAssets/<%= product.images[0] %>" alt="Product image"
+                                                        class="product-image" style="height: 280px;width: 285px;">
                                                 </a>
-
+                    
                                                 <div class="product-action-vertical">
-                                                    <a href="#"
-                                                        class="btn-product-icon btn-wishlist btn-expandable"><span>add
-                                                            to
+                                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
                                                             wishlist</span></a>
                                                 </div>
                                             </div>
-
+                    
                                             <div class="product-body">
                                                 <div class="product-cat">
                                                     <a href="#">
@@ -211,8 +209,13 @@
                                                         <%= product.pname %>
                                                     </a>
                                                 </h3><!-- End .product-title -->
+                    
                                                 <div class="product-price">
-                                                    Rs:<%= product.price %> <!-- Replace with actual product price -->
+                                                    <% if (product.priceAfterDiscount !==product.price) { %>
+                                                        <del>Rs:<%= product.price %></del><pre>  </pre> Rs:<%= product.priceAfterDiscount.toFixed(2) %>
+                                                            <% } else { %>
+                                                                Rs:<%= product.price %>
+                                                                    <% } %>
                                                 </div><!-- End .product-price -->
                                             </div><!-- End .product-body -->
                                         </div><!-- End .product -->
@@ -221,6 +224,7 @@
                                         <% }); %>
                         </div><!-- End .row -->
                     </div>
+
 
 
                     <div class="load-more-container text-center">

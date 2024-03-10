@@ -15,8 +15,12 @@
       },
       discountPercentage: {
         type: Number,
-        default: 0, 
+        default: 0,
       },
+       priceAfterDiscount: {
+      type: Number,
+      
+    },
 
       description: {
         type: String,
@@ -57,10 +61,30 @@
         type: String,
         default: 1,
       },
+      appliedOffers: [
+        {
+          offer: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Offer", 
+            required: true,
+          },
+          discountPercentage: {
+            type: Number,
+            required: true,
+          },
+        },
+      ],
     },
     {
       strictPopulate: false,
     }
   );
+
+productSchema.pre("save", function (next) {
+  const discountedPrice =
+    this.price - (this.price * this.discountPercentage) / 100;
+  this.priceAfterDiscount = discountedPrice;
+  next();
+});
 
   module.exports = mongoose.model("Product", productSchema);
