@@ -190,7 +190,7 @@ const sortProducts = async (req, res) => {
     let sortObject = {};
 
     if (priceSort !== "undefined") {
-      sortObject.price = priceSort === "lowToHigh" ? 1 : -1;
+      sortObject.priceAfterDiscount = priceSort === "lowToHigh" ? 1 : -1;
     }
 
     if (nameSort !== "undefined") {

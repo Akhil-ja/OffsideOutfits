@@ -20,6 +20,13 @@
     <link rel="stylesheet" href="assets/css/plugins/nouislider/nouislider.css">
 </head>
 
+<style>
+    .strike-price {
+    text-decoration: line-through;
+    margin-right: 10px;
+}
+</style>
+
 <body>
     <div class="page-wrapper">
         <header class="header ">
@@ -479,7 +486,7 @@
     </script>
 
 
- <script>
+<script>
     function applyFilters() {
         const priceSort = document.querySelector('input[name="sort-type"][value^="lowToHigh"]:checked')?.value ||
             document.querySelector('input[name="sort-type"][value^="highToLow"]:checked')?.value;
@@ -518,7 +525,7 @@
                                         <a href="/product/${updatedProduct._id}">${updatedProduct.pname}</a>
                                     </h3>
                                     <div class="product-price">
-                                        Rs:${updatedProduct.price}
+                                        ${updatedProduct.priceAfterDiscount !== updatedProduct.price ? `<span class="strike-price">Rs: ${updatedProduct.price.toFixed(2)}</span> Rs: ${updatedProduct.priceAfterDiscount.toFixed(2)}` : `Rs: ${updatedProduct.price.toFixed(2)}`}
                                     </div>
                                 </div>
                             </div>
@@ -531,10 +538,8 @@
     }
 
     function clearAll() {
-           
-            window.location.href =  '/products';
-        }
-
+        window.location.href = '/products';
+    }
 </script>
 
 <script>
