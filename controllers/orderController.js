@@ -14,7 +14,7 @@ const createOrders = async (req, res) => {
     const userID = req.session.userID;
     const selectedAddress = req.session.selectedAddress;
     const paymentType = req.session.paymentType;
-
+    const couponApplied=req.session.couponApplied
     console.log("userid:" + userID);
     console.log("address:" + selectedAddress);
     console.log("paymenntType:" + paymentType);
@@ -85,6 +85,7 @@ orderProducts.forEach((orderProduct) => {
             orderDate: Date.now(),
             orderTotal: totalAmount,
             PaymentMethod: paymentType,
+            couponApplied: couponApplied,
           });
 
           await newOrder.save();

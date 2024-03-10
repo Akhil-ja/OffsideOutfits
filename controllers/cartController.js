@@ -373,6 +373,8 @@ const checkQuantities = async (req, res) => {
 
 const Applycoupon = async (req, res) => {
   try {
+
+    console.log("in apply coupon");
     const { couponCode, userID } = req.body;
 
     let couponApplied = null;
@@ -437,20 +439,15 @@ const Applycoupon = async (req, res) => {
       cartWithProductDetails.forEach((cartItem) => {
         cartItem.totalAmountPerCart -= couponDiscount;
       });
-
+req.session.couponApplied = coupon._id;
       await Cart.updateOne({ user: userID }, { cartTotal: newTotalAmount });
       couponApplied = coupon.toObject();
+      console.log("couponApplied in apply coupon:" + couponApplied);
+      
     } else {
       console.log("No such coupon exists");
       return res.status(400).json({ error: "Coupon not found" });
     }
-
-    // const order = await Order.create({
-    //   user: userID,
-    //   cartItems: cartWithProductDetails,
-    //   totalAmount: newTotalAmount,
-    // });
-
     console.log("New total:", newTotalAmount);
 
     res.json({ newTotalAmount, couponApplied });

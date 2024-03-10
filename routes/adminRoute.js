@@ -155,7 +155,10 @@ adminRoute.post("/referalOffers", offerController.addReferalOffer);
 
 adminRoute.post("/toggleOfferStatus", offerController.toggleStatus);
 
+adminRoute.get("/dashboard", adminController.viewDashboard);
 
+adminRoute.get("/download/excel", adminController.downloadExel);
+adminRoute.get("/download/pdf", adminController.downloadPDF);
 
 
 module.exports = adminRoute;

@@ -556,7 +556,7 @@
 
                         document.getElementById('couponDetailsSection').style.display = 'block';
                     } else {
-                        // Handle case where couponApplied is null
+                       
                         console.error('Failed to apply coupon: No coupon data received');
                         Swal.fire({
                             icon: 'error',
@@ -565,7 +565,7 @@
                         });
                     }
                 } else {
-                    // Handle non-OK responses (e.g., server errors)
+                   
                     console.error('Failed to apply coupon');
                     Swal.fire({
                         icon: 'error',

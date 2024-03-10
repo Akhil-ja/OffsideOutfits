@@ -37,6 +37,10 @@ const orderSchema = new mongoose.Schema(
       enum: ["pending", "completed", "cancelled", "delivered"],
       default: "pending",
     },
+    couponApplied: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Coupon",
+    },
     orderDate: {
       type: Date,
       default: Date.now,
@@ -45,10 +49,10 @@ const orderSchema = new mongoose.Schema(
       type: Object,
       required: false,
     },
-    PaymentMethod:{
-type:String,
-required:true
-    }
+    PaymentMethod: {
+      type: String,
+      required: true,
+    },
   },
   {
     strictPopulate: false,
