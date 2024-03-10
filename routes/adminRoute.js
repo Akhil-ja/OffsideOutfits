@@ -11,6 +11,7 @@ const productController = require("../controllers/productController");
 const orderController = require("../controllers/orderController");
 const userController = require("../controllers/userController");
 const couponController = require("../controllers/couponController");
+const offerController=require("../controllers/offerController")
 
 
 
@@ -136,6 +137,23 @@ adminRoute.get("/viewCoupon", couponController.viewCoupon);
 adminRoute.get("/editCoupon", couponController.viewEditCoupon);
 adminRoute.post("/editCoupon", couponController.editCoupon);
 
+adminRoute.get("/offers", offerController.viewOffers);
+
+
+
+adminRoute.get("/categoryOffer", offerController.CategoryOffer);
+
+adminRoute.get("/productOffer", offerController.ProductOffer);
+
+adminRoute.get("/referalOffers", offerController.ReferalOffer);
+
+adminRoute.post("/categoryOffer", offerController.addCategoryOffer);
+
+adminRoute.post("/productOffer", offerController.addProductOffer);
+
+adminRoute.post("/referalOffers", offerController.addReferalOffer);
+
+adminRoute.post("/toggleOfferStatus", offerController.toggleStatus);
 
 
 

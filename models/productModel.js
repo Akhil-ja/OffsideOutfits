@@ -13,6 +13,10 @@
         type: Number,
         required: true,
       },
+      discountPercentage: {
+        type: Number,
+        default: 0, 
+      },
 
       description: {
         type: String,
