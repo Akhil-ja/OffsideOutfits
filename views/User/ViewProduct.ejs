@@ -219,8 +219,13 @@
                                     
         
                                     <div class="product-price">
-                                   Rs:<%=product.price%>/-
-                                    </div><!-- End .product-price -->
+                                    <% if (product.priceAfterDiscount !==product.price) { %>
+                                        <del>Rs:<%= product.price %></del>
+                                        <pre>  </pre> Rs:<%= product.priceAfterDiscount.toFixed(2) %>
+                                            <% } else { %>
+                                                Rs:<%= product.price %>
+                                                    <% } %>
+                                    </div>
         
                                     <div class="product-content">
                                         <p><%=product.description%></p>

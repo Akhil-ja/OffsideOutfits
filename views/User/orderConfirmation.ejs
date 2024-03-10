@@ -145,12 +145,12 @@
                             <h3 class="product-title">
                                 <%= product.product.pname %>
                             </h3>
-                            <span class="product-price">Rs:<%= product.price %></span>-/
+                            <span class="product-price">Rs:<%= product.price.toFixed(2) %></span>-/
                             <span class="Quantity">
                                 <%= product.quantity %> units
                             </span>
-                            <% const updatedPrice=newOrder.products.find(p=> p.product.equals(product.product._id)).price; %>
-                                <span class="total-price">Total: Rs:<%= updatedPrice * product.quantity %></span>-/
+                            <% const updatedPrice=newOrder.products.find(p=> p.product.equals(product.product._id)).price.toFixed(2); %>
+                                <span class="total-price">Total: Rs:<%= updatedPrice * product.quantity.toFixed(2) %></span>-/
                         </div>
                     </div>
                     <% }); %>

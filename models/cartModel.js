@@ -25,7 +25,8 @@ const cartSchema = new mongoose.Schema(
     cartTotal: {
       type: Number,
       required: false,
-      default:0
+      default: 0,
+     
     },
   },
   {

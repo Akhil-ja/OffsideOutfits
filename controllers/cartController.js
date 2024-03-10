@@ -93,14 +93,18 @@ const addToCart = async (req, res) => {
       cart.cartProducts.push({ product: productId, size: size }); 
     }
 
- let cartTotal = 0;
- for (const item of cart.cartProducts) {
-   const productDoc = await Product.findById(item.product);
-   cartTotal += productDoc.price * item.quantity;
- }
- cart.cartTotal = cartTotal;
-    
-    await cart.save();
+let cartTotal = 0;
+
+for (const item of cart.cartProducts) {
+  const productDoc = await Product.findById(item.product);
+  cartTotal += parseFloat(
+    (productDoc.priceAfterDiscount * item.quantity).toFixed(2)
+  );
+}
+
+cart.cartTotal = parseFloat(cartTotal.toFixed(2));
+
+await cart.save();
 
 
 
@@ -167,13 +171,16 @@ const cartQuantity = async (req, res) => {
 
     productInCart.quantity = newQuantity;
 
-    // Calculate the cart total
     let cartTotal = 0;
+
     for (const item of cart.cartProducts) {
-      const productDoc = await Product.findById(item.product._id);
-      cartTotal += productDoc.price * item.quantity;
+      const productDoc = await Product.findById(item.product);
+      cartTotal += parseFloat(
+        (productDoc.priceAfterDiscount * item.quantity).toFixed(2)
+      );
     }
-    cart.cartTotal = cartTotal;
+
+    cart.cartTotal = parseFloat(cartTotal.toFixed(2));
 
     await cart.save();
 
@@ -217,14 +224,18 @@ const cartRemove = async (req, res) => {
     const removedProduct = cart.cartProducts.splice(productIndex, 1)[0];
 
     
-    let cartTotal = 0;
-    for (const item of cart.cartProducts) {
-      const productDoc = await Product.findById(item.product._id);
-      cartTotal += productDoc.price * item.quantity;
-    }
-    cart.cartTotal = cartTotal;
+   let cartTotal = 0;
 
-    await cart.save();
+   for (const item of cart.cartProducts) {
+     const productDoc = await Product.findById(item.product);
+     cartTotal += parseFloat(
+       (productDoc.priceAfterDiscount * item.quantity).toFixed(2)
+     );
+   }
+
+   cart.cartTotal = parseFloat(cartTotal.toFixed(2));
+
+   await cart.save();
 
     res.status(200).json({
       success: true,
@@ -269,7 +280,8 @@ const loadCheckout = async (req, res) => {
 
          
 
-            const productAmount = productDetail.price * product.quantity;
+            const productAmount =
+              productDetail.priceAfterDiscount * product.quantity;
             totalAmountPerCart += productAmount;
             totalAmount += productAmount;
             return {
@@ -386,7 +398,8 @@ const Applycoupon = async (req, res) => {
             const productDetail = products.find((_p_) =>
               _p_._id.equals(_product_.product)
             );
-            const productAmount = productDetail.price * _product_.quantity;
+            const productAmount =
+              productDetail.priceAfterDiscount * _product_.quantity;
             totalAmountPerCart += productAmount;
             return {
               ..._product_.toObject(),

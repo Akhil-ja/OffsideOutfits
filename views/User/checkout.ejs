@@ -262,7 +262,7 @@
                                                             <td>
                                                                 <%= product.quantity %>
                                                             </td>
-                                                            <td>Rs:<%= product.quantity * product.productDetail.price %>-/
+                                                            <td>Rs:<%= product.quantity * product.productDetail.priceAfterDiscount.toFixed(2) %>-/
                                                             </td>
                                                         </tr>
                                                         <% }); %>
@@ -275,7 +275,7 @@
                                             <p id="discountValuePlaceholder">Discount Value: </p>
                                         </div>
                         
-                                    <p class="mt-1" style="font-weight: 600;">Total Amount To be paid: <span id="totalAmount"><%=totalAmount%></span></p>
+                                    <p class="mt-1" style="font-weight: 600;">Total Amount To be paid: <span id="totalAmount"><%=totalAmount.toFixed(2)%></span></p>
 
                                         
                         
@@ -540,7 +540,7 @@
 
                 if (response.ok) {
                     const data = await response.json();
-                    document.getElementById('totalAmount').innerText = data.newTotalAmount;
+                    document.getElementById('totalAmount').innerText = data.newTotalAmount.toFixed(2);
 
                     if (data.couponApplied) {
                         const couponCodePlaceholder = document.getElementById('couponCodePlaceholder');

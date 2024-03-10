@@ -176,7 +176,7 @@
                                                               <b><%= product.size %></b>  
                                                             </td>
                                                             <td class="price-col">
-                                                                <%= product.productDetail.price %>
+                                                                <%= product.productDetail.priceAfterDiscount.toFixed(2)%>
                                                             </td>
                                                             <td class="quantity-col">
                                                                 <div class="cart-product-quantity">
@@ -186,7 +186,7 @@
                                                                 </div>
                                                             </td>
                                                             <td class="total-col">
-                                                                <%= product.productDetail.price * product.quantity %>
+                                                                <%= product.productDetail.priceAfterDiscount * product.quantity.toFixed(2) %>
                                                             </td>
                                                             <td class="remove-col">
                                                                 <button class="btn-remove"

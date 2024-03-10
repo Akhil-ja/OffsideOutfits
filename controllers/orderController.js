@@ -45,7 +45,7 @@ const createOrders = async (req, res) => {
         const orderProducts = cart.cartProducts.map((cartProduct) => ({
           product: cartProduct.product,
           quantity: cartProduct.quantity,
-          price: cartProduct.product.price,
+          price: cartProduct.product.priceAfterDiscount,
           size: cartProduct.size,
         }));
 
@@ -163,7 +163,7 @@ const getOrderDetails=async(req,res)=>{
       const TotalAmount = (products) => {
         let totalAmount = 0;
         products.forEach((productInfo) => {
-          totalAmount += productInfo.price * productInfo.quantity;
+          totalAmount += productInfo.priceAfterDiscount * productInfo.quantity;
         });
         return totalAmount;
       };
@@ -218,7 +218,7 @@ const adminGetOrderDetails = async (req, res) => {
     const TotalAmount = (products) => {
       let totalAmount = 0;
       products.forEach((productInfo) => {
-        totalAmount += productInfo.price * productInfo.quantity;
+        totalAmount += productInfo.priceAfterDiscount * productInfo.quantity;
       });
       return totalAmount;
     };
@@ -389,7 +389,7 @@ const Payment = async (req, res) => {
         orderProducts = cart.cartProducts.map((cartProduct) => ({
           product: cartProduct.product,
           quantity: cartProduct.quantity,
-          price: cartProduct.product.price,
+          price: cartProduct.product.priceAfterDiscount,
           size: cartProduct.size,
         }));
 
