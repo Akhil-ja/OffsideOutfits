@@ -157,6 +157,8 @@ adminRoute.post("/toggleOfferStatus", offerController.toggleStatus);
 
 adminRoute.get("/dashboard", adminController.viewDashboard);
 
+adminRoute.post("/dashboard", adminController.filterOrdersByDate);
+
 adminRoute.get("/download/excel", adminController.downloadExel);
 adminRoute.get("/download/pdf", adminController.downloadPDF);
 

@@ -43,6 +43,17 @@ const createCoupon = async (req, res) => {
 
     await newCoupon.save();
 
+    // const timeUntilExpiry = new Date(expiryDate).getTime() - Date.now();
+    // if (timeUntilExpiry > 0) {
+    //   setTimeout(async () => {
+    //     await Coupon.updateOne(
+    //       { _id: newCoupon._id },
+    //       { $set: { status: "inactive" } }
+    //     );
+    //   }, timeUntilExpiry);
+    // }
+
+
     res.redirect("/admin/coupons");
   } catch (error) {
     console.error(error.message);
@@ -63,6 +74,13 @@ const editCouponStatus = async (req, res) => {
     if (!coupon) {
       return res.status(404).json({ error: "Coupon not found" });
     }
+
+    // const now = new Date();
+    // if (coupon.expiryDate < now) {
+    //   return res
+    //     .status(400)
+    //     .json({ error: "Cannot edit status for an expired coupon" });
+    // }
 
     coupon.status = coupon.status === "active" ? "blocked" : "active";
 

@@ -281,13 +281,47 @@ const downloadPDF = async (req, res) => {
       }
     });
 
-    // End the PDF document
+   
     doc.end();
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal Server Error");
   }
 };
+
+const filterOrdersByDate = async (req, res) => {
+  try {
+    const { selectedDate } = req.query;
+
+    const startDate = new Date(selectedDate);
+    startDate.setHours(0, 0, 0, 0);
+
+    const endDate = new Date(selectedDate);
+    endDate.setHours(23, 59, 59, 999);
+
+    const orders = await Order.find({
+      orderDate: { $gte: startDate, $lte: endDate },
+    }).populate({
+        path: "products.product",
+        model: "Product",
+      })
+      .populate({
+        path: "user",
+        model: "User",
+      })
+      .populate({
+        path: "couponApplied",
+        model: "Coupon",
+      })
+      .sort({ orderDate: "desc" })
+
+    res.json({ orders });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 
 
 module.exports = {
@@ -297,4 +331,5 @@ module.exports = {
   viewDashboard,
   downloadExel,
   downloadPDF,
+  filterOrdersByDate,
 };
