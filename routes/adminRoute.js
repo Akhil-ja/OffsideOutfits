@@ -64,7 +64,7 @@ adminRoute.get(
   authRoutes.isAdminLogin,
   productController.editProduct
 );
-adminRoute.post("/products/edit-product",productController.edit_product);
+
 
 adminRoute.get(
   "/category",
@@ -110,8 +110,14 @@ adminRoute.post(
   productController.add_Product
 );
 
+adminRoute.post(
+  "/products/edit-product",
+  upload.array("newImage", 6),
+  productController.edit_product
+);
 
 adminRoute.post("/category", categoryController.createCategory);
+
 
 adminRoute.get(
   "/logout",  adminController.adminLogout

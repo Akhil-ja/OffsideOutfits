@@ -106,32 +106,51 @@ const editProduct = async (req, res) => {
 
 
 const edit_product = async (req, res) => {
-  try {
-    const id = req.query.id;
+    try {
+        const id = req.query.id;
+        const sizeNames = ["XS", "S", "M", "L", "XL", "XXL"];
+        const sizes = sizeNames.map((size) => ({
+            size: size,
+            quantity: req.body.sizes[size] || 0,
+        }));
 
-    const sizeNames = ["XS", "S", "M", "L", "XL", "XXL"];
+        const product=await Product.findByIdAndUpdate(id)
+        const updatedImages = [];
 
-    const sizes = sizeNames.map((size) => ({
-      size: size,
-      quantity: req.body.sizes[size] || 0,
-    }));
+        
+        for (let i = 0; i < product.images.length; i++) {
+            const removeImage = req.body[`removeImage${i}`] === 'true';
+            const newImage = req.files && req.files[`newImage${i}`];
 
-    const updatedProductData = await Product.findByIdAndUpdate(id, {
-      _id: id,
-      pname: req.body.ProductName,
-      price: req.body.ProductPrice,
-      description: req.body.ProductDetails,
-      category: req.body.productCategory,
-      is_listed: req.body.listed,
-      brand: req.body.ProductBrand,
-      sizes: sizes,
-    });
+            if (!removeImage && newImage) {
+               
+                updatedImages.push(newImage.filename);
+            } else if (!removeImage) {
+              
+                updatedImages.push(product.images[i]);
+            }
+           
+        }
 
-    res.redirect(`/admin/products`);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Internal Server Error");
-  }
+        const updatedProductData = {
+            pname: req.body.ProductName,
+            price: req.body.ProductPrice,
+            description: req.body.ProductDetails,
+            category: req.body.productCategory,
+            is_listed: req.body.listed,
+            brand: req.body.ProductBrand,
+            sizes: sizes,
+            images: updatedImages,
+        };
+
+        
+        const updatedProduct = await Product.findByIdAndUpdate(id, updatedProductData);
+
+        res.redirect(`/admin/products`);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
 };
 
 

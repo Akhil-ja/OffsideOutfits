@@ -146,7 +146,9 @@
                 </ul>
             </div>
         </header>
-        <form action="/admin/products/edit-product?id=<%= product._id %>" id="productForm" method="post">
+<form action="/admin/products/edit-product?id=<%= product._id %>" id="productForm" method="post"
+    enctype="multipart/form-data">
+       
           
             <section class="content-main">
                 <div class="row">
@@ -202,19 +204,17 @@
                             <div class="card-body">
                                 <div>
                                     <label class="form-label">Images</label>
-                                 
-                                    <% product.images.forEach(image=> { %>
+                                    <% product.images.forEach((image, index)=> { %>
                                         <div>
                                             <img src="/productAssets/<%= image %>" alt="<%= image %>" style="height: 50px;">
                                             <label>Current Image: <%= image %></label>
                                             <input type="checkbox" name="removeImage" value="<%= image %>">
                                             <label>Remove</label>
+                                            <br>
+                                        <input class="form-control" type="file" multiple name="newImage" accept="image/*">
+
                                         </div>
                                         <% }); %>
-
-                                            
-                                            <input class="form-control" type="file" multiple name="newImages"
-                                                accept="image/*">
                                 </div>
                             </div>
                         </div>
@@ -233,7 +233,7 @@
 
                                     <label class="form-label">Price</label>
                                     <input type="text" placeholder="Type here" name="ProductPrice" id="productPrice"
-                                        value="<%=product.priceAfterDiscount.toFixed(2)%>" class="form-control" required />
+                                        value="<%=product.price%>" class="form-control" required />
                                        
                                 </div>
 
