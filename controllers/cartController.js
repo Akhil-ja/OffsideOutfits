@@ -430,7 +430,15 @@ const Applycoupon = async (req, res) => {
       if (coupon.discountType === "percentage") {
         couponDiscount = (coupon.discountValue / 100) * initialTotalAmount;
       } else if (coupon.discountType === "fixed") {
-        couponDiscount = Math.min(initialTotalAmount, coupon.discountValue);
+        if (coupon.minimumOffer < initialTotalAmount) {
+          couponDiscount = Math.min(initialTotalAmount, coupon.discountValue);
+        } else {
+          console.log(
+            "Fixed amount is greater than the total. Coupon not applied."
+          );
+          return res.status(400).json({ error: "Coupon not applicable" });
+        }
+        
       }
 
       newTotalAmount = initialTotalAmount - couponDiscount;

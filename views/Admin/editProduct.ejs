@@ -200,6 +200,7 @@
                             </div>
                         </div>
                         <!-- card end// -->
+                        <input type="hidden" name="ProductImageCount" value="<%= product.images.length %>">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div>
@@ -208,15 +209,15 @@
                                         <div>
                                             <img src="/productAssets/<%= image %>" alt="<%= image %>" style="height: 50px;">
                                             <label>Current Image: <%= image %></label>
-                                            <input type="checkbox" name="removeImage" value="<%= image %>">
+                                            <input type="hidden" name="ProductImage[<%= index %>]" value="<%= image %>">
+                                            <input type="checkbox" name="removeImage<%= index %>" value="<%= image %>">
                                             <label>Remove</label>
-                                            <br>
-                                        <input class="form-control" type="file" multiple name="newImage" accept="image/*">
-
+                                        <input class="form-control" type="file" name="newImages<%= index %>" accept="image/*">
                                         </div>
                                         <% }); %>
                                 </div>
                             </div>
+
                         </div>
 
                         <!-- Other form fields -->

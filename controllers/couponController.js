@@ -20,7 +20,14 @@ const viewCoupons = async (req, res) => {
 
 const createCoupon = async (req, res) => {
   try {
-    const { name, code, discountType, discountValue, expiryDate } = req.body;
+    const {
+      name,
+      code,
+      discountType,
+      discountValue,
+      minimumOffer,
+      expiryDate,
+    } = req.body;
 
     const existingCoupon = await Coupon.findOne({ code: code.trim() });
 
@@ -37,6 +44,7 @@ const createCoupon = async (req, res) => {
       code,
       discountType,
       discountValue,
+      minimumOffer, 
       expiryDate,
       status: "active",
     });

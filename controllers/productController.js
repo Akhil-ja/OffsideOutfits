@@ -106,51 +106,50 @@ const editProduct = async (req, res) => {
 
 
 const edit_product = async (req, res) => {
-    try {
-        const id = req.query.id;
-        const sizeNames = ["XS", "S", "M", "L", "XL", "XXL"];
-        const sizes = sizeNames.map((size) => ({
-            size: size,
-            quantity: req.body.sizes[size] || 0,
-        }));
+  try {
+    const id = req.query.id;
+    console.log("this ts the body:"+req.body);
 
-        const product=await Product.findByIdAndUpdate(id)
-        const updatedImages = [];
+    const sizeNames = ["XS", "S", "M", "L", "XL", "XXL"];
 
-        
-        for (let i = 0; i < product.images.length; i++) {
-            const removeImage = req.body[`removeImage${i}`] === 'true';
-            const newImage = req.files && req.files[`newImage${i}`];
+    const sizes = sizeNames.map((size) => ({
+      size: size,
+      quantity: req.body.sizes[size] || 0,
+    }));
 
-            if (!removeImage && newImage) {
-               
-                updatedImages.push(newImage.filename);
-            } else if (!removeImage) {
-              
-                updatedImages.push(product.images[i]);
-            }
-           
-        }
+    const updatedImages = [];
 
-        const updatedProductData = {
-            pname: req.body.ProductName,
-            price: req.body.ProductPrice,
-            description: req.body.ProductDetails,
-            category: req.body.productCategory,
-            is_listed: req.body.listed,
-            brand: req.body.ProductBrand,
-            sizes: sizes,
-            images: updatedImages,
-        };
+   
+    for (let i = 0; i < req.body.ProductImageCount; i++) {
+      const currentImage = req.body.ProductImage[i];
 
-        
-        const updatedProduct = await Product.findByIdAndUpdate(id, updatedProductData);
-
-        res.redirect(`/admin/products`);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Internal Server Error");
+      
+      if (!req.body[`removeImage${i}`]) {
+        const newImage = req.files.find(
+          (file) => file.fieldname === `newImages${i}`
+        );
+        updatedImages.push(newImage ? newImage.filename : currentImage);
+      }
     }
+
+   
+    const updatedProductData = await Product.findByIdAndUpdate(id, {
+      _id: id,
+      pname: req.body.ProductName,
+      price: req.body.ProductPrice,
+      description: req.body.ProductDetails,
+      category: req.body.productCategory,
+      is_listed: req.body.listed,
+      brand: req.body.ProductBrand,
+      sizes: sizes,
+      images: updatedImages,
+    });
+
+    res.redirect(`/admin/products`);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
 };
 
 

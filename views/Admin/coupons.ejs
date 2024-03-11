@@ -164,6 +164,8 @@
                         <th scope="col">Name</th>
                         <th scope="col">Status</th>
                         <th scope="col">End Date</th>
+                        <th scope="col">Discount Value</th>
+
                         <th scope="col" class="text-end">Action</th>
                     </tr>
                 </thead>
@@ -184,6 +186,9 @@
                             </td>
                             <td>
                                 <%= coupon.expiryDate.toISOString().split('T')[0] %>
+                            </td>
+                            <td>
+                                <%= coupon.discountType==='percentage' ? coupon.discountValue + '%' : '₹' + coupon.discountValue %>
                             </td>
                             <td class="text-end">
                                 <% if (coupon.status==='blocked' ) { %>
@@ -256,6 +261,13 @@
                     placeholder="Enter discount value" required>
                 <p id="discountValue-error" class="error-message" style="color: red;"></p>
             </div>
+
+            <div class="mb-3">
+                <label for="minimumOffer" class="form-label">Minimum Offer</label>
+                <input type="number" class="form-control" id="minimumOffer" name="minimumOffer" placeholder="Enter minimum offer"
+                    required>
+                <p id="minimumOffer-error" class="error-message" style="color: red;"></p>
+            </div>
         
             <div class="mb-3">
                 <label for="expiryDate" class="form-label">Expiry Date</label>
@@ -278,14 +290,14 @@
 
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
-                <div class="col-sm-6">
+                <!-- <div class="col-sm-6">
                     <script>
                         document.write(new Date().getFullYear())
                     </script> ©
-                </div>
+                </div> -->
                 <div class="col-sm-6">
                     <div class="text-sm-end">
-                        All rights reserved
+                        <!-- All rights reserved -->
                     </div>
                 </div>
             </div>
@@ -308,6 +320,8 @@
         const discountValue = document.getElementById('discountValue').value;
         const discountType = document.getElementById('discountType').value;
         const discountValueError = document.getElementById('discountValue-error');
+        const minimumOffer = document.getElementById('minimumOffer').value;
+        const minimumOfferError = document.getElementById('minimumOffer-error');
         const expiryDate = document.getElementById('expiryDate').value;
         const expiryDateError = document.getElementById('expiryDate-error');
 
@@ -333,6 +347,13 @@
             return false;
         } else {
             discountValueError.textContent = '';
+        }
+
+        if (parseFloat(minimumOffer) <= 0 || isNaN(parseFloat(minimumOffer))) {
+            minimumOfferError.textContent = 'Minimum Offer must be greater than zero.';
+            return false;
+        } else {
+            minimumOfferError.textContent = '';
         }
 
         const today = new Date().toISOString().split('T')[0];
