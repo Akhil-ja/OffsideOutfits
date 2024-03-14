@@ -1,53 +1,93 @@
 const Product = require("../models/productModel");
 const Category = require("../models/categoryModel");
 const categoryModel = require("../models/categoryModel");
+const productModel = require("../models/productModel");
 
 
 
 const loadProducts = async (req, res) => {
   try {
+    console.log("in load products");
     const { priceSort, nameSort, selectedCategories, search } = req.query;
-
-    let products;
-
-    
-    if (priceSort || nameSort) {
-    
+    console.log("search" + search);
+       let products;
+ 
+    if (priceSort || nameSort || selectedCategories || search) {
+ 
       return sortProducts(req, res);
-    }
 
+    }else{
     
-    const categories = await Category.find()
-
-   
-    if (selectedCategories) {
-      
-      products = await Product.find({
-        category: { $in: selectedCategories },
-      }).populate("category");
-    } else {
-      
       products = await Product.find().populate("category");
+
     }
 
-  
-    if (search) {
-      products = products.filter(
-        (product) =>
-          product.pname.toLowerCase().includes(search.toLowerCase()) ||
-          product.description.toLowerCase().includes(search.toLowerCase()) ||
-          product.brand.toLowerCase().includes(search.toLowerCase()) ||
-          product.category.cName.toLowerCase().includes(search.toLowerCase())
-      );
-    }
 
-    
+    const categories = await Category.find();
+
     res.render("products", { products, categories });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal Server Error");
   }
 };
+
+
+
+const sortProducts = async (req, res) => {
+  try {
+    const { priceSort, nameSort, selectedCategories, search } = req.query;
+
+    console.log("Name sort:" + nameSort);
+    console.log("Price sort:" + priceSort);
+    console.log("selectedCategories:" + selectedCategories);
+
+    let sortObject = {};
+
+    if (priceSort !== "undefined") {
+      sortObject.priceAfterDiscount = priceSort === "lowToHigh" ? 1 : -1;
+    }
+
+    if (nameSort !== "undefined") {
+      sortObject.pname = nameSort === "aToZ" ? 1 : -1;
+      console.log(`Name sorting selected: ${nameSort}`);
+    }
+
+    
+    let filterObject = {};
+
+   
+    if (search) {
+      filterObject.$or = [
+        { pname: { $regex: search, $options: "i" } },
+        { brand: { $regex: search, $options: "i" } },
+        { "category.cName": { $regex: search, $options: "i" } },
+      ];
+    }
+
+    let query = Product.find(filterObject).populate("category");
+
+    if (selectedCategories && selectedCategories.length > 0) {
+      const categoryIds = selectedCategories.split(",");
+      query = query.find({ category: { $in: categoryIds } });
+      console.log(`selectedCategories selected: ${categoryIds}`);
+    }
+
+    
+    const products = await query.sort(sortObject);
+
+    res.json({ products });
+    console.log("Fetch");
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+
+
+
 
 
 
@@ -207,45 +247,6 @@ const loadDashboard = async (req, res) => {
 
 
 
-const sortProducts = async (req, res) => {
-  try {
-    const { priceSort, nameSort, selectedCategories, ajax } = req.query;
-
-    console.log("Name sort:" + nameSort);
-    console.log("Price sort:" + priceSort);
-    console.log("selectedCategories:" + selectedCategories);
-
-    let sortObject = {};
-
-    if (priceSort !== "undefined") {
-      sortObject.priceAfterDiscount = priceSort === "lowToHigh" ? 1 : -1;
-    }
-
-    if (nameSort !== "undefined") {
-      sortObject.pname = nameSort === "aToZ" ? 1 : -1;
-      console.log(`Name sorting selected: ${nameSort}`);
-    }
-
-    if (selectedCategories && selectedCategories.length > 0) {
-      const categoryIds = selectedCategories.split(",");
-      products = await Product.find({ category: { $in: categoryIds } }).sort(
-        sortObject
-      );
-      console.log(`selectedCategories selected: ${categoryIds}`);
-    } else {
-      products = await Product.find().sort(sortObject);
-    }
-
-      res.json({ products });
-      console.log("Fetch");
-    
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
-
 
 
 
@@ -263,5 +264,5 @@ module.exports = {
   editProduct,
   deleteProduct,
   add_Product,
-  sortProducts,
+
 };

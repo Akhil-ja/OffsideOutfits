@@ -59,7 +59,7 @@ userRoute.get(
   "/products/sort",
   authRoutes.isBlocked,
   authRoutes.isLogin,
-  productController.sortProducts
+  productController.loadProducts
 );
 
 userRoute.get("/cart", authRoutes.isLogin, cartController.loadCart);

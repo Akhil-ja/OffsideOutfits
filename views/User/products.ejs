@@ -94,16 +94,17 @@
 
                         <div class="header-right">
 
-                            <div class="header-search">
-                                <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
-                                <form action="" method="get">
-                                    <div class="header-search-wrapper">
-                                        <label for="search" class="sr-only">Search</label>
-                                        <input type="search" class="form-control" name="search" id="search"
-                                            placeholder="Search in..." required>
-                                    </div>
-                                </form>
+                    <div class="header-search">
+                        <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
+                        <form id="searchForm" method="get">
+                            <div class="header-search-wrapper">
+                                <label for="search" class="sr-only">Search</label>
+                                <input type="text" class="form-control" name="search" id="searchInput" placeholder="Search in..." required>
                             </div>
+                        </form>
+                    </div>
+
+
 
                             <a href="/wishlist" class="wishlist-link">
                                 <i class="icon-heart-o"></i>
@@ -242,85 +243,86 @@
 
                 <div class="sidebar-filter-overlay"></div>
 
-        <aside class="sidebar-shop sidebar-filter">
-            <div class="sidebar-filter-wrapper">
-                <div class="widget widget-clean">
-                    <a href="#" class="sidebar-filter-clear" onclick="clearAll()">Clear All</a>
-                </div>
-        
-                <!-- Sort and Filter Widget -->
-                <div class="widget widget-collapsible">
-                    <h3 class="widget-title">
-                        <a data-toggle="collapse" href="#widget-2" role="button" aria-expanded="true" aria-controls="widget-2">
-                            Sort & Filter
-                        </a>
-                    </h3>
-                    <div class="collapse show" id="widget-2">
-                        <div class="widget-body">
-                            <div class="filter-items">
-                               
-                                <fieldset>
-                                    <legend><b>Name Sorting</b></legend>
-                                    <div class="filter-item">
-                                        <div class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input" id="name-az" name="sort-type"
-                                                value="aToZ">
-                                            <label class="custom-control-label" for="name-az">A-Z</label>
-                                        </div>
-                                    </div>
-                                    <div class="filter-item">
-                                        <div class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input" id="name-za" name="sort-type"
-                                                value="zToA">
-                                            <label class="custom-control-label" for="name-za">Z-A</label>
-                                        </div>
-                                    </div>
-                                </fieldset>
-        
-                                <!-- Price Sorting -->
-                                <fieldset>
-                                    <legend><b>Price Sorting</b> </legend>
-                                    <div class="filter-item">
-                                        <div class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input" id="price-lh" name="sort-type"
-                                                value="lowToHigh">
-                                            <label class="custom-control-label" for="price-lh">Low to High</label>
-                                        </div>
-                                    </div>
-                                    <div class="filter-item">
-                                        <div class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input" id="price-hl" name="sort-type"
-                                                value="highToLow">
-                                            <label class="custom-control-label" for="price-hl">High to Low</label>
-                                        </div>
-                                    </div>
-                                </fieldset>
-        
-                                <!-- Category Filtering -->
-                                <fieldset>
-                                    <legend><b>Category Filtering</b></legend>
-                                
-                                    <% for (const category of categories) { %>
-                                        <div class="filter-item">
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="<%= category._id %>" name="category-filter"
-                                                    value="<%= category._id %>">
-                                                <label class="custom-control-label" for="<%= category._id %>">
-                                                    <%= category.cName %>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <% } %>
-                                </fieldset>
+<aside class="sidebar-shop sidebar-filter">
+    <div class="sidebar-filter-wrapper">
+        <form id="filterForm" action="/products" method="GET">
+            <div class="widget widget-clean">
+                <button type="button" class="sidebar-filter-clear" onclick="clearAll()">Clear All</button>
+            </div>
 
-                            </div>
+            <!-- Sort and Filter Widget -->
+            <div class="widget widget-collapsible">
+                <h3 class="widget-title">
+                    <button type="button" data-toggle="collapse" href="#widget-2" aria-expanded="true"
+                        aria-controls="widget-2">
+                        Sort & Filter
+                    </button>
+                </h3>
+                <div class="collapse show" id="widget-2">
+                    <div class="widget-body">
+                        <div class="filter-items">
+                            <fieldset>
+                                <legend><b>Name Sorting</b></legend>
+                                <div class="filter-item">
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input" id="name-az" name="sort-type"
+                                            value="aToZ">
+                                        <label class="custom-control-label" for="name-az">A-Z</label>
+                                    </div>
+                                </div>
+                                <div class="filter-item">
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input" id="name-za" name="sort-type"
+                                            value="zToA">
+                                        <label class="custom-control-label" for="name-za">Z-A</label>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <!-- Price Sorting -->
+                            <fieldset>
+                                <legend><b>Price Sorting</b></legend>
+                                <div class="filter-item">
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input" id="price-lh" name="sort-type"
+                                            value="lowToHigh">
+                                        <label class="custom-control-label" for="price-lh">Low to High</label>
+                                    </div>
+                                </div>
+                                <div class="filter-item">
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" class="custom-control-input" id="price-hl" name="sort-type"
+                                            value="highToLow">
+                                        <label class="custom-control-label" for="price-hl">High to Low</label>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <!-- Category Filtering -->
+                            <fieldset>
+                                <legend><b>Category Filtering</b></legend>
+                                <% for (const category of categories) { %>
+                                    <div class="filter-item">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="<%= category._id %>"
+                                                name="category-filter" value="<%= category._id %>">
+                                            <label class="custom-control-label" for="<%= category._id %>">
+                                                <%= category.cName %>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <% } %>
+                            </fieldset>
                         </div>
                     </div>
                 </div>
-        
-                <button class="btn btn-outline-dark btn-round" onclick="applyFilters()">Apply Filter</button>
             </div>
-        </aside>
+
+            <button type="button" class="btn btn-outline-dark btn-round" onclick="applyFilters()">Apply Filter</button>
+        </form>
+    </div>
+</aside>
+
 
 
             </div><!-- End .container-fluid -->
@@ -487,7 +489,21 @@
 
 
 <script>
+
+    document.getElementById("searchInput").addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault(); 
+            applyFilters(); 
+        }
+    });
+
     function applyFilters() {
+        const form = document.getElementById("filterForm");
+        const formData = new FormData(form);
+
+      const search = document.getElementById("searchInput").value;
+        formData.append("search", search);
+
         const priceSort = document.querySelector('input[name="sort-type"][value^="lowToHigh"]:checked')?.value ||
             document.querySelector('input[name="sort-type"][value^="highToLow"]:checked')?.value;
 
@@ -496,68 +512,60 @@
 
         const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter"]:checked')).map(checkbox => checkbox.value);
 
-        fetch(`/products/sort?priceSort=${priceSort}&nameSort=${nameSort}&selectedCategories=${selectedCategories.join(',')}`)
+
+        const searchParams = new URLSearchParams(formData).toString();
+       
+
+     fetch(`/products?priceSort=${priceSort}&nameSort=${nameSort}&selectedCategories=${selectedCategories.join(',')}&search=${search}`)
+
             .then(response => response.json())
             .then(data => {
-                const productsContainer = document.querySelector('.products .row');
+                if (data.products.length === 0) {
+                  
+                    const productsContainer = document.querySelector('.products .row');
+                    productsContainer.innerHTML = '<p>No products found</p>';
+                } else {
+                    
+                    const productsContainer = document.querySelector('.products .row');
+                    productsContainer.innerHTML = '';
 
-                productsContainer.innerHTML = '';
-
-                data.products.forEach(updatedProduct => {
-                    if (updatedProduct.is_listed === "1") {
-                        const productItem = document.createElement('div');
-                        productItem.classList.add('col-6', 'col-md-4', 'col-lg-4', 'col-xl-3', 'col-xxl-2', 'product-item');
-                        productItem.innerHTML = `
-                            <div class="product">
-                                <div class="card card-product-grid">
-                                    <a href="/products/${updatedProduct._id}">
-                                        <img src="/productAssets/${updatedProduct.images[0]}" alt="Product image" class="product-image" style="height: 280px; width: 285px;">
-                                    </a>
-                                    <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                    
+                    data.products.forEach(updatedProduct => {
+                        if (updatedProduct.is_listed === "1") {
+                            const productItem = document.createElement('div');
+                            productItem.classList.add('col-6', 'col-md-4', 'col-lg-4', 'col-xl-3', 'col-xxl-2', 'product-item');
+                            productItem.innerHTML = `
+                                <div class="product">
+                                    <div class="card card-product-grid">
+                                        <a href="/products/${updatedProduct._id}">
+                                            <img src="/productAssets/${updatedProduct.images[0]}" alt="Product image" class="product-image" style="height: 280px; width: 285px;">
+                                        </a>
+                                        <div class="product-action-vertical">
+                                            <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                        </div>
+                                    </div>
+                                    <div class="product-body">
+                                        <div class="product-cat">
+                                            <a href="#">${updatedProduct.brand}</a>
+                                        </div>
+                                        <h3 class="product-title">
+                                            <a href="/product/${updatedProduct._id}">${updatedProduct.pname}</a>
+                                        </h3>
+                                        <div class="product-price">
+                                            ${updatedProduct.priceAfterDiscount !== updatedProduct.price ? `<span class="strike-price">Rs: ${updatedProduct.price.toFixed(2)}</span> Rs: ${updatedProduct.priceAfterDiscount.toFixed(2)}` : `Rs: ${updatedProduct.price.toFixed(2)}`}
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="product-body">
-                                    <div class="product-cat">
-                                        <a href="#">${updatedProduct.brand}</a>
-                                    </div>
-                                    <h3 class="product-title">
-                                        <a href="/product/${updatedProduct._id}">${updatedProduct.pname}</a>
-                                    </h3>
-                                    <div class="product-price">
-                                        ${updatedProduct.priceAfterDiscount !== updatedProduct.price ? `<span class="strike-price">Rs: ${updatedProduct.price.toFixed(2)}</span> Rs: ${updatedProduct.priceAfterDiscount.toFixed(2)}` : `Rs: ${updatedProduct.price.toFixed(2)}`}
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                        productsContainer.appendChild(productItem);
-                    }
-                });
+                            `;
+                            productsContainer.appendChild(productItem);
+                        }
+                    });
+                }
             })
             .catch(error => console.error('Error:', error));
     }
-
-    function clearAll() {
-        window.location.href = '/products';
-    }
 </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const selectedCategories = urlParams.get('selectedCategories');
-
-        if (selectedCategories) {
-            const categoryIds = selectedCategories.split(',');
-            categoryIds.forEach(categoryId => {
-                const checkbox = document.getElementById(categoryId);
-                if (checkbox) {
-                    checkbox.checked = true;
-                }
-            });
-        }
-    });
-</script>
 
 
 
