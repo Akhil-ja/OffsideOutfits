@@ -212,7 +212,7 @@
             <div class="card-body">
                 <h4 class="card-title">Total Amount</h4>
                 <p class="card-text" style="font-weight: 600;text-decoration: underline;">
-                    Rs: <%=orderDetails.orderTotal %>/-
+                    Rs: <%=orderDetails.orderTotal.toFixed(2) %>/-
                 </p>
             </div>
             <% if (orderDetails.status==='pending' ) { %>

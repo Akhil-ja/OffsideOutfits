@@ -263,7 +263,7 @@
     <div class="tab-pane fade" id="tab-wallet" role="tabpanel" aria-labelledby="tab-wallet-link">
         <div class="wallet-info">
             <h4>Your Wallet</h4>
-            <p class="balance">Balance: <b style="text-decoration: underline;">Rs:<%= walletDetails.money %>/-</b></p>
+            <p class="balance">Balance: <b style="text-decoration: underline;">Rs:<%= walletDetails.money.toFixed(2) %>/-</b></p>
             <p class="description">Manage your wallet by making deposits or withdrawals.</p>
         </div>
         <div class="wallet-actions">

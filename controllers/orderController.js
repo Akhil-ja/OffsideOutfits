@@ -91,6 +91,7 @@ orderProducts.forEach((orderProduct) => {
           await newOrder.save();
 
           cart.cartProducts = [];
+          cart.cartTotal=0;
           await cart.save();
 
           return res.render("orderConfirmation", {
@@ -343,6 +344,72 @@ await userWallet.save();
   }
 };
 
+
+const returnOrder=async(req,res)=>{
+  try {
+    console.log("in return order");
+    const orderId = req.query.orderID;
+    const userID = res.locals.currentUser._id;
+    console.log("userID:" + userID);
+    console.log("Cancelling order with ID: " + orderId);
+
+    const updatedOrder = await Orders.findByIdAndUpdate(
+      orderId,
+      { $set: { status: "returned" } },
+      { new: true }
+    )
+      .populate({
+        path: "user",
+        model: "User",
+      })
+      .populate({
+        path: "products.product",
+        model: "Product",
+      });
+
+    console.log("Updated order:", updatedOrder);
+
+    for (const product of updatedOrder.products) {
+      const productId = product.product._id;
+      const quantityOrdered = product.quantity;
+
+      console.log(
+        `Updating product stock for product ID ${productId} with quantity ${quantityOrdered}`
+      );
+
+      await Product.findByIdAndUpdate(
+        productId,
+        { $inc: { "sizes.$[size].quantity": quantityOrdered } },
+        {
+          arrayFilters: [{ "size.size": product.size }],
+          new: true,
+        }
+      );
+    }
+
+    
+      let userWallet = await Wallet.findOne({ user: userID });
+
+      if (!userWallet) {
+        userWallet = new Wallet({
+          user: userID,
+          money: updatedOrder.orderTotal,
+        });
+      } else {
+        userWallet.money += updatedOrder.orderTotal;
+      }
+
+      await userWallet.save();
+    
+
+    console.log("Order return successful");
+
+    res.redirect(`/order-details?orderID=${orderId}`);
+  } catch (error) {
+    console.error("Error returnung order:", error.message);
+  }
+}
+
 const Payment = async (req, res) => {
   try {
     const { userID, selectedAddress, paymentType } = req.body;
@@ -489,4 +556,5 @@ module.exports = {
   UpdateOrderStatus,
   Payment,
   cancelOrder,
+  returnOrder,
 };

@@ -102,22 +102,17 @@ const storage = multer.diskStorage({
   },
 });
 
-
 const upload = multer({ storage: storage });
 
 
-
-adminRoute.post(
-  "/products/edit-product",
-  upload.array("newImages"),
-  productController.edit_product
-);
+adminRoute.post("/products/edit-product", productController.edit_product);
 
 adminRoute.post(
   "/add-product",
-  upload.array("newImages", 6),
+  upload.array("ProductImage", 4),
   productController.add_Product
 );
+
 
 
 adminRoute.post(

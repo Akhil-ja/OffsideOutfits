@@ -4,6 +4,54 @@ const categoryModel = require("../models/categoryModel");
 
 
 
+const loadProducts = async (req, res) => {
+  try {
+    const { priceSort, nameSort, selectedCategories, search } = req.query;
+
+    let products;
+
+    
+    if (priceSort || nameSort) {
+    
+      return sortProducts(req, res);
+    }
+
+    
+    const categories = await Category.find()
+
+   
+    if (selectedCategories) {
+      
+      products = await Product.find({
+        category: { $in: selectedCategories },
+      }).populate("category");
+    } else {
+      
+      products = await Product.find().populate("category");
+    }
+
+  
+    if (search) {
+      products = products.filter(
+        (product) =>
+          product.pname.toLowerCase().includes(search.toLowerCase()) ||
+          product.description.toLowerCase().includes(search.toLowerCase()) ||
+          product.brand.toLowerCase().includes(search.toLowerCase()) ||
+          product.category.cName.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    
+    res.render("products", { products, categories });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
+
+
 
 const loadProduct = async (req, res) => {
   try {
@@ -105,10 +153,10 @@ const editProduct = async (req, res) => {
 
 
 
+
 const edit_product = async (req, res) => {
   try {
     const id = req.query.id;
-    console.log("this ts the body:"+req.body);
 
     const sizeNames = ["XS", "S", "M", "L", "XL", "XXL"];
 
@@ -117,22 +165,6 @@ const edit_product = async (req, res) => {
       quantity: req.body.sizes[size] || 0,
     }));
 
-    const updatedImages = [];
-
-   
-    for (let i = 0; i < req.body.ProductImageCount; i++) {
-      const currentImage = req.body.ProductImage[i];
-
-      
-      if (!req.body[`removeImage${i}`]) {
-        const newImage = req.files.find(
-          (file) => file.fieldname === `newImages${i}`
-        );
-        updatedImages.push(newImage ? newImage.filename : currentImage);
-      }
-    }
-
-   
     const updatedProductData = await Product.findByIdAndUpdate(id, {
       _id: id,
       pname: req.body.ProductName,
@@ -142,7 +174,6 @@ const edit_product = async (req, res) => {
       is_listed: req.body.listed,
       brand: req.body.ProductBrand,
       sizes: sizes,
-      images: updatedImages,
     });
 
     res.redirect(`/admin/products`);
@@ -150,8 +181,7 @@ const edit_product = async (req, res) => {
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
-};
-
+}
 
 // *********Admin************
 
@@ -174,26 +204,6 @@ const loadDashboard = async (req, res) => {
 };
 
 
-const loadProducts = async (req, res) => {
-  try {
-    let products;
-    const { priceSort, nameSort, selectedCategories } = req.query;
-
-    if (priceSort || nameSort) {
-      return sortProducts(req, res);
-    } else if (selectedCategories) {
-      products = await Product.find({ category: selectedCategories });
-    } else {
-      products = await Product.find();
-    }
-
-    const categories = await Category.find();
-    res.render("products", { products, categories });
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).send("Internal Server Error");
-  }
-};
 
 
 

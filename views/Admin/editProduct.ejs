@@ -146,192 +146,199 @@
                 </ul>
             </div>
         </header>
-<form action="/admin/products/edit-product?id=<%= product._id %>" id="productForm" method="post"
-    enctype="multipart/form-data">
-       
-          
-            <section class="content-main">
-                <div class="row">
-                    <div class="col-9">
-                        <div class="content-header">
-                            
-                            <h2 class="content-title">Edit Product</h2>
-                            <p id="main-error" class="text-centre" style="color: red;"></p>
-                        
-                            <div>
-                              
-                                <button type="button" onclick="submitForm(this)" class="btn btn-md rounded font-sm hover-up">
-                                    EDIT
-                                </button>
-                            </div>
+<form action="/admin/products/edit-product?id=<%= product._id %>" id="productForm" method="post">
+
+    <section class="content-main">
+        <div class="row">
+            <div class="col-9">
+                <div class="content-header">
+
+                    <h2 class="content-title">Edit Product</h2>
+                    <p id="main-error" class="text-centre" style="color: red;"></p>
+
+                    <div>
+
+                        <button type="button" onclick="submitForm(this)" class="btn btn-md rounded font-sm hover-up">
+                            EDIT
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <label for="product_title" class="form-label">Product title</label>
+                            <input type="text" placeholder="Type here" class="form-control" name="ProductName"
+                                value="<%=product.pname%>" required />
+                        </div>
+                        <div class="row gx-3"></div>
+
+                        <div class="mb-4">
+                            <label for="product_brand" class="form-label">Brand</label>
+                            <input type="text" placeholder="Type here" class="form-control" name="ProductBrand"
+                                value="<%=product.brand%>" required />
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="mb-4">
-                                    <label for="product_title" class="form-label">Product title</label>
-                                    <input type="text" placeholder="Type here" class="form-control" name="ProductName"
-                                        value="<%=product.pname%>" required />
-                                </div>
-                                <div class="row gx-3"></div>
-
-                                <div class="mb-4">
-                                    <label for="product_brand" class="form-label">Brand</label>
-                                    <input type="text" placeholder="Type here" class="form-control" name="ProductBrand"
-                                        value="<%=product.brand%>" required />
-                                </div>
-                            </div>
-                        </div>
-                        <!-- card end// -->
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="card mb-4">
-                                    <div class="card-body">
-                                        <div>
-                                            <label class="form-label">Description</label>
-                                            <textarea placeholder="Type here" class="form-control" name="ProductDetails"
-                                                rows="4"><%=product.description%></textarea>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <!-- card end// -->
-                        <input type="hidden" name="ProductImageCount" value="<%= product.images.length %>">
+                </div>
+                <!-- card end// -->
+                <div class="card mb-4">
+                    <div class="card-body">
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div>
-                                    <label class="form-label">Images</label>
-                                    <% product.images.forEach((image, index)=> { %>
-                                        <div>
-                                            <img src="/productAssets/<%= image %>" alt="<%= image %>" style="height: 50px;">
-                                            <label>Current Image: <%= image %></label>
-                                            <input type="hidden" name="ProductImage[<%= index %>]" value="<%= image %>">
-                                            <input type="checkbox" name="removeImage<%= index %>" value="<%= image %>">
-                                            <label>Remove</label>
-                                        <input class="form-control" type="file" name="newImages<%= index %>" accept="image/*">
-                                        </div>
-                                        <% }); %>
+                                    <label class="form-label">Description</label>
+                                    <textarea placeholder="Type here" class="form-control" name="ProductDetails"
+                                        rows="4"><%=product.description%></textarea>
                                 </div>
-                            </div>
-
-                        </div>
-
-                        <!-- Other form fields -->
-
-
-
-                        <!-- card end// -->
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="mb-4">
-                                    <p id="productPriceError" class="error-message" style="color: red;"></p>
-
-                                    <label class="form-label">Price</label>
-                                    <input type="text" placeholder="Type here" name="ProductPrice" id="productPrice"
-                                        value="<%=product.price%>" class="form-control" required />
-                                       
-                                </div>
-
-                                <!-- Status -->
-                                <h5 class="mb-3">Status</h5>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="listed" id="status1" value="0"
-                                        <%=product.is_listed==="0" ? 'checked' : '' %>>
-                                    <label class="form-check-label" for="status1">Draft</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="listed" id="status2" value="1"
-                                        <%=product.is_listed==="1" ? 'checked' : '' %>>
-                                    <label class="form-check-label" for="status2">Published</label>
-                                </div>
-
-                                <br>
-
-                                <!-- Categories -->
-                                <h5 class="mb-3">Categories</h5>
-                                
-
-    <% categories.forEach(category=> { %>
-        <div class="form-check">
-            
-            <%if(product.category.cName===category.cName){%>  
-            <input class="form-check-input" type="radio" checked="" name="productCategory" value="<%= category._id %>">
-                <label class="form-check-label" >
-                    <%= category.cName %>
-                </label>
-                <%}else{%>
-                    <input class="form-check-input" type="radio"  name="productCategory" value="<%= category._id %>">
-                    <label class="form-check-label">
-                        <%= category.cName %>
-                    </label><%}%>
-        </div>
-        <% }); %>
-
 
                             </div>
                         </div>
-                    </div>
 
-                    <div class="card">
-                        <div class="card-body" style="display: flex;flex-direction: column;flex-wrap: wrap;">
-                            <label class="form-label">Sizes and Stock</label>
-                    
-                            <div class="row gx-3">
-                                <div class="col-md-4 mb-2">
-                                    <label for="size_xs" class="form-label">XS</label>
-                                    <input type="number" placeholder="Stock" id="size_xs" class="form-control" style="width: 6rem;"
-                                        name="sizes[XS]"  value="<%= product.sizes[0].quantity%>" oninput="validateStock('size_xs', 'size_xsError')">
-                                    <span id="size_xsError" class="text-danger"></span>
-                    
+                    </div>
+                </div>
+                <!-- card end// -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div>
+                            <label class="form-label">Images</label>
+
+                            <% product.images.forEach(image=> { %>
+                                <div>
+                                    <img src="/productAssets/<%= image %>" alt="<%= image %>" style="height: 50px;">
+                                    <label>Current Image: <%= image %></label>
+                                    <input type="checkbox" name="removeImage" value="<%= image %>">
+                                    <label>Remove</label>
                                 </div>
-                    
-                                <div class="col-md-4 mb-2">
-                                    <label for="size_s" class="form-label">S</label>
-                                    <input type="number" placeholder="Stock" id="size_s" class="form-control" style="width: 6rem;"
-                                        name="sizes[S]" value="<%= product.sizes[1].quantity%>" oninput="validateStock('size_s', 'size_sError')">
-                                    <span id="size_sError" class="text-danger"></span>
-                                </div>
-                    
-                                <div class="col-md-4 mb-2">
-                                    <label for="size_m" class="form-label">M</label>
-                                    <input type="number" placeholder="Stock" id="size_m" class="form-control" style="width: 6rem;"
-                                        name="sizes[M]" value="<%= product.sizes[2].quantity%>" oninput="validateStock('size_m', 'size_mError')">
-                                    <span id="size_mError" class="text-danger"></span>
-                                </div>
-                    
-                                <div class="col-md-4 mb-2">
-                                    <label for="size_l" class="form-label">L</label>
-                                    <input type="number" placeholder="Stock" id="size_l" class="form-control" style="width: 6rem;"
-                                        name="sizes[L]" value="<%= product.sizes[3].quantity%>" oninput="validateStock('size_l', 'size_lError')">
-                                    <span id="size_lError" class="text-danger"></span>
-                                </div>
-                    
-                                <div class="col-md-4 mb-2">
-                                    <label for="size_xl" class="form-label">XL</label>
-                                    <input type="number" placeholder="Stock" id="size_xl" class="form-control" style="width: 6rem;"
-                                        name="sizes[XL]" value="<%= product.sizes[4].quantity%>" oninput="validateStock('size_xl', 'size_xlError')">
-                                    <span id="size_xlError" class="text-danger"></span>
-                                </div>
-                    
-                                <div class="col-md-4 mb-2">
-                                    <label for="size_xxl" class="form-label">XXL</label>
-                                    <input type="number" placeholder="Stock" id="size_xxl" class="form-control" style="width: 6rem;"
-                                        name="sizes[XXL]" value="<%= product.sizes[5].quantity%>" oninput="validateStock('size_xxl', 'size_xxlError')" maxlength="1">
-                                    <span id="size_xxlError" class="text-danger"></span>
-                                </div>
-                                <!-- Add more size fields as needed -->
-                            </div>
+                                <% }); %>
+
+
+                                    <input class="form-control" type="file" multiple name="newImages" accept="image/*">
                         </div>
                     </div>
+                </div>
 
-            </section>
-        </form>
+                <!-- Other form fields -->
+
+
+
+                <!-- card end// -->
+            </div>
+            <div class="col-lg-3">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <p id="productPriceError" class="error-message" style="color: red;"></p>
+
+                            <label class="form-label">Price</label>
+                            <input type="text" placeholder="Type here" name="ProductPrice" id="productPrice"
+                                value="<%=product.price%>" class="form-control" required />
+
+                        </div>
+
+                        <!-- Status -->
+                        <h5 class="mb-3">Status</h5>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="listed" id="status1" value="0"
+                                <%=product.is_listed==="0" ? 'checked' : '' %>>
+                            <label class="form-check-label" for="status1">Draft</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="listed" id="status2" value="1"
+                                <%=product.is_listed==="1" ? 'checked' : '' %>>
+                            <label class="form-check-label" for="status2">Published</label>
+                        </div>
+
+                        <br>
+
+                        <!-- Categories -->
+                        <h5 class="mb-3">Categories</h5>
+
+
+                        <% categories.forEach(category=> { %>
+                            <div class="form-check">
+
+                                <%if(product.category.cName===category.cName){%>
+                                    <input class="form-check-input" type="radio" checked="" name="productCategory"
+                                        value="<%= category._id %>">
+                                    <label class="form-check-label">
+                                        <%= category.cName %>
+                                    </label>
+                                    <%}else{%>
+                                        <input class="form-check-input" type="radio" name="productCategory"
+                                            value="<%= category._id %>">
+                                        <label class="form-check-label">
+                                            <%= category.cName %>
+                                        </label>
+                                        <%}%>
+                            </div>
+                            <% }); %>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body" style="display: flex;flex-direction: column;flex-wrap: wrap;">
+                    <label class="form-label">Sizes and Stock</label>
+
+                    <div class="row gx-3">
+                        <div class="col-md-4 mb-2">
+                            <label for="size_xs" class="form-label">XS</label>
+                            <input type="number" placeholder="Stock" id="size_xs" class="form-control"
+                                style="width: 6rem;" name="sizes[XS]" value="<%= product.sizes[0].quantity%>"
+                                oninput="validateStock('size_xs', 'size_xsError')">
+                            <span id="size_xsError" class="text-danger"></span>
+
+                        </div>
+
+                        <div class="col-md-4 mb-2">
+                            <label for="size_s" class="form-label">S</label>
+                            <input type="number" placeholder="Stock" id="size_s" class="form-control"
+                                style="width: 6rem;" name="sizes[S]" value="<%= product.sizes[1].quantity%>"
+                                oninput="validateStock('size_s', 'size_sError')">
+                            <span id="size_sError" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4 mb-2">
+                            <label for="size_m" class="form-label">M</label>
+                            <input type="number" placeholder="Stock" id="size_m" class="form-control"
+                                style="width: 6rem;" name="sizes[M]" value="<%= product.sizes[2].quantity%>"
+                                oninput="validateStock('size_m', 'size_mError')">
+                            <span id="size_mError" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4 mb-2">
+                            <label for="size_l" class="form-label">L</label>
+                            <input type="number" placeholder="Stock" id="size_l" class="form-control"
+                                style="width: 6rem;" name="sizes[L]" value="<%= product.sizes[3].quantity%>"
+                                oninput="validateStock('size_l', 'size_lError')">
+                            <span id="size_lError" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4 mb-2">
+                            <label for="size_xl" class="form-label">XL</label>
+                            <input type="number" placeholder="Stock" id="size_xl" class="form-control"
+                                style="width: 6rem;" name="sizes[XL]" value="<%= product.sizes[4].quantity%>"
+                                oninput="validateStock('size_xl', 'size_xlError')">
+                            <span id="size_xlError" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4 mb-2">
+                            <label for="size_xxl" class="form-label">XXL</label>
+                            <input type="number" placeholder="Stock" id="size_xxl" class="form-control"
+                                style="width: 6rem;" name="sizes[XXL]" value="<%= product.sizes[5].quantity%>"
+                                oninput="validateStock('size_xxl', 'size_xxlError')" maxlength="1">
+                            <span id="size_xxlError" class="text-danger"></span>
+                        </div>
+                        <!-- Add more size fields as needed -->
+                    </div>
+                </div>
+            </div>
+
+    </section>
+</form>
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
                 <div class="col-sm-6">

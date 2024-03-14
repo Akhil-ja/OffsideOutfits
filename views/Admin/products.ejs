@@ -189,14 +189,9 @@
                         <%= products[i].pname %>
                     </a>
                     <div class="price mt-2">
-                        <% if (products[i].priceAfterDiscount !==products[i].price) { %>
-                            <del>
+                       
                                 <%= products[i].price %>
-                            </del>
-                            <%= products[i].priceAfterDiscount.toFixed(2) %>
-                                <% } else { %>
-                                    <%= products[i].price %>
-                                        <% } %>
+                           
                     </div>
                 </div>
                 <div class="action-buttons">
