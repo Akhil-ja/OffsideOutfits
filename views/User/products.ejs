@@ -235,10 +235,36 @@
 
 
 
-                    <div class="load-more-container text-center">
-                        <a href="#" class="btn btn-outline-darker btn-load-more">More Products <i
-                                class="icon-refresh"></i></a>
-                    </div><!-- End .load-more-container -->
+                    <nav aria-label="...">
+                        <ul class="pagination justify-content-center">
+                            <% if (currentPage> 1) { %>
+                                <li class="page-item">
+                                    <a class="page-link"
+                                        href="?page=<%= currentPage - 1 %>&sortBy=<%= sortBy %>&category=<%= filterByCategory %>">Previous</a>
+                                </li>
+                                <% } %>
+                    
+                                    <% for (let i=1; i <=totalPages; i++) { %>
+                                        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                            <a class="page-link"
+                                                href="?page=<%= i %>&sortBy=<%= sortBy %>&category=<%= filterByCategory %>">
+                                                <%= i %>
+                                            </a>
+                                        </li>
+                                        <% } %>
+                    
+                                            <% if (currentPage < totalPages) { %>
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                        href="?page=<%= currentPage + 1 %>&sortBy=<%= sortBy %>&category=<%= filterByCategory %>">Next</a>
+                                                </li>
+                                                <% } %>
+                        </ul>
+                    </nav>
+
+
+
+
                 </div><!-- End .products -->
 
                 <div class="sidebar-filter-overlay"></div>
@@ -497,11 +523,11 @@
         }
     });
 
-    function applyFilters() {
+   function applyFilters(page = 1) { 
         const form = document.getElementById("filterForm");
         const formData = new FormData(form);
 
-      const search = document.getElementById("searchInput").value;
+        const search = document.getElementById("searchInput").value;
         formData.append("search", search);
 
         const priceSort = document.querySelector('input[name="sort-type"][value^="lowToHigh"]:checked')?.value ||
@@ -512,24 +538,17 @@
 
         const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter"]:checked')).map(checkbox => checkbox.value);
 
-
         const searchParams = new URLSearchParams(formData).toString();
-       
-
-     fetch(`/products?priceSort=${priceSort}&nameSort=${nameSort}&selectedCategories=${selectedCategories.join(',')}&search=${search}`)
-
+      
+        fetch(`/products?priceSort=${priceSort}&nameSort=${nameSort}&selectedCategories=${selectedCategories.join(',')}&search=${search}&page=${page}`)
             .then(response => response.json())
             .then(data => {
                 if (data.products.length === 0) {
-                  
                     const productsContainer = document.querySelector('.products .row');
                     productsContainer.innerHTML = '<p>No products found</p>';
                 } else {
-                    
                     const productsContainer = document.querySelector('.products .row');
                     productsContainer.innerHTML = '';
-
-                    
                     data.products.forEach(updatedProduct => {
                         if (updatedProduct.is_listed === "1") {
                             const productItem = document.createElement('div');
@@ -564,6 +583,7 @@
             })
             .catch(error => console.error('Error:', error));
     }
+
 </script>
 
 

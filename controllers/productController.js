@@ -8,30 +8,44 @@ const productModel = require("../models/productModel");
 const loadProducts = async (req, res) => {
   try {
     console.log("in load products");
-    const { priceSort, nameSort, selectedCategories, search } = req.query;
+    const { priceSort, nameSort, selectedCategories, search, page, sortBy } =
+      req.query;
     console.log("search" + search);
-       let products;
- 
+
+    const limit = 8; 
+    const skip = (page - 1) * limit;
+
+    let products;
+
     if (priceSort || nameSort || selectedCategories || search) {
- 
-      return sortProducts(req, res);
-
-    }else{
-    
-      products = await Product.find().populate("category");
-
+      products = await sortProducts(req, res, skip, limit);
+    } else {
+      products = await Product.find()
+        .skip(skip)
+        .limit(limit)
+        .populate("category");
     }
 
+    const totalProducts = await Product.countDocuments(); 
+
+    const totalPages = Math.ceil(totalProducts / limit);
 
     const categories = await Category.find();
 
-    res.render("products", { products, categories });
+   
+    res.render("products", {
+      products,
+      categories,
+      totalPages,
+      currentPage: page,
+      sortBy,
+      filterByCategory: selectedCategories,
+    });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal Server Error");
   }
 };
-
 
 
 const sortProducts = async (req, res) => {
