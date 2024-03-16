@@ -185,18 +185,19 @@
         </div>
     
         <% categories.forEach((category, index)=> { %>
-           
             <div class="mb-4 container">
-                
-                   <p style="font-weight: bolder;"><%= category.cName %></p> 
-
-                <a href="/admin/category/delete?id=<%= category._id %>" class="btn btn-sm font-sm btn-light rounded delete-btn">
-                    <i class="material-icons md-delete_forever"></i> Delete
-                </a>
-             
-    
+                <p style="font-weight: bolder;">
+                    <%= category.cName %>
+                </p>
+                <% if (category.status==="active" ) { %>
+                    <a href="/admin/category/delete?id=<%= category._id %>"
+                        class="btn btn-sm font-sm btn-light rounded delete-btn">
+                        <i class="material-icons md-delete_forever"></i> Delete
+                    </a>
+                    <% } %>
             </div>
             <% }) %>
+
     
     </section>
 

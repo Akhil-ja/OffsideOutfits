@@ -170,54 +170,81 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% coupons.forEach(coupon=> { %>
-                        <tr>
-                            <td>
-                                <%= coupon.code %>
-                            </td>
-                            <td><b>
-                                    <%= coupon.name %>
-                                </b></td>
-                            <td>
-                                <span
-                                    class="badge rounded-pill <%= coupon.status === 'active' ? 'alert-success' : 'alert-danger' %>">
-                                    <%= coupon.status.charAt(0).toUpperCase() + coupon.status.slice(1) %>
-                                </span>
-                            </td>
-                            <td>
-                                <%= coupon.expiryDate.toISOString().split('T')[0] %>
-                            </td>
-                            <td>
-                                <%= coupon.discountType==='percentage' ? coupon.discountValue + '%' : '₹' + coupon.discountValue %>
-                            </td>
-                            <td class="text-end">
-                                <% if (coupon.status==='blocked' ) { %>
-                                    <a href="/admin/editStatus?couponID=<%= coupon._id %>"
-                                        class="btn btn-md rounded font-sm me-5">Activate</a>
-                                    <% } else { %>
-                                        <a href="/admin/editStatus?couponID=<%= coupon._id %>"
-                                            class="btn btn-md rounded font-sm me-5">Block</a>
-                                        <% } %>
-                                <div class="dropdown">
-                                    <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm">
-                                        <i class="material-icons md-more_horiz"></i>
-                                    </a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="/admin/viewCoupon?couponID=<%= coupon._id %>">View detail</a>
-                                        <a class="dropdown-item" href="/admin/editCoupon?couponID=<%= coupon._id %>">Edit info</a>
+            <% coupons.reverse().forEach(coupon=> { %>
+                <tr>
+                    <td>
+                        <%= coupon.code %>
+                    </td>
+                    <td><b>
+                            <%= coupon.name %>
+                        </b></td>
+                    <td>
+                        <span class="badge rounded-pill <%= coupon.status === 'active' ? 'alert-success' : 'alert-danger' %>">
+                            <%= coupon.status.charAt(0).toUpperCase() + coupon.status.slice(1) %>
+                        </span>
+                    </td>
+                    <td>
+                        <%= coupon.expiryDate.toISOString().split('T')[0] %>
+                    </td>
+                    <td>
+                        <%= coupon.discountType==='percentage' ? coupon.discountValue + '%' : '₹' + coupon.discountValue %>
+                    </td>
+                    <td class="text-end">
+                        <% if (coupon.status==='blocked' ) { %>
+                            <a href="/admin/editStatus?couponID=<%= coupon._id %>"
+                                class="btn btn-md rounded font-sm me-5">Activate</a>
+                            <% } else { %>
+                                <a href="/admin/editStatus?couponID=<%= coupon._id %>"
+                                    class="btn btn-md rounded font-sm me-5">Block</a>
+                                <% } %>
+                                    <div class="dropdown">
+                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm">
+                                            <i class="material-icons md-more_horiz"></i>
+                                        </a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="/admin/viewCoupon?couponID=<%= coupon._id %>">View
+                                                detail</a>
+                                            <a class="dropdown-item" href="/admin/editCoupon?couponID=<%= coupon._id %>">Edit
+                                                info</a>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <% }); %>
+                    </td>
+                </tr>
+                <% }); %>
+
                 </tbody>
             </table>
         </div>
-<% if (error) { %>
-    <div class="alert alert-danger" role="alert">
-        <%= error %>
+
+
+    <div class="pagination-area mt-15 mb-50">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+                <% if (currentPage> 1) { %>
+                    <li class="page-item">
+                        <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <% } %>
+                        <% for (let i=startPage; i <=endPage; i++) { %>
+                            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                <a class="page-link" href="?page=<%= i %>">
+                                    <%= i %>
+                                </a>
+                            </li>
+                            <% } %>
+                                <% if (currentPage < totalPages) { %>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                    <% } %>
+            </ul>
+        </nav>
     </div>
-    <% } %>
+
 
     </div>
 
@@ -284,20 +311,20 @@
                 </div>
             </div>
         </div>
+        
     </div>
+    
 </section>
+
+
 
 
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
-                <!-- <div class="col-sm-6">
-                    <script>
-                        document.write(new Date().getFullYear())
-                    </script> ©
-                </div> -->
+                
                 <div class="col-sm-6">
                     <div class="text-sm-end">
-                        <!-- All rights reserved -->
+                       
                     </div>
                 </div>
             </div>

@@ -85,7 +85,7 @@ const addMoney = async (req, res) => {
 
 const ViewWalletHistory = async (req, res) => {
   try {
-    const page = parseInt(req.query.page, 10) || 1; // Parse the page number as an integer
+    const page = parseInt(req.query.page, 10) || 1; 
     const transactionsPerPage = 2;
     const userID = res.locals.currentUser._id;
 

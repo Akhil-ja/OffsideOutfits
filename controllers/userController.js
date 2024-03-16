@@ -218,7 +218,7 @@ const loadProfile = async (req, res) => {
    console.log("walletDetails:" + walletDetails);
 
     let pageinfo = selectedValue;
-    
+
     console.log(pageinfo);
 
     console.log(userID);
@@ -303,12 +303,40 @@ const editUser = async (req, res) => {
 
 const loadUsers = async (req, res) => {
   try {
-    const users = await User.find();
-    res.render("users", { users });
+    
+    const itemsPerPage = 6;
+    const currentPage = parseInt(req.query.page) || 1;
+
+    
+    const totalUsers = await User.countDocuments();
+    const totalPages = Math.ceil(totalUsers / itemsPerPage);
+
+    
+    const visiblePages = 5;
+    const startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
+    const endPage = Math.min(totalPages, startPage + visiblePages - 1);
+
+   
+    const skipCount = (currentPage - 1) * itemsPerPage;
+
+    
+    const users = await User.find().skip(skipCount).limit(itemsPerPage);
+
+    
+    res.render("users", {
+      users,
+      currentPage,
+      totalPages,
+      startPage,
+      endPage,
+    });
   } catch (error) {
-    console.log(error.message);
+    
+    console.error("Error loading users:", error.message);
+   
   }
 };
+
 
 
 

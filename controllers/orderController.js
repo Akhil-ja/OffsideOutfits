@@ -178,7 +178,19 @@ const getOrderDetails=async(req,res)=>{
 
 const adminViewOrders = async (req, res) => {
   try {
+    const itemsPerPage = 6;
+    const currentPage = parseInt(req.query.page) || 1;
+    const visiblePages = 5;
+     const startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
+    const totalProducts = await Product.countDocuments();
+      const totalPages = Math.ceil(totalProducts / itemsPerPage);
+
+     const endPage = Math.min(totalPages, startPage + visiblePages - 1);
+    
+     const skipCount = (currentPage - 1) * itemsPerPage;
+   
     const AllOrders = await Orders.find()
+     
       .populate({
         path: "user",
         model: "User",
@@ -188,14 +200,21 @@ const adminViewOrders = async (req, res) => {
         model: "Product",
       })
       .sort({ orderDate: -1 })
+      .skip((currentPage - 1) * itemsPerPage)
+      .limit(itemsPerPage)
       .exec();
-
-    console.log("All orders>>>>>>>>>" + AllOrders);
-    res.render("orders", { AllOrders });
+    res.render("orders", {
+      AllOrders,
+      currentPage,
+      startPage,
+      endPage,
+      totalPages,
+    });
   } catch (error) {
     console.error(error.message);
   }
 };
+
 
 
 const adminGetOrderDetails = async (req, res) => {

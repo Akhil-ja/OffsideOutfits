@@ -241,21 +241,29 @@ const edit_product = async (req, res) => {
 
 const addProduct = async (req, res) => {
   try {
+    console.log("product");
     const categories = await getCategories();
-    res.render("addProduct", { categories });
+    const itemsPerPage = 10;
+    const currentPage = parseInt(req.query.page, 10) || 1;
+    const totalProducts = await Product.countDocuments();
+    const totalPages = Math.ceil(totalProducts / itemsPerPage);
+    const visiblePages = 5; // Define visiblePages
+    const startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
+
+    res.render("addProduct", {
+      categories,
+      currentPage,
+      totalPages,
+      startPage,
+    });
   } catch (error) {
     console.log(error.message);
   }
 };
 
 
-const loadDashboard = async (req, res) => {
-  try {
-    res.render("dashboard");
-  } catch (error) {
-    console.log(error.message);
-  }
-};
+
+
 
 
 
@@ -271,12 +279,10 @@ const loadDashboard = async (req, res) => {
 module.exports = {
   loadProduct,
   loadProducts,
-  loadDashboard,
   addProduct,
   addProduct,
   edit_product,
   editProduct,
   deleteProduct,
   add_Product,
-
 };

@@ -8,12 +8,26 @@ const Coupon =require("../models/couponModel")
 
 const viewCoupons = async (req, res) => {
   try {
-    const coupons = await Coupon.find();
-    const error = req.query.error; 
-    res.render("coupons", { coupons, error });
+    const itemsPerPage = 2;
+    const currentPage = parseInt(req.query.page) || 1;
+    const totalCoupons = await Coupon.countDocuments();
+    const totalPages = Math.ceil(totalCoupons / itemsPerPage);
+    const visiblePages = 5;
+    const startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
+    const endPage = Math.min(totalPages, startPage + visiblePages - 1);
+    const skipCount = (currentPage - 1) * itemsPerPage;
+    const coupons = await Coupon.find().skip(skipCount).limit(itemsPerPage);
+    const error = req.query.error;
+    res.render("coupons", {
+      coupons,
+      currentPage,
+      totalPages,
+      startPage,
+      endPage,
+      error,
+    });
   } catch (error) {
     console.error(error.message);
-   
   }
 };
 

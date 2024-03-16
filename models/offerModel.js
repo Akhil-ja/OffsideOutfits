@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 const offerSchema = new mongoose.Schema(
   {
-    
     title: {
       type: String,
       required: true,
@@ -24,7 +23,6 @@ const offerSchema = new mongoose.Schema(
       default: false,
     },
 
-   
     productOffer: {
       products: [
         {
@@ -36,10 +34,8 @@ const offerSchema = new mongoose.Schema(
         type: Number,
         default: 0,
       },
-   
     },
 
-   
     categoryOffer: {
       category: {
         type: mongoose.Schema.Types.ObjectId,
@@ -49,25 +45,12 @@ const offerSchema = new mongoose.Schema(
         type: Number,
         default: 0,
       },
-     
     },
 
- 
-    referralOffer: {
-      referredUserReward: {
-        type: Number,
-        default: 0,
-      },
-      referringUserReward: {
-        type: Number,
-        default: 0,
-      },
-
-    },
   },
   {
     strictPopulate: false,
-    timestamps: true, 
+    timestamps: true,
   }
 );
 

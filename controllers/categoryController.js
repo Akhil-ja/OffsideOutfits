@@ -61,10 +61,12 @@ const deleteCategory = async (req, res) => {
     if (!categoryId) {
       return res.status(400).send("Invalid category ID");
     }
-    const deletedCategory = await Category.findByIdAndDelete(categoryId);
-    if (!deletedCategory) {
+    const category = await Category.findById(categoryId);
+    if (!category) {
       return res.status(404).send("Category not found");
     }
+    category.status = "disabled"; 
+    await category.save();
     res.redirect("/admin/category");
   } catch (error) {
     console.error(error);

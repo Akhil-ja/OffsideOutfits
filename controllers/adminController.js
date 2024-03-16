@@ -5,10 +5,9 @@ const Order = require("../models/ordersModel");
 const Product = require("../models/productModel");
 const ExcelJS = require("exceljs");
 const PDFDocument = require("pdfkit");
-const blobStream = require("blob-stream");
-const PdfPrinter = require("pdfmake");
-const fs = require("fs");
-const path = require("path");
+
+
+const Category=require("../models/categoryModel")
 
 
 
@@ -90,9 +89,17 @@ const adminLogout= async(req,res)=>{
   }
 }
 
+
+
+
 const viewDashboard = async (req, res) => {
   try {
-    const orders = await Order.find()
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
+
+   
+    const sortedOrders = await Order.find()
       .populate({
         path: "products.product",
         model: "Product",
@@ -104,32 +111,37 @@ const viewDashboard = async (req, res) => {
       .populate({
         path: "couponApplied",
         model: "Coupon",
-      });
+      })
+      .sort({ orderDate: -1 });
 
+    
+    const orders = sortedOrders.slice(skip, skip + limit);
 
+    const totalOrders = sortedOrders.length;
+    const totalPages = Math.ceil(totalOrders / limit);
 
-    const totalRevenue = orders.reduce(
+    const totalRevenue = sortedOrders.reduce(
       (sum, order) => sum + order.orderTotal,
       0
     );
-
-    const totalOrders = orders.length;
-
     const totalProducts = await Product.countDocuments();
-
-  
 
     res.render("dashboard", {
       orders,
       totalRevenue,
       totalOrders,
       totalProducts,
+      currentPage: page,
+      totalPages,
     });
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
     res.status(500).send("Internal Server Error");
   }
 };
+
+
+
 
 
 
@@ -201,6 +213,46 @@ const downloadExel=async(req,res)=>{
 
 
 
+const loadadminProducts = async (req, res) => {
+  try {
+    const itemsPerPage = 6; 
+    const currentPage = parseInt(req.query.page) || 1;
+
+   
+    const totalProducts = await Product.countDocuments();
+  
+    const totalPages = Math.ceil(totalProducts / itemsPerPage);
+
+   
+    const visiblePages = 5;
+    const startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
+
+    const endPage = Math.min(totalPages, startPage + visiblePages - 1);
+
+    
+    const skipCount = (currentPage - 1) * itemsPerPage;
+
+   
+    const products = await Product.find().skip(skipCount).limit(itemsPerPage);
+
+   
+    const categories = await Category.find();
+
+ 
+    res.render("products", {
+      products,
+      categories,
+      currentPage,
+      totalPages,
+      startPage,
+      endPage,
+    });
+  } catch (error) {
+    console.error(error.message);
+  }
+};
+
+
 
 
 
@@ -225,11 +277,11 @@ const downloadPDF = async (req, res) => {
 
     const doc = new PDFDocument();
 
-    // Set response headers for PDF download
+    
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "attachment; filename=orders.pdf");
 
-    // Pipe the PDF document to the response
+    
     doc.pipe(res);
 
     // Add table headers
@@ -242,9 +294,9 @@ const downloadPDF = async (req, res) => {
     doc.fontSize(12).text("Discount", 620, 20);
 
     let y = 40;
-    const lineHeight = 20; // Adjust this value to change spacing
+    const lineHeight = 20; 
 
-    // Add order data rows
+   
     orders.forEach((order, index) => {
       y += lineHeight;
       doc.fontSize(10).text(`#${order._id}`, 20, y);
@@ -332,4 +384,5 @@ module.exports = {
   downloadExel,
   downloadPDF,
   filterOrdersByDate,
+  loadadminProducts,
 };

@@ -160,7 +160,7 @@
                        
                     </div>
                 </header> 
-<% users.filter(user=> user.is_admin === '0').forEach(user => { %>
+            <% users.filter(user=> user.is_admin === '0').reverse().forEach(user => { %>
                  <article class="itemlist">
                
                     <div class="row align-items-center user-item">
@@ -205,13 +205,60 @@
                                 </a>
                                 <% } %>
                         </div>
-                    </div> <!-- row .// -->
+
+
+                    </div> 
+                    
                    
-            </article> <!-- itemlist  .// -->
+            </article> 
+
+            
             <% }); %>
 
+          
+    <div class="pagination-area mt-15 mb-50">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+                <% if (currentPage> 1) { %>
+                    <li class="page-item">
+                        <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <% } else { %>
+                        <li class="page-item disabled">
+                            <span class="page-link" aria-hidden="true">&laquo;</span>
+                        </li>
+                        <% } %>
+    
+                            <% for (let i=startPage; i <=endPage; i++) { %>
+                                <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                    <a class="page-link" href="?page=<%= i %>">
+                                        <%= i %>
+                                    </a>
+                                </li>
+                                <% } %>
+    
+                                    <% if (currentPage < totalPages) { %>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                        <% } else { %>
+                                            <li class="page-item disabled">
+                                                <span class="page-link" aria-hidden="true">&raquo;</span>
+                                            </li>
+                                            <% } %>
+            </ul>
+        </nav>
+    </div>
+
+
+
+
         </section>
-        <!-- content-main end// -->
+        
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
                 <div class="col-sm-6">
@@ -237,6 +284,5 @@
 </body>
 
 
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-products-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:12 GMT -->
 
 </html>
