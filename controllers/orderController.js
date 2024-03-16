@@ -331,6 +331,11 @@ if (!userWallet) {
   userWallet.money += updatedOrder.orderTotal;
 }
 
+    userWallet.transactions.push({
+      amount: updatedOrder.orderTotal,
+      type: "cancelled",
+    });
+
 await userWallet.save();
 
     }
@@ -351,7 +356,7 @@ const returnOrder=async(req,res)=>{
     const orderId = req.query.orderID;
     const userID = res.locals.currentUser._id;
     console.log("userID:" + userID);
-    console.log("Cancelling order with ID: " + orderId);
+    console.log("returning order with ID: " + orderId);
 
     const updatedOrder = await Orders.findByIdAndUpdate(
       orderId,
@@ -398,6 +403,11 @@ const returnOrder=async(req,res)=>{
       } else {
         userWallet.money += updatedOrder.orderTotal;
       }
+
+       userWallet.transactions.push({
+         amount: updatedOrder.orderTotal,
+         type: "returned",
+       });
 
       await userWallet.save();
     

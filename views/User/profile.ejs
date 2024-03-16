@@ -258,22 +258,59 @@
 
 
                                     </div>
-<% if (walletDetails) { %>
 
-    <div class="tab-pane fade" id="tab-wallet" role="tabpanel" aria-labelledby="tab-wallet-link">
-        <div class="wallet-info">
-            <h4>Your Wallet</h4>
-            <p class="balance">Balance: <b style="text-decoration: underline;">Rs:<%= walletDetails.money.toFixed(2) %>/-</b></p>
-            <p class="description">Manage your wallet by making deposits or withdrawals.</p>
+
+    <% if (walletDetails) { %>
+        <div class="tab-pane fade" id="tab-wallet" role="tabpanel" aria-labelledby="tab-wallet-link">
+            <div class="wallet-info">
+                <h4>Your Wallet</h4>
+                <p class="balance">Balance: <b style="text-decoration: underline;">Rs:<%= walletDetails.money.toFixed(2) %>
+                            /-</b></p>
+                <p class="description">Manage your wallet by making deposits or withdrawals.</p>
+            </div>
+
+            <div class="wallet-actions">
+                <a href="#" id="add-money-btn" class="btn btn-outline-primary">
+                    <span>Add Money</span>
+                    <i class="icon-long-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="wallet-history mt-4">
+                <h4>Last 3 Transactions</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% walletDetails.transactions.slice(0, 3).forEach(transaction=> { %>
+                            <tr>
+                                <td>
+                                    <%= transaction.type %>
+                                </td>
+                                <td>Rs <%= transaction.amount.toFixed(2) %>/-</td>
+                                <td>
+                                    <%= new Date(transaction.createdAt).toLocaleDateString() %>
+                                </td>
+                            </tr>
+                            <% }); %>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="wallet-actions mt-4">
+                <a href="/walletHistory" class="btn btn-outline-dark btn-round">
+                    <span>Full Wallet History </span>
+                    <i class="icon-long-arrow-right"></i>
+                </a>
+            </div>
         </div>
-        <div class="wallet-actions">
-            <a href="wallet.html" class="btn btn-outline-primary">
-                <span>Manage Wallet</span>
-                <i class="icon-long-arrow-right"></i>
-            </a>
-        </div>
-    </div>
-    <% } %>
+        <% } %>
+
 
 
 
@@ -322,7 +359,7 @@
                                                                                                         <i
                                                                                                             class="icon-edit"></i></a>
                                                                         </p>
-                                                                    </div><!-- End .card-body -->
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                             <% } %>
@@ -346,8 +383,8 @@
                                                                             </div><!-- End .card-body -->
                                                                         </div><!-- End .card-dashboard -->
                                                                     </div><!-- End .col-lg-6 -->
-                                                </div><!-- End .row -->
-                                    </div><!-- .End .tab-pane -->
+                                                </div>
+                                    </div>
                                     <div class="tab-pane fade" id="tab-account" role="tabpanel"
                                         aria-labelledby="tab-account-link">
 
@@ -414,6 +451,16 @@
                                                 });
                                             </script>
                                             <%}%>
+
+                                            <%if(pageinfo==="wallet"){%>
+                                                <script>
+                                                    document.addEventListener("DOMContentLoaded", function () {
+
+                                                        var tabAddressLink = document.getElementById("tab-wallet-link");
+                                                        tabAddressLink.click();
+                                                    });
+                                                </script>
+                                                <%}%>
                                            
 
         </main>
@@ -551,6 +598,7 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <script>
 
@@ -650,6 +698,9 @@
     });
 </script>
 
+
+
+
 <script>
     async function submitEdit(inputId, displayId, inputContainerElement) {
         const inputValue = document.getElementById(inputId).value;
@@ -705,6 +756,91 @@
         inputContainerElement.style.display = 'block';
     }
 </script>
+
+<script>
+   document.getElementById('add-money-btn').addEventListener('click', function () {
+        Swal.fire({
+            title: 'Enter Amount',
+            input: 'number',
+            inputPlaceholder: 'Enter amount',
+            showCancelButton: true,
+            cancelButtonText: 'Cancel',
+            confirmButtonText: 'Add',
+            inputValidator: (value) => {
+                if (!value || value <= 0) {
+                    return 'Please enter a valid amount';
+                }
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const amount = result.value;
+
+                fetch('/addToWallet', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ amount: amount }) 
+                })
+                    .then(response => response.json())
+                    .then(res => {
+                        console.log("Server Response:", res);
+
+                        if (res.success) {
+                            var options = {
+                                "key": res.key_id,
+                                "amount": res.amount,
+                                "currency": "INR",
+                                "name": res.name,
+                                "description": res.msg,
+                                "image": "https://dummyimage.com/600x400/000/fff",
+                                "order_id": res.order_id,
+                               "handler": function (response) {
+                                    var amountPaid = res.amount;
+                                    window.location.href = `/wallet/add?amount=${amountPaid}`;
+                                },
+                                "prefill": {
+                                    "contact": res.contact,
+                                    "name": res.name,
+                                    "email": res.email
+                                },
+                                "notes": {
+                                    "description": res.description
+                                },
+                                "theme": {
+                                    "color": "#2300a3"
+                                }
+                            };
+
+                            var razorpayObject = new Razorpay(options);
+
+                            razorpayObject.on('payment.failed', function (response) {
+                                alert("Payment Failed");
+                            });
+
+                            razorpayObject.open();
+                        } else {
+                            if (res.redirectURL) {
+                                window.location.href = res.redirectURL;
+                            } else {
+                                alert("Order creation failed. Check console for details.");
+                                console.error(res);
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error during order logging:', error);
+                        alert("Error during order logging. Check console for details.");
+                    });
+            }
+        });
+    });
+
+</script>
+
+
+
+
 
 </body>
 

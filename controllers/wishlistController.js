@@ -7,6 +7,7 @@ const Order = require("../models/ordersModel");
 const Wishlist=require("../models/wishlistModel")
 
 
+
 const addToWishlist=async(req,res)=>{
     console.log("in add to wishlist");
 

@@ -8,9 +8,12 @@ const orderController = require("../controllers/orderController");
 const addressController = require("../controllers/addressController");
 const couponController=require("../controllers/couponController")
 const authRoutes=require("../services/authRoutes")
+const walletController=require("../controllers/walletController")
 const wishlistController=require("../controllers/wishlistController")
 
+
 const express = require("express");
+const walletModel = require("../models/walletModel");
 
 
 const userRoute = express();
@@ -137,8 +140,12 @@ userRoute.post("/addToWishlist", wishlistController.addToWishlist);
 userRoute.get("/wishlist", wishlistController.viewWishlist);
 
 
-
+userRoute.post("/addToWallet",walletController.addToWallet);
 
 userRoute.post("/remove-from-wishlist", wishlistController.removeFromwishlist);
+
+userRoute.get("/wallet/add",walletController.addMoney);
+
+userRoute.get("/walletHistory", walletController.ViewWalletHistory);
 
 module.exports= userRoute;

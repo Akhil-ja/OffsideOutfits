@@ -218,6 +218,8 @@ const loadProfile = async (req, res) => {
    console.log("walletDetails:" + walletDetails);
 
     let pageinfo = selectedValue;
+    
+    console.log(pageinfo);
 
     console.log(userID);
 

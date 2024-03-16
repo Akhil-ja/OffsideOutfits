@@ -99,14 +99,18 @@
                                     <div class="form-group">
                                         <label for="password-2">Password *</label>
                                         <p id="password-error" class="error-message" style="color: red;"></p>
-                                        <input type="password" class="form-control" id="register-password-2" name="password" required>
+                                        <input type="password" class="form-control" id="register-password-2" name="password" required  maxlength="20"
+                                                    pattern="^(?!\s+$)(?=.*\d)(?=.*[A-Z])\S{8,}$"
+                                                    title="Password must contain at least one digit and one uppercase letter, and be at least 8 characters long. No spaces at the beginning or in the middle are allowed.">
                                     </div>
                                 
                                     <!-- New Confirm Password field -->
                                     <div class="form-group">
                                         <label for="confirm-password">Confirm Password *</label>
                                         <p id="confirm-password-error" class="error-message" style="color: red;"></p>
-                                        <input type="password" class="form-control" id="confirm-password" name="confirmPassword" required
+                                        <input type="password" class="form-control" id="confirm-password" name="confirmPassword" required  maxlength="20"
+                                                    pattern="^(?!\s+$)(?=.*\d)(?=.*[A-Z])\S{8,}$"
+                                                    title="Password must contain at least one digit and one uppercase letter, and be at least 8 characters long. No spaces at the beginning or in the middle are allowed."
                                             onblur="checkPasswordMatch()">
                                     </div>
                                 
@@ -117,6 +121,8 @@
                                         </button>
                                     </div>
                                 </form>
+
+                                
                                 </div>
                             </div>
                         </div><!-- End .tab-content -->

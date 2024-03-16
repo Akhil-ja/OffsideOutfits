@@ -1,5 +1,21 @@
 const mongoose = require("mongoose");
 
+const transactionSchema = new mongoose.Schema(
+  {
+    amount: {
+      type: Number,
+      required: true,
+    },
+    type: {
+      type: String,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
 const walletSchema = new mongoose.Schema(
   {
     user: {
@@ -11,6 +27,7 @@ const walletSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    transactions: [transactionSchema], 
   },
   {
     strictPopulate: false,

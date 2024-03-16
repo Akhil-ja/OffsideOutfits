@@ -235,32 +235,19 @@
 
 
 
-                    <nav aria-label="...">
-                        <ul class="pagination justify-content-center">
-                            <% if (currentPage> 1) { %>
-                                <li class="page-item">
-                                    <a class="page-link"
-                                        href="?page=<%= currentPage - 1 %>&sortBy=<%= sortBy %>&category=<%= filterByCategory %>">Previous</a>
-                                </li>
-                                <% } %>
-                    
-                                    <% for (let i=1; i <=totalPages; i++) { %>
-                                        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-                                            <a class="page-link"
-                                                href="?page=<%= i %>&sortBy=<%= sortBy %>&category=<%= filterByCategory %>">
-                                                <%= i %>
-                                            </a>
-                                        </li>
-                                        <% } %>
-                    
-                                            <% if (currentPage < totalPages) { %>
-                                                <li class="page-item">
-                                                    <a class="page-link"
-                                                        href="?page=<%= currentPage + 1 %>&sortBy=<%= sortBy %>&category=<%= filterByCategory %>">Next</a>
-                                                </li>
-                                                <% } %>
-                        </ul>
-                    </nav>
+                <nav aria-label="...">
+                    <ul class="pagination justify-content-center">
+                        <% for (let i=1; i <=totalPages; i++) { %>
+                            <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                <a class="page-link <%= currentPage === i ? 'disabled' : '' %>"
+                                    href="<%= currentPage === i ? '#' : '?page=' + i + '&sortBy=' + sortBy + '&category=' + filterByCategory %>">
+                                    <%= i %>
+                                </a>
+                            </li>
+                            <% } %>
+                    </ul>
+                </nav>
+
 
 
 
@@ -515,15 +502,14 @@
 
 
 <script>
-
     document.getElementById("searchInput").addEventListener("keypress", function (event) {
         if (event.key === "Enter") {
-            event.preventDefault(); 
-            applyFilters(); 
+            event.preventDefault();
+            applyFilters();
         }
     });
 
-   function applyFilters(page = 1) { 
+    function applyFilters(page = 1, totalPages) {
         const form = document.getElementById("filterForm");
         const formData = new FormData(form);
 
@@ -539,7 +525,12 @@
         const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter"]:checked')).map(checkbox => checkbox.value);
 
         const searchParams = new URLSearchParams(formData).toString();
-      
+
+        if (page > totalPages) {
+            console.log("Requested page exceeds total pages. No products will be fetched.");
+            return;
+        }
+
         fetch(`/products?priceSort=${priceSort}&nameSort=${nameSort}&selectedCategories=${selectedCategories.join(',')}&search=${search}&page=${page}`)
             .then(response => response.json())
             .then(data => {
@@ -583,8 +574,8 @@
             })
             .catch(error => console.error('Error:', error));
     }
-
 </script>
+
 
 
 
