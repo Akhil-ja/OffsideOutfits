@@ -12,15 +12,14 @@ const loadCart = async (req, res) => {
 
     const currentUser = res.locals.currentUser._id;
 
-    console.log("curr:" + currentUser);
+   
 
     const cartItems = await Cart.findOne({ user: currentUser });
 
     console.log("cart items", cartItems);
 
-    if (!cartItems) {
-    
-      console.log("No cart items found for the current user");
+    if (!cartItems || cartItems.cartProducts.length === 0) {
+      console.log("Cart is empty");
       return res.render("cart", { cartItems: [] });
     }
 
