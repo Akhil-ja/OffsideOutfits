@@ -61,27 +61,41 @@ const addToWallet = async (req, res) => {
 
 const addMoney = async (req, res) => {
   try {
-    console.log("add money");
-
     const { amount } = req.query;
     const userID = res.locals.currentUser._id;
 
     let wallet = await Wallet.findOne({ user: userID });
 
-    wallet.money += parseFloat(amount);
+    if (!wallet) {
+      wallet = new Wallet({
+        user: userID,
+        money: parseFloat(amount),
+        transactions: [
+          {
+            amount: parseFloat(amount),
+            type: "credit",
+          },
+        ],
+      });
 
-    wallet.transactions.push({
-      amount: parseFloat(amount),
-      type: "credit", 
-    });
+      await wallet.save();
+    } else {
+      
+      wallet.money += parseFloat(amount);
+      wallet.transactions.push({
+        amount: parseFloat(amount),
+        type: "credit",
+      });
+      await wallet.save();
+    }
 
-    await wallet.save();
-    console.log("redirect");
     res.redirect("/profile?selected=wallet");
   } catch (error) {
     console.error(error.message);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
   }
 };
+
 
 const ViewWalletHistory = async (req, res) => {
   try {
@@ -93,7 +107,7 @@ const ViewWalletHistory = async (req, res) => {
     const transactionsCount = wallet.transactions.length;
     const totalPages = Math.ceil(transactionsCount / transactionsPerPage);
 
-    // Ensure the page number is within valid bounds
+   
     const safePageNumber = Math.max(1, Math.min(page, totalPages));
 
     const startIndex = (safePageNumber - 1) * transactionsPerPage;

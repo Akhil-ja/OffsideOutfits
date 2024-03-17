@@ -22,6 +22,9 @@
     <link rel="stylesheet" href="assets/css/plugins/nouislider/nouislider.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+
 </head>
 
 <body>
@@ -174,8 +177,7 @@
                             <div class="col-md-8 col-lg-9">
                                 <div class="tab-content">
 
-                                    <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
-                                    
+                                <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
                                     <span id="nameDisplay">
                                         <input type="text" id="userID" value="<%= userDetails._id %>" hidden>
                                         <span style="font-size: xx-large; font-weight: 700;">
@@ -187,24 +189,31 @@
                                         <input type="text" id="nameEdit" value="<%= userDetails.name %>" />
                                         <button onclick="submitEdit('nameEdit', 'nameDisplay', nameInput)">Save</button>
                                         <div id="emptyNameError" style="color: red;"></div>
-                                        <div id="invalidNameError" style="color: red;"></div>        
+                                        <div id="invalidNameError" style="color: red;"></div>
                                     </div>
-
-                                        <p class="lead">
-                                            <strong>Email:</strong>
-                                            <%= userDetails.email %> <br>
-                                                <strong>Phone:</strong>
-                                                <span id="userPhone">
-                                                    <%= userDetails.phone %>
-                                                        <!-- <i class="fas fa-edit edit-icon" onclick="toggleEditMode(phoneInput)"></i> -->
-                                                </span>
-                                        </p>
-                                        <div id="phoneInput" style="display: none;">
-                                            <input type="text" id="phoneEdit" value="<%= userDetails.phone %>" />
-                                            <button onclick="submitEdit('phoneEdit', 'userPhone', phoneInput)">Save</button>
-                                        </div>
-                                    
+                                
+                                    <p class="lead">
+                                        <strong>Email:</strong>
+                                        <%= userDetails.email %> <br>
+                                            <strong>Phone:</strong>
+                                            <span id="userPhone">
+                                                <%= userDetails.phone %>
+                                            </span>
+                                    </p>
+                                    <div id="phoneInput" style="display: none;">
+                                        <input type="text" id="phoneEdit" value="<%= userDetails.phone %>" />
+                                        <button onclick="submitEdit('phoneEdit', 'userPhone', phoneInput)">Save</button>
                                     </div>
+                                
+                                 
+                                    <p class="lead">
+                                        <strong>Referral Code:</strong>
+                                        <span id="couponDisplay">
+                                            <%= userDetails.referralCode %>
+                                        </span>
+                                        <button class="btn btn-outline-dark btn-round ml-3 btn-smaller" onclick="copyToClipboard('couponDisplay')">Copy</button>
+                                    </p>
+                                </div>
 
 
 
@@ -305,6 +314,34 @@
             <div class="wallet-actions mt-4">
                 <a href="/walletHistory" class="btn btn-outline-dark btn-round">
                     <span>Full Wallet History </span>
+                    <i class="icon-long-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        <% } else { %>
+        <!-- Display when there is no wallet information -->
+        <div class="tab-pane fade" id="tab-wallet" role="tabpanel" aria-labelledby="tab-wallet-link">
+            <div class="wallet-info">
+                <h4>Your Wallet</h4>
+                <p class="balance">Balance: <b style="text-decoration: underline;">Rs: 0.00 /-</b></p>
+                <p class="description">Manage your wallet by making deposits.</p>
+            </div>
+        
+            <div class="wallet-actions">
+                <a href="#" id="add-money-btn" class="btn btn-outline-primary">
+                    <span>Add Money</span>
+                    <i class="icon-long-arrow-right"></i>
+                </a>
+            </div>
+        
+            <div class="wallet-history mt-4">
+                <h4>Last 3 Transactions</h4>
+                <p>No transactions available.</p>
+            </div>
+        
+            <div class="wallet-actions mt-4">
+                <a href="/walletHistory" class="btn btn-outline-dark btn-round">
+                    <span>Full Wallet History</span>
                     <i class="icon-long-arrow-right"></i>
                 </a>
             </div>
@@ -599,7 +636,11 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+   
 
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/notyf@3.0.0/notyf.min.js"></script>
+    
     <script>
 
         window.onload = function () {
@@ -838,7 +879,30 @@
 
 </script>
 
+<script>
+    function copyToClipboard(elementId) {
+        const couponText = document.getElementById(elementId).innerText;
+        const tempInput = document.createElement("input");
+        tempInput.value = couponText;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
 
+      
+        const toast = Toastify({
+            text: 'Referral Code Copied to clipboard',
+            duration: 3000,
+            gravity: 'top', 
+            position: 'right', 
+            backgroundColor: 'linear-gradient(to right, #e0f7fa, #e0f7fa)', 
+        });
+
+         toast.showToast();
+        const toastElement = document.querySelector('.toastify');
+        toastElement.style.color = 'black'; 
+    }
+</script>
 
 
 

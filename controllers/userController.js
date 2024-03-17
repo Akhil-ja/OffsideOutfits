@@ -5,6 +5,7 @@ const Address = require("../models/addressModel");
 const Wallet = require("../models/walletModel");
 const sendEmail = require("../services/sendEmail");
 const authRoutes = require("../services/authRoutes");
+const crypto = require("crypto");
 
 const bcrypt = require("bcrypt");
 
@@ -111,6 +112,9 @@ const resentOTP = async (req, res) => {
 const insertUser = async (req, res) => {
   try {
     if (req.body.otp === req.session.tempUserDetails.otp) {
+
+      const referralCode = crypto.randomBytes(5).toString("hex");
+
       const user = new User({
         name: req.session.tempUserDetails.fullname,
         email: req.session.tempUserDetails.email,
@@ -118,6 +122,7 @@ const insertUser = async (req, res) => {
         password: req.session.tempUserDetails.password,
         is_admin: 0,
         is_verified: 1,
+        referralCode: referralCode, 
       });
 
       const userData = await user.save();
