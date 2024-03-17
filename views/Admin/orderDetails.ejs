@@ -172,6 +172,7 @@
             <option value="completed" <%=AllOrders.status==='completed' ? 'selected' : '' %>>Completed</option>
             <option value="cancelled" <%=AllOrders.status==='cancelled' ? 'selected' : '' %>>Cancelled</option>
             <option value="delivered" <%=AllOrders.status==='delivered' ? 'selected' : '' %>>Delivered</option>
+           
         </select>
             <button class="btn btn-primary" onclick="updateStatus()">Save</button>
         </div>
@@ -304,7 +305,7 @@
 
 <script>
     async function updateStatus() {
-        const orderId = "<%= AllOrders.orderID %>";
+        const orderId = "<%= AllOrders._id%>";
         const selectedStatus = document.getElementById("statusDropdown").value;
 
         

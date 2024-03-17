@@ -10,13 +10,19 @@ const viewCoupons = async (req, res) => {
   try {
     const itemsPerPage = 2;
     const currentPage = parseInt(req.query.page) || 1;
-    const totalCoupons = await Coupon.countDocuments();
+    const totalCoupons = await Coupon.countDocuments({
+      expiryDate: { $gte: new Date() },
+    }); 
     const totalPages = Math.ceil(totalCoupons / itemsPerPage);
     const visiblePages = 5;
     const startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
     const endPage = Math.min(totalPages, startPage + visiblePages - 1);
     const skipCount = (currentPage - 1) * itemsPerPage;
-    const coupons = await Coupon.find().skip(skipCount).limit(itemsPerPage);
+    const coupons = await Coupon.find({expiryDate: { $gte: new Date() }}).skip(skipCount).limit(itemsPerPage);
+
+      
+
+
     const error = req.query.error;
     res.render("coupons", {
       coupons,

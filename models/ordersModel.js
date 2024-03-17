@@ -42,6 +42,10 @@ const orderSchema = new mongoose.Schema(
       enum: ["pending", "completed", "returned", "cancelled", "delivered"],
       default: "pending",
     },
+    returnReason: {
+      type: String,
+  
+    },
     couponApplied: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Coupon",

@@ -214,28 +214,30 @@ const adminViewOrders = async (req, res) => {
     const itemsPerPage = 6;
     const currentPage = parseInt(req.query.page) || 1;
     const visiblePages = 5;
-     const startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
-    const totalProducts = await Product.countDocuments();
-      const totalPages = Math.ceil(totalProducts / itemsPerPage);
+    const totalOrders = await Orders.countDocuments();
+    const totalPages = Math.ceil(totalOrders / itemsPerPage);
+    const startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
+    const endPage = Math.min(totalPages, startPage + visiblePages - 1);
 
-     const endPage = Math.min(totalPages, startPage + visiblePages - 1);
-    
-     const skipCount = (currentPage - 1) * itemsPerPage;
-   
-    const AllOrders = await Orders.find()
-     
-      .populate({
-        path: "user",
-        model: "User",
-      })
-      .populate({
-        path: "products.product",
-        model: "Product",
-      })
-      .sort({ orderDate: -1 })
-      .skip((currentPage - 1) * itemsPerPage)
-      .limit(itemsPerPage)
-      .exec();
+    let AllOrders;
+    if (totalOrders > 0) {
+      AllOrders = await Orders.find()
+        .populate({
+          path: "user",
+          model: "User",
+        })
+        .populate({
+          path: "products.product",
+          model: "Product",
+        })
+        .sort({ orderDate: -1 })
+        .skip((currentPage - 1) * itemsPerPage)
+        .limit(itemsPerPage)
+        .exec();
+    } else {
+      AllOrders = [];
+    }
+
     res.render("orders", {
       AllOrders,
       currentPage,
@@ -293,6 +295,7 @@ const UpdateOrderStatus=async(req,res)=>{
      const newStatus = req.query.status;
 
      console.log("in order update");
+     console.log("orderId" + orderId);
      const allowedStatusValues = [
        "pending",
        "completed",
@@ -303,8 +306,7 @@ const UpdateOrderStatus=async(req,res)=>{
        return res.status(400).send("Invalid status value");
      }
 
-     const updatedOrder = await Orders.findByIdAndUpdate(
-       orderId,
+     const updatedOrder = await Orders.findByIdAndUpdate(orderId,
        { $set: { status: newStatus } },
        { new: true }
      );
@@ -402,17 +404,18 @@ await userWallet.save();
 };
 
 
-const returnOrder=async(req,res)=>{
+const returnOrder = async (req, res) => {
   try {
-    console.log("in return order");
-    const orderId = req.query.orderID;
+    const orderId = req.body.orderID; 
     const userID = res.locals.currentUser._id;
-    console.log("userID:" + userID);
-    console.log("returning order with ID: " + orderId);
 
+    console.log("Returning order with ID:", orderId);
+    console.log("User ID:", userID);
+
+   
     const updatedOrder = await Orders.findByIdAndUpdate(
       orderId,
-      { $set: { status: "returned" } },
+      { $set: { status: "returned" , returnReason: req.body.returnReason} },
       { new: true }
     )
       .populate({
@@ -426,17 +429,18 @@ const returnOrder=async(req,res)=>{
 
     console.log("Updated order:", updatedOrder);
 
+    
     for (const product of updatedOrder.products) {
       const productId = product.product._id;
-      const quantityOrdered = product.quantity;
+      const quantityReturned = product.quantity;
 
       console.log(
-        `Updating product stock for product ID ${productId} with quantity ${quantityOrdered}`
+        `Increasing product stock for product ID ${productId} with quantity ${quantityReturned}`
       );
 
       await Product.findByIdAndUpdate(
         productId,
-        { $inc: { "sizes.$[size].quantity": quantityOrdered } },
+        { $inc: { "sizes.$[size].quantity": quantityReturned } },
         {
           arrayFilters: [{ "size.size": product.size }],
           new: true,
@@ -445,32 +449,36 @@ const returnOrder=async(req,res)=>{
     }
 
     
-      let userWallet = await Wallet.findOne({ user: userID });
+    let userWallet = await Wallet.findOne({ user: userID });
 
-      if (!userWallet) {
-        userWallet = new Wallet({
-          user: userID,
-          money: updatedOrder.orderTotal,
-        });
-      } else {
-        userWallet.money += updatedOrder.orderTotal;
-      }
+    if (!userWallet) {
+      userWallet = new Wallet({
+        user: userID,
+        money: updatedOrder.orderTotal,
+      });
+    } else {
+      userWallet.money += updatedOrder.orderTotal;
+    }
 
-       userWallet.transactions.push({
-         amount: updatedOrder.orderTotal,
-         type: "returned",
-       });
+    userWallet.transactions.push({
+      amount: updatedOrder.orderTotal,
+      type: "returned",
+    });
 
-      await userWallet.save();
-    
+    await userWallet.save();
 
     console.log("Order return successful");
 
+   
     res.redirect(`/order-details?orderID=${orderId}`);
   } catch (error) {
-    console.error("Error returnung order:", error.message);
+    console.error("Error returning order:", error.message);
+   
+    res.status(500).send("Error returning order");
   }
-}
+};
+
+
 
 const Payment = async (req, res) => {
   try {

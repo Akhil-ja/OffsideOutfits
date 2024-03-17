@@ -221,10 +221,33 @@
                         style="border-radius: 10px;">Cancel Order</a>
                 </div>
                 <% } else if (orderDetails.status==='delivered' ) { %>
-                    <div class="text-right">
-                        <a href="/return-order?orderID=<%= orderDetails._id %>" class="btn btn-primary"
-                            style="border-radius: 10px;">Return Order</a>
-                    </div>
+                <form action="/return-order" method="POST" id="returnOrderForm" style="display: none;">
+                    <input type="hidden" name="orderID" value="<%= orderDetails._id %>">
+                
+                  
+                        <div class="form-group" >
+                            <label>Reason for Return:</label><br>
+                            <input type="radio" id="reason1" name="returnReason" value="Wrong size">
+                            <label for="reason1">Wrong size</label><br>
+                            <input type="radio" id="reason2" name="returnReason" value="Defective product">
+                            <label for="reason2">Defective product</label><br>
+                            <input type="radio" id="reason3" name="returnReason" value="Changed mind">
+                            <label for="reason3">Changed mind</label><br>
+                            <input type="radio" id="otherReason" name="returnReason" value="Other">
+                            <label for="otherReason" value="Other">Other</label><br>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Submit Return</button>
+                        </form>
+                        
+                        <div id="returnOrderButtonWrapper"  style="display: flex; justify-content: flex-end;">
+                            <button id="showReturnReasons" class="btn btn-primary" style="width: 150px;">Return Order</button>
+                        </div>
+
+
+
+
+
                     <% } %>
         </div>
 
@@ -384,6 +407,25 @@
 <script src="assets/js/main.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+    document.getElementById('otherReason').addEventListener('change', function () {
+        if (this.checked) {
+            document.getElementById('otherReasonText').style.display = 'block';
+        } else {
+            document.getElementById('otherReasonText').style.display = 'none';
+        }
+    });
+</script>
+
+<script>
+    document.getElementById('showReturnReasons').addEventListener('click', function () {
+        document.getElementById('returnOrderButtonWrapper').style.display = 'none';
+        document.getElementById('returnOrderForm').style.display = 'block';
+    });
+</script>
+
+
 
 
 <script>
