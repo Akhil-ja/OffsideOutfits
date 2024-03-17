@@ -268,55 +268,56 @@
                         </table>
                         <% } %>
 
-                            <!-- Referral Offers -->
-                            <% const referralOffers=offers.filter(offer=> offer.referralOffer &&
-                                (offer.referralOffer.referredUserReward !== 0 || offer.referralOffer.referringUserReward
-                                !== 0)); %>
-                                <% if (referralOffers.length> 0) { %>
-                                    <h2 class="m-3" style="text-decoration: underline;">Referral Offers</h2>
-                                    <table class="table referral-offers mb-4">
-                                        <thead>
+                        
+                            <% if (referralOffers.length> 0) { %>
+                                <h2 class="m-3" style="text-decoration: underline;">Referral Offers</h2>
+                                <table class="table referral-offers mb-4">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Description</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Referred User Reward</th>
+                                            <th>Referring User Reward</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% referralOffers.forEach(offer=> { %>
                                             <tr>
-                                                <th>Title</th>
-                                                <th>Description</th>
-                                                <th>Start Date</th>
-                                                <th>End Date</th>
-                                                <th>Referred User Reward</th>
-                                                <th>Referring User Reward</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <% referralOffers.forEach(offer=> { %>
-                                                <tr>
-                                                    <td>
-                                                        <%= offer.title %>
-                                                    </td>
-                                                    <td>
-                                                        <%= offer.description %>
-                                                    </td>
-                                                    <td>
-                                                        <%= new Date(offer.startDate).toLocaleDateString() %>
-                                                    </td>
-                                                    <td>
-                                                        <%= new Date(offer.endDate).toLocaleDateString() %>
-                                                    </td>
-                                                    <td>
-                                                        <%= offer.referralOffer.referredUserReward %>
-                                                    </td>
-                                                    <td>
-                                                        <%= offer.referralOffer.referringUserReward %>
-                                                    </td>
                                                 <td>
-                                                    <button onclick="toggleStatus('<%= offer._id %>')" class="btn btn-<%= offer.isActive ? 'danger' : 'success' %>">
+                                                    <%= offer.title %>
+                                                </td>
+                                                <td>
+                                                    <%= offer.description %>
+                                                </td>
+                                                <td>
+                                                    <%= new Date(offer.startDate).toLocaleDateString() %>
+                                                </td>
+                                                <td>
+                                                    <%= new Date(offer.endDate).toLocaleDateString() %>
+                                                </td>
+                                                <td>
+                                                    <%= offer.referredUserReward %>
+                                                </td>
+                                                <td>
+                                                    <%= offer.referringUserReward %>
+                                                </td>
+                                                <td>
+                                                    <button onclick="toggleReferalStatus('<%= offer._id %>')"
+                                                        class="btn btn-<%= offer.isActive ? 'danger' : 'success' %>">
                                                         <%= offer.isActive ? 'Block' : 'Activate' %>
                                                     </button>
                                                 </td>
-                                                </tr>
-                                                <% }) %>
-                                        </tbody>
-                                    </table>
+                                            </tr>
+                                            <% }) %>
+                                    </tbody>
+                                </table>
+                                <% } else { %>
+                                    <p class="m-3">No referral offers available.</p>
                                     <% } %>
+
 </div>
 
 
@@ -375,6 +376,30 @@
                     }
                 </script>
                 
+
+                <script>
+                    function toggleReferalStatus(offerId) {
+                        fetch('/admin/toggleReferalStatus', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ offerId }),
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    location.reload(); 
+                                } else {
+                                    console.error('Failed to update status');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                    }
+                </script>
+
                 </body>
                 
                 

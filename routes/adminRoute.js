@@ -167,11 +167,14 @@ adminRoute.post("/referalOffers", offerController.addReferalOffer);
 
 adminRoute.post("/toggleOfferStatus", offerController.toggleStatus);
 
+adminRoute.post("/toggleReferalStatus", offerController.toggleReferalStatus);
+
 adminRoute.get("/dashboard", adminController.viewDashboard);
 
 adminRoute.post("/dashboard", adminController.filterOrdersByDate);
 
 adminRoute.get("/download/excel", adminController.downloadExel);
+
 adminRoute.get("/download/pdf", adminController.downloadPDF);
 
 

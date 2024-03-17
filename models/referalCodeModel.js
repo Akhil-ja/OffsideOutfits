@@ -2,11 +2,7 @@ const mongoose = require("mongoose");
 
 const referralCodeSchema = new mongoose.Schema(
   {
-    code: {
-      type: String,
-      required: true,
-      unique: true,
-    },
+  
     title: {
       type: String,
       required: true,
@@ -27,10 +23,8 @@ const referralCodeSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    offer: {
-      type: Number,
-      ref: "Offer",
-    },
+    referredUserReward: { type: Number, default: 0 },
+    referringUserReward: { type: Number, default: 0 },
   },
   {
     timestamps: true,

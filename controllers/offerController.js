@@ -8,24 +8,28 @@ const Order = require("../models/ordersModel");
 const Wishlist = require("../models/wishlistModel");
 const Category = require("../models/categoryModel");
 const productModel = require("../models/productModel");
+const ReferralCode = require("../models/referalCodeModel");
+
+
 
 const viewOffers=async(req,res)=>{
-    try {
-const offers = await Offer.find()
-  .populate({
-    path: "productOffer.products",
-    model: "Product",
-  })
-  .populate({
-    path: "categoryOffer.category",
-    model: "category",
-  });
+  try {
+    const offers = await Offer.find()
+      .populate({
+        path: "productOffer.products",
+        model: "Product",
+      })
+      .populate({
+        path: "categoryOffer.category",
+        model: "category",
+      });
 
+    const referralOffers = await ReferralCode.find();
 
-        res.render("offers", { offers });
-    } catch (error) {
-        console.log(error.message);
-    }
+    res.render("offers", { offers, referralOffers });
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 
 
@@ -121,35 +125,55 @@ try {
 }
 }
 
-const  addReferalOffer=async(req,res)=>{
-   try {
-     const {
-       title,
-       description,
-       startDate,
-       endDate,
-       referredUserReward,
-       referringUserReward,
-     } = req.body;
 
-     const referralOffer = new Offer({
-       title,
-       description,
-       startDate,
-       endDate,
-       referralOffer: {
-         referredUserReward,
-         referringUserReward,
-       },
-     });
 
-     await referralOffer.save();
+const addReferalOffer = async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      startDate,
+      endDate,
+      referredUserReward,
+      referringUserReward,
+    } = req.body;
 
-  res.redirect("/admin/offers");
-   } catch (error) {
-     console.error(error.message);
-   }
-}
+    const referralOffer = new ReferralCode({
+      title,
+      description,
+      startDate,
+      endDate,
+      referredUserReward,
+      referringUserReward,
+    });
+
+    await referralOffer.save();
+
+    res.redirect("/admin/offers");
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+const toggleReferalStatus = async (req, res) => {
+  try {
+    const { offerId } = req.body;
+    const offer = await ReferralCode.findById(offerId);
+
+    if (!offer) {
+      return res.status(404).json({ success: false, message: "Offer not found" });
+    }
+
+    offer.isActive = !offer.isActive;
+    await offer.save();
+
+    res.json({ success: true, message: "Offer status toggled successfully" });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
 
 
 const toggleStatus = async (req, res) => {
@@ -327,4 +351,5 @@ module.exports = {
   addProductOffer,
   addReferalOffer,
   toggleStatus,
+  toggleReferalStatus,
 };
