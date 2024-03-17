@@ -5,6 +5,12 @@ const Address = require("../models/addressModel");
 const productModel = require("../models/productModel");
 const RazorPay = require("razorpay");
 const Wallet =require("../models/walletModel")
+const mongoose = require("mongoose");
+
+
+
+
+
 
 
 const createOrders = async (req, res) => {
@@ -77,19 +83,46 @@ orderProducts.forEach((orderProduct) => {
             await product.save();
           }
 
-          const newOrder = new Orders({
-            user: userID,
-            products: orderProducts,
-            status: "pending",
-            address: orderAddress,
-            orderDate: Date.now(),
-            orderTotal: totalAmount,
-            PaymentMethod: paymentType,
-            couponApplied: couponApplied,
-          });
+        
 
-          await newOrder.save();
+const generateRandomNumber = () => {
+  return Math.floor(1000 + Math.random() * 9000);
+};
 
+
+const isOrderIdExists = async (orderId) => {
+  const existingOrder = await Orders.findOne({ orderID: orderId });
+  return !!existingOrder;
+};
+
+let generatedOrderId;
+
+
+do {
+  
+  const randomNumber = generateRandomNumber();
+
+  
+  generatedOrderId = `OOF${randomNumber}`;
+
+} while (await isOrderIdExists(generatedOrderId));
+
+
+const newOrder = new Orders({
+  orderID: generatedOrderId,
+  user: userID,
+  products: orderProducts,
+  status: "pending",
+  address: orderAddress,
+  orderDate: Date.now(),
+  orderTotal: totalAmount,
+  PaymentMethod: paymentType,
+  couponApplied: couponApplied,
+});
+
+await newOrder.save();
+
+       
           cart.cartProducts = [];
           cart.cartTotal=0;
           await cart.save();

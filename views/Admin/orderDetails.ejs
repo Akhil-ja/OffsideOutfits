@@ -151,7 +151,7 @@
     <div class="content-header">
         <div>
             <h2 class="content-title card-title">Order detail</h2>
-            <p>Details for Order ID: <%= AllOrders._id %>
+            <p>Details for Order ID: <%= AllOrders.orderID %>
             </p>
         </div>
     </div>
@@ -164,7 +164,7 @@
                             <%= AllOrders.orderDate.toDateString() %>
                         </b>
                     </span> <br>
-                    <small class="text-muted">Order ID: <%= AllOrders._id %></small>
+                    <small class="text-muted">Order ID: <%= AllOrders.orderID %></small>
                 </div>
         <div class="col-lg-6 col-md-6 ms-auto text-md-end">
         <select id="statusDropdown" class="form-select d-inline-block mb-lg-0 mb-15 mw-200">
@@ -304,7 +304,7 @@
 
 <script>
     async function updateStatus() {
-        const orderId = "<%= AllOrders._id %>";
+        const orderId = "<%= AllOrders.orderID %>";
         const selectedStatus = document.getElementById("statusDropdown").value;
 
         
