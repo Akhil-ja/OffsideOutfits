@@ -6,8 +6,9 @@ const Wallet = require("../models/walletModel");
 const sendEmail = require("../services/sendEmail");
 const authRoutes = require("../services/authRoutes");
 const crypto = require("crypto");
-
+const ReferralCode = require("../models/referalCodeModel");
 const bcrypt = require("bcrypt");
+
 
 
 
@@ -52,6 +53,27 @@ const generateRandomCode = () => {
     
 const initialSignUp = async (req, res) => {
   try {
+    const referralCode = req.body.referralCode;
+let referredUser = null;
+    if (referralCode) {
+       referredUser = await User.findOne(
+        { referralCode: referralCode },
+       
+      );
+
+referredUser = referredUser._id;
+
+      if (referredUser) {
+        console.log("Referral code is valid");
+      } else {
+        console.log("Referral code is invalid");
+        return res.render("loginRegister", {
+          errorMessage:
+            "Referral code is invalid. Please enter a valid referral code.",
+        });
+      }
+    }
+
     const spassword = await securePassword(req.body.password);
     const randomCode = generateRandomCode();
 
@@ -63,12 +85,12 @@ const initialSignUp = async (req, res) => {
       is_admin: 0,
       is_verified: 0,
       otp: randomCode,
+      referalUserID:referredUser
     };
 
     const existingUser = await User.findOne({ email: req.body.email });
 
     if (existingUser) {
-      
       return res.render("loginRegister", {
         errorMessage: "Email already exists. Please use a different email.",
       });
@@ -80,7 +102,7 @@ const initialSignUp = async (req, res) => {
       console.log("OTP:" + randomCode);
       const text = `Your verification code is: ${randomCode}`;
       await sendEmail(req.body.email, subject, text);
-       otpNull(req, res);
+      otpNull(req, res);
       console.log(req.session.tempUserDetails);
       res.render("OTPpage", { errorMessage: null });
       res.cookie("jwt", "", { maxAge: 1 });
@@ -109,24 +131,90 @@ const resentOTP = async (req, res) => {
 
 
 
-const insertUser = async (req, res) => {
-  try {
-    if (req.body.otp === req.session.tempUserDetails.otp) {
+  const insertUser = async (req, res) => {
+    try {
+      if (req.body.otp === req.session.tempUserDetails.otp) {
 
-      const referralCode = crypto.randomBytes(5).toString("hex");
+        const referralCode = crypto.randomBytes(3).toString("hex");
 
-      const user = new User({
-        name: req.session.tempUserDetails.fullname,
-        email: req.session.tempUserDetails.email,
-        phone: req.session.tempUserDetails.phone,
-        password: req.session.tempUserDetails.password,
-        is_admin: 0,
-        is_verified: 1,
-        referralCode: referralCode, 
-      });
+        const user = new User({
+          name: req.session.tempUserDetails.fullname,
+          email: req.session.tempUserDetails.email,
+          phone: req.session.tempUserDetails.phone,
+          password: req.session.tempUserDetails.password,
+          is_admin: 0,
+          is_verified: 1,
+          referralCode: referralCode, 
+        });
 
-      const userData = await user.save();
-      const userID = userData._id;
+        const userData = await user.save();
+        const userID = userData._id;
+
+
+  const referalUserID=req.session.tempUserDetails.referalUserID
+
+
+  const referral= await ReferralCode.findOne();
+
+
+const referredUserReward = referral.referredUserReward;
+
+const referringUserReward = referral.referringUserReward;
+
+
+
+  let referredUserwallet = await Wallet.findOne({ user: referalUserID });
+
+
+
+  if (!referredUserwallet) {
+    referredUserwallet = new Wallet({
+      user: userID,
+      money: parseFloat(referredUserReward),
+      transactions: [
+        {
+          amount: parseFloat(referredUserReward),
+          type: "credit",
+        },
+      ],
+    });
+
+    await referredUserwallet.save();
+  } else {
+    referredUserwallet.money += parseFloat(referringUserReward);
+    referredUserwallet.transactions.push({
+      amount: parseFloat(referringUserReward),
+      type: "credit",
+    });
+    await referredUserwallet.save();
+  }
+        
+  let userWallet = await Wallet.findOne({ user: userID });
+
+  if (!userWallet) {
+    userWallet = new Wallet({
+      user: userID,
+      money: parseFloat(referringUserReward),
+      transactions: [
+        {
+          amount: parseFloat(referringUserReward),
+          type: "Referal Amount",
+        },
+      ],
+    });
+
+    await userWallet.save();
+  } else {
+    userWallet.money += parseFloat(referringUserReward);
+    userWallet.transactions.push({
+      amount: parseFloat(referringUserReward),
+      type: "Referal Amount",
+    });
+    await wallet.save();
+  }
+
+
+
       const token = authRoutes.createToken(userID);
       res.cookie("jwt", token, {
         httpOnly: true,
@@ -147,8 +235,10 @@ const insertUser = async (req, res) => {
 
 const verifyLogin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+       const { email, password } = req.body;
 
+    
+     
     const userData = await User.findOne({ email: email });
 
     if (userData) {
