@@ -145,70 +145,7 @@ const viewDashboard = async (req, res) => {
 
 
 
-const downloadExel=async(req,res)=>{
-  try {
-    
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet("Orders");
 
-    
-    worksheet.addRow([
-      "Order ID",
-      "User Name",
-      "Date",
-      "Total",
-      "Coupon Applied",
-      "Payment Method",
-      "Discount",
-    ]);
-
-    const orders = await Order.find()
-      .populate({
-        path: "products.product",
-        model: "Product",
-      })
-      .populate({
-        path: "user",
-        model: "User",
-      })
-      .populate({
-        path: "couponApplied",
-        model: "Coupon",
-      });
-
-    orders.forEach((order) => {
-      worksheet.addRow([
-        order._id,
-        order.user.name,
-        order.orderDate.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        }),
-        order.orderTotal.toFixed(1),
-        order.couponApplied ? order.couponApplied.code : "Not Applied",
-        order.PaymentMethod,
-        order.discountPercentage
-          ? `${order.discountPercentage}%`
-          : "No discount",
-      ]);
-    });
-
-    
-    res.setHeader(
-      "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    );
-    res.setHeader("Content-Disposition", "attachment; filename=orders.xlsx");
-
-    
-    const buffer = await workbook.xlsx.writeBuffer();
-    res.send(buffer);
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).send("Internal Server Error");
-  }
-}
 
 
 
@@ -259,101 +196,47 @@ const loadadminProducts = async (req, res) => {
 
 
 
-const downloadPDF = async (req, res) => {
-  try {
-    const orders = await Order.find()
-      .populate({
-        path: "products.product",
-        model: "Product",
-      })
-      .populate({
-        path: "user",
-        model: "User",
-      })
-      .populate({
-        path: "couponApplied",
-        model: "Coupon",
-      });
-
-    const doc = new PDFDocument();
-
-    
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "attachment; filename=orders.pdf");
-
-    
-    doc.pipe(res);
-
-    // Add table headers
-    doc.fontSize(12).text("Order ID", 20, 20);
-    doc.fontSize(12).text("User Name", 120, 20);
-    doc.fontSize(12).text("Date", 220, 20);
-    doc.fontSize(12).text("Total", 320, 20);
-    doc.fontSize(12).text("Coupon Applied", 420, 20);
-    doc.fontSize(12).text("Payment Method", 520, 20);
-    doc.fontSize(12).text("Discount", 620, 20);
-
-    let y = 40;
-    const lineHeight = 20; 
-
-   
-    orders.forEach((order, index) => {
-      y += lineHeight;
-      doc.fontSize(10).text(`#${order._id}`, 20, y);
-      doc.fontSize(10).text(order.user.name, 120, y);
-      doc
-        .fontSize(10)
-        .text(
-          order.orderDate.toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          }),
-          220,
-          y
-        );
-      doc.fontSize(10).text(`Rs: ${order.orderTotal.toFixed(1)}`, 320, y);
-
-      if (order.couponApplied) {
-        doc.fontSize(10).text(order.couponApplied.code, 420, y);
-      } else {
-        doc.fontSize(10).text("Not Applied", 420, y);
-      }
-
-      if (order.PaymentMethod === "COD") {
-        doc.fontSize(10).text("COD", 520, y);
-      } else if (order.PaymentMethod === "RazorPay") {
-        doc.fontSize(10).text("RazorPay", 520, y);
-      }
-
-      if (order.discountPercentage) {
-        doc.fontSize(10).text(`${order.discountPercentage}%`, 620, y);
-      } else {
-        doc.fontSize(10).text("No discount", 620, y);
-      }
-    });
-
-   
-    doc.end();
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).send("Internal Server Error");
-  }
-};
 
 const filterOrdersByDate = async (req, res) => {
   try {
-    const { selectedDate } = req.query;
+    let query = {};
+    const { startDate, endDate, timeFilter } = req.query;
 
-    const startDate = new Date(selectedDate);
-    startDate.setHours(0, 0, 0, 0);
+    if (startDate && endDate) {
+      const startDateTime = new Date(startDate);
+      const endDateTime = new Date(endDate);
+      endDateTime.setHours(23, 59, 59, 999);
+      query.orderDate = { $gte: startDateTime, $lte: endDateTime };
+    }
 
-    const endDate = new Date(selectedDate);
-    endDate.setHours(23, 59, 59, 999);
+    if (timeFilter && timeFilter !== "All") {
+      const currentDate = new Date();
+      currentDate.setHours(0, 0, 0, 0);
 
-    const orders = await Order.find({
-      orderDate: { $gte: startDate, $lte: endDate },
-    }).populate({
+      if (timeFilter === "daily") {
+        query.orderDate = { $gte: currentDate };
+      } else if (timeFilter === "weekly") {
+        const startOfWeek = new Date(currentDate);
+        startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
+        startOfWeek.setHours(0, 0, 0, 0);
+        query.orderDate = { $gte: startOfWeek };
+      } else if (timeFilter === "monthly") {
+        const startOfMonth = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          1
+        );
+        startOfMonth.setHours(0, 0, 0, 0);
+        query.orderDate = { $gte: startOfMonth };
+      } else if (timeFilter === "yearly") {
+        const startOfYear = new Date(currentDate.getFullYear(), 0, 1);
+        startOfYear.setHours(0, 0, 0, 0);
+        query.orderDate = { $gte: startOfYear };
+      }
+    }
+
+    const orders = await Order.find(query)
+      .populate({
         path: "products.product",
         model: "Product",
       })
@@ -365,7 +248,7 @@ const filterOrdersByDate = async (req, res) => {
         path: "couponApplied",
         model: "Coupon",
       })
-      .sort({ orderDate: "desc" })
+      .sort({ orderDate: "desc" });
 
     res.json({ orders });
   } catch (error) {
@@ -376,13 +259,13 @@ const filterOrdersByDate = async (req, res) => {
 
 
 
+
+
 module.exports = {
   loadAdminLog,
   adminLogin,
   adminLogout,
   viewDashboard,
-  downloadExel,
-  downloadPDF,
   filterOrdersByDate,
   loadadminProducts,
 };

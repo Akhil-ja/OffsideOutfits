@@ -517,44 +517,45 @@
 
 <script>
     function addToWishlist(productId) {
-            fetch('/addToWishlist', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ productId }),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    const notyf = new Notyf();
+        fetch('/addToWishlist', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ productId }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                const notyf = new Notyf();
 
-                    if (data.success) {
-                        console.log('Product added to wishlist:', data.wishlist);
+                if (data.success) {
+                    console.log('Product added to wishlist:', data.wishlist);
+                    new Noty({
+                        type: 'success',
+                        text: 'Product added to Wishlist',
+                        timeout: 2000,
+                        layout: 'topRight',
+                    }).show();
+                } else {
+                    if (data.error === "Product already in wishlist") {
+                        console.log('Product already in wishlist:', data.error);
                         new Noty({
-                            type: 'success',
-                            text: 'Product addes in Wishlist',
+                            type: 'warning',
+                            text: 'Product already in Wishlist',
                             timeout: 2000,
                             layout: 'topRight',
                         }).show();
                     } else {
-                        if (data.error === "Product already in wishlist") {
-                           new Noty({
-                                type: 'warning',
-                                text: 'Product already in Wishlist',
-                                timeout: 2000, 
-                                layout: 'topRight', 
-                            }).show();
-                        } else {
-                            console.error('Error adding product to wishlist:', data.error);
-                        }
+                        console.error('Error adding product to wishlist:', data.error);
                     }
-                })
-                .catch(error => {
-                    console.error('Error adding product to wishlist:', error);
-                });
-        }
-
+                }
+            })
+            .catch(error => {
+                console.error('Error adding product to wishlist:', error);
+            });
+    }
 </script>
+
 
 </body>
 

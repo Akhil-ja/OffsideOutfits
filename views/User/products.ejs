@@ -260,16 +260,15 @@
     <div class="sidebar-filter-wrapper">
         <form id="filterForm" action="/products" method="GET">
             <div class="widget widget-clean">
-                <button type="button" class="sidebar-filter-clear" onclick="clearAll()">Clear All</button>
+                <button type="button"  class="btn btn-outline-dark btn-round" onclick="clearAll()">Clear All</button>
             </div>
 
             <!-- Sort and Filter Widget -->
             <div class="widget widget-collapsible">
                 <h3 class="widget-title">
-                    <button type="button" data-toggle="collapse" href="#widget-2" aria-expanded="true"
-                        aria-controls="widget-2">
+                    <a data-toggle="collapse" href="#widget-2" role="button" aria-expanded="true" aria-controls="widget-2">
                         Sort & Filter
-                    </button>
+                    </a>
                 </h3>
                 <div class="collapse show" id="widget-2">
                     <div class="widget-body">
@@ -578,6 +577,11 @@
 
 
 
+<script>
+    function clearAll() {
+        location.reload();
+    }
+</script>
 
 
 

@@ -53,25 +53,34 @@ const generateRandomCode = () => {
     
 const initialSignUp = async (req, res) => {
   try {
+
+    console.log("in initial signup");
     const referralCode = req.body.referralCode;
+
 let referredUser = null;
+
+
     if (referralCode) {
        referredUser = await User.findOne(
         { referralCode: referralCode },
        
       );
 
-referredUser = referredUser._id;
+       if (referredUser) {
+         console.log("Referral code is valid");
+       } else {
+         console.log("Referral code is invalid");
+         return res.render("loginRegister", {
+           errorMessage:
+             "Referral code is invalid.",
+         });
+       } 
+      
+      referredUser = referredUser._id;
 
-      if (referredUser) {
-        console.log("Referral code is valid");
-      } else {
-        console.log("Referral code is invalid");
-        return res.render("loginRegister", {
-          errorMessage:
-            "Referral code is invalid. Please enter a valid referral code.",
-        });
-      }
+console.log("referal user:" + referredUser);
+
+    
     }
 
     const spassword = await securePassword(req.body.password);

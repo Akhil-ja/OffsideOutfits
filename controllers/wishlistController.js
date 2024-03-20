@@ -8,44 +8,40 @@ const Wishlist=require("../models/wishlistModel")
 
 
 
-const addToWishlist=async(req,res)=>{
-    console.log("in add to wishlist");
+const addToWishlist = async (req, res) => {
+  console.log("in add to wishlist");
 
-         const { productId } = req.body;
-         console.log("Product ID:"+productId);
+  const { productId } = req.body;
+  console.log("Product ID:" + productId);
 
-         
-         const userId = res.locals.currentUser._id;
-         console.log("userid:"+userId);
+  const userId = res.locals.currentUser._id;
+  console.log("userid:" + userId);
 
-         try {
-          const existingWishlist = await Wishlist.findOne({
-            user: userId,
-            "cartProducts.product": productId,
-          });
+  try {
+    const existingWishlist = await Wishlist.findOne({
+      user: userId,
+      "wishlistProducts.product": productId,
+    });
 
-          if (existingWishlist) {
-            console.log("Already exist");
-            return res
-              .status(400)
-              .json({ success: false, error: "Product already in wishlist" });
-          }
-           const wishlist = await Wishlist.findOneAndUpdate(
-             { user: userId },
-             { $addToSet: { wishlistProducts: { product: productId } } },
-             { upsert: true, new: true }
-           );
+    if (existingWishlist) {
+      console.log("Already exists in wishlist");
+      return res
+        .status(400)
+        .json({ success: false, error: "Product already in wishlist" });
+    }
 
-           res.json({ success: true, wishlist });
+    const wishlist = await Wishlist.findOneAndUpdate(
+      { user: userId },
+      { $addToSet: { wishlistProducts: { product: productId } } },
+      { upsert: true, new: true }
+    );
 
-
-         } catch (error) {
-           console.error("Error adding product to wishlist:", error);
-           res
-             .status(500)
-             .json({ success: false, error: "Internal Server Error" });
-         }
-    } 
+    res.json({ success: true, wishlist });
+  } catch (error) {
+    console.error("Error adding product to wishlist:", error);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
+};
 
 const viewWishlist = async (req, res) => {
   try {
