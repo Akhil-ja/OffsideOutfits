@@ -249,8 +249,7 @@
                 <option value="monthly">Monthly</option>
                 <option value="yearly">Yearly</option>
                 <option value="custom">Custom date</option>
-                <option value="specific">Specific Date</option>
-            </select>
+                </select>
         </div>
     </div>
     <div class="col-md-2 col-6">
@@ -261,26 +260,33 @@
     </div>
 </div>
 
+
 </header>
 
 
                 <div class="card-body">
                     <div class="table-responsive">
                     <table id="ordersTable" class="table align-middle table-nowrap mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th scope="col" class="text-center">
-                                    <div class="form-check align-middle"></div>
-                                </th>
-                                <th class="align-middle" scope="col">Order ID</th>
-                                <th class="align-middle" scope="col">User Name</th>
-                                <th class="align-middle" scope="col">Date</th>
-                                <th class="align-middle" scope="col">Total</th>
-                                <th class="align-middle" scope="col">Coupon Applied</th>
-                                <th class="align-middle" scope="col">Payment Method</th>
-                                <th class="align-middle" scope="col">Discount</th>
-                            </tr>
-                        </thead>
+                        
+                    <thead class="table-light">
+                        <tr>
+                            <th colspan="8" class="text-center">
+                                <h3 id="tableHeading">Orders</h3>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th scope="col" class="text-center">
+                                <div class="form-check align-middle"></div>
+                            </th>
+                            <th class="align-middle" scope="col">Order ID</th>
+                            <th class="align-middle" scope="col">User Name</th>
+                            <th class="align-middle" scope="col">Date</th>
+                            <th class="align-middle" scope="col">Total</th>
+                            <th class="align-middle" scope="col">Coupon Applied</th>
+                            <th class="align-middle" scope="col">Payment Method</th>
+                            <th class="align-middle" scope="col">Discount</th>
+                        </tr>
+                    </thead>
                         <tbody>
                             <% const reversedOrders=orders.slice().reverse(); %>
                                 <% reversedOrders.forEach(order=> { %>
@@ -416,114 +422,161 @@
   
 
 
- <script>
-  window.onload = function () {
-        document.getElementById('filterByTime').addEventListener('click', function () {
-            const startDate = document.getElementById('startDateInput').value;
-            const endDate = document.getElementById('endDateInput').value;
-            const timeFilter = document.getElementById('timeFilter').value;
+    <script>
+    window.onload = function () {
+        const today = new Date();
+            document.getElementById('filterByTime').addEventListener('click', function () {
+                const startDate = document.getElementById('startDateInput').value;
+                const endDate = document.getElementById('endDateInput').value;
+                const timeFilter = document.getElementById('timeFilter').value;
 
-            if (!startDate && !endDate && (timeFilter === 'specific' || timeFilter === 'custom')) {
-             
-                Toastify({
-                    text: "Please enter both start and end dates for custom date range.",
-                    duration: 2000,
-                    gravity: "top",
-                    backgroundColor: "linear-gradient(to right, #ff5e62, #ff9966)",
-                }).showToast();
-                return;
-            }
-
-            if ((startDate && !endDate) || (!startDate && endDate)) {
+                if (!startDate && !endDate && (timeFilter === 'specific' || timeFilter === 'custom')) {
                 
-                Toastify({
-                    text: "Please enter both start and end dates for custom date range.",
-                    duration: 2000,
-                    gravity: "top",
-                    backgroundColor: "linear-gradient(to right, #ff5e62, #ff9966)",
-                }).showToast();
-                return;
+                    Toastify({
+                        text: "Please enter start or end dates.",
+                        duration: 2000,
+                        gravity: "top",
+                        backgroundColor: "linear-gradient(to right, #ff5e62, #ff9966)",
+                    }).showToast();
+                    return;
+                }
+
+                if ((startDate && !endDate) || (!startDate && endDate)) {
+                    
+                    Toastify({
+                        text: "Please enter both start and end dates for custom date range......",
+                        duration: 2000,
+                        gravity: "top",
+                        backgroundColor: "linear-gradient(to right, #ff5e62, #ff9966)",
+                    }).showToast();
+                    return;
+                }
+
+                if ((startDate && new Date(startDate) > today) || (endDate && new Date(endDate) > today)) {
+                    Toastify({
+                        text: "Start date or end date cannot be greater than today.",
+                        duration: 2000,
+                        gravity: "top",
+                        backgroundColor: "linear-gradient(to right, #ff5e62, #ff9966)",
+                    }).showToast();
+                    return;
+                }
+
+                if (startDate && endDate && timeFilter !== 'custom') {
+                    Toastify({
+                        text: "Please select 'Custom Date' to filter by specific dates.",
+                        duration: 2000,
+                        gravity: "top",
+                        backgroundColor: "linear-gradient(to right, #ff5e62, #ff9966)",
+                    }).showToast();
+                    return;
+                }
+
+                if (startDate && endDate && new Date(startDate) > new Date(endDate) && timeFilter === 'custom') {
+                
+                    Toastify({
+                        text: "End date should be after the start date.",
+                        duration: 2000,
+                        gravity: "top",
+                        backgroundColor: "linear-gradient(to right, #ff5e62, #ff9966)",
+                    }).showToast();
+                    return;
+                }
+  let headingText;
+                switch (timeFilter) {
+                    
+                    case 'all':
+                        headingText = 'All Orders';
+                        break;
+                    case 'daily':
+                        headingText = 'Orders for ' + today.toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' });
+                        break;
+                    case 'weekly':
+                   
+                        const startOfWeek = new Date(today);
+                        startOfWeek.setDate(today.getDate() - today.getDay()); 
+                        const endOfWeek = new Date(today);
+                        endOfWeek.setDate(startOfWeek.getDate() + 6); 
+
+                        const startDateofWeek = startOfWeek.toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' });
+                        const endDateofWeek = endOfWeek.toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' });
+
+                        document.getElementById('startDateInput').value = startDateofWeek;
+                        document.getElementById('endDateInput').value = endDateofWeek;
+
+                        
+                         headingText = `Orders for the Week (${startDateofWeek} - ${endDateofWeek})`;
+                        document.getElementById('tableHeading').textContent = headingText;
+
+                        break;
+                    case 'monthly':
+                        headingText = 'Orders for ' + today.toLocaleDateString("en-US", { year: 'numeric', month: 'long' });
+                        break;
+                    case 'yearly':
+                        headingText = 'Orders for ' + today.toLocaleDateString("en-US", { year: 'numeric' });
+                        break;
+                    case 'custom':
+                        headingText = `Custom Date Range Orders  (${startDate} - ${endDate})`;
+                        break;
+                    case 'specific':
+                        headingText = 'Orders for Specific Date';
+                        break;
+                    default:
+                        headingText = 'Orders';
+                        break;
+                }
+
+                document.getElementById('tableHeading').innerText = headingText;
+
+
+                let url = `/admin/dashboard?startDate=${startDate}&endDate=${endDate}`;
+
+                if (timeFilter !== 'All' && timeFilter !== 'custom') {
+                    url += `&timeFilter=${timeFilter}`;
+                }
+
+                fetch(url, { method: 'POST' })
+                    .then(response => response.json())
+                    .then(data => {
+                        renderTable(data.orders);
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+
+            document.getElementById('resetFilter').addEventListener('click', function () {
+                location.reload()
+            });
+
+            function renderTable(orders) {
+                const tableBody = document.querySelector('#ordersTable tbody');
+
+                tableBody.innerHTML = '';
+
+                if (orders.length === 0) {
+                    const noOrdersRow = document.createElement('tr');
+                    noOrdersRow.innerHTML = `<td colspan="8" class="text-center">No orders for the selected date</td>`;
+                    tableBody.appendChild(noOrdersRow);
+                } else {
+                    orders.forEach(order => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                        <td class="text-center">
+                            <div class="form-check"></div>
+                        </td>
+                        <td><a href="#" class="fw-bold" style="font-size: smaller;">#${order.orderID}</a></td>
+                        <td>${order.user.name}</td>
+                        <td>${new Date(order.orderDate).toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' })}</td>
+                        <td>Rs: ${order.orderTotal.toFixed(1)}</td>
+                        <td>${order.couponApplied ? `<span class="badge badge-pill badge-soft-success">${order.couponApplied.code}</span>` : '<span class="badge badge-pill badge-soft-danger">Not Applied</span>'}</td>
+                        <td>${order.PaymentMethod === 'COD' ? '<i class="material-icons md-money font-xxl text-muted mr-5"></i>COD' : '<i class="material-icons md-payment font-xxl text-muted mr-5"></i>RazorPay'}</td>
+                        <td>${order.discountPercentage ? `${order.discountPercentage}%` : '<span>No discount</span>'}</td>`;
+                        tableBody.appendChild(row);
+                    });
+                }
             }
+        };
 
-            if (startDate && endDate && timeFilter !== 'custom') {
-                // Show error toast for selecting dates with non-custom time filter
-                Toastify({
-                    text: "Please select 'Custom Date' to filter by specific dates.",
-                    duration: 2000,
-                    gravity: "top",
-                    backgroundColor: "linear-gradient(to right, #ff5e62, #ff9966)",
-                }).showToast();
-                return;
-            }
-
-            if (startDate && endDate && new Date(startDate) > new Date(endDate) && timeFilter === 'custom') {
-              
-                Toastify({
-                    text: "End date should be after the start date.",
-                    duration: 2000,
-                    gravity: "top",
-                    backgroundColor: "linear-gradient(to right, #ff5e62, #ff9966)",
-                }).showToast();
-                return;
-            }
-
-            let url = `/admin/dashboard?startDate=${startDate}&endDate=${endDate}`;
-
-            if (timeFilter !== 'All' && timeFilter !== 'custom') {
-                url += `&timeFilter=${timeFilter}`;
-            }
-
-            fetch(url, { method: 'POST' })
-                .then(response => response.json())
-                .then(data => {
-                    renderTable(data.orders);
-                })
-                .catch(error => console.error('Error:', error));
-        });
-
-        document.getElementById('resetFilter').addEventListener('click', function () {
-            document.getElementById('startDateInput').value = '';
-            document.getElementById('endDateInput').value = '';
-            document.getElementById('timeFilter').selectedIndex = 0;
-
-            fetch(`/admin/dashboard`, { method: 'POST' })
-                .then(response => response.json())
-                .then(data => {
-                    renderTable(data.orders);
-                })
-                .catch(error => console.error('Error:', error));
-        });
-
-        function renderTable(orders) {
-            const tableBody = document.querySelector('#ordersTable tbody');
-
-            tableBody.innerHTML = '';
-
-            if (orders.length === 0) {
-                const noOrdersRow = document.createElement('tr');
-                noOrdersRow.innerHTML = `<td colspan="8" class="text-center">No orders for the selected date</td>`;
-                tableBody.appendChild(noOrdersRow);
-            } else {
-                orders.forEach(order => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                    <td class="text-center">
-                        <div class="form-check"></div>
-                    </td>
-                    <td><a href="#" class="fw-bold" style="font-size: smaller;">#${order.orderID}</a></td>
-                    <td>${order.user.name}</td>
-                    <td>${new Date(order.orderDate).toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' })}</td>
-                    <td>Rs: ${order.orderTotal.toFixed(1)}</td>
-                    <td>${order.couponApplied ? `<span class="badge badge-pill badge-soft-success">${order.couponApplied.code}</span>` : '<span class="badge badge-pill badge-soft-danger">Not Applied</span>'}</td>
-                    <td>${order.PaymentMethod === 'COD' ? '<i class="material-icons md-money font-xxl text-muted mr-5"></i>COD' : '<i class="material-icons md-payment font-xxl text-muted mr-5"></i>RazorPay'}</td>
-                    <td>${order.discountPercentage ? `${order.discountPercentage}%` : '<span>No discount</span>'}</td>`;
-                    tableBody.appendChild(row);
-                });
-            }
-        }
-    };
-
-</script>
+    </script>
 
 <script>
     function exportToExcel() {
@@ -534,7 +587,12 @@
 </script>
 
 
-
+<script>
+function pdf() {
+        const table = document.getElementById("ordersTable")
+        html2pdf().from(table).save();
+    }
+</script>
 
 
 
