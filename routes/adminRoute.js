@@ -3,9 +3,10 @@ const adminController = require("../controllers/adminController");
 const authRoutes = require("../services/authRoutes");
 const bodyParser = require("body-parser");
 const multer = require("multer");
-const path = require("path");
+
 const uuid = require("uuid");
 
+const path = require("path");
 const categoryController = require("../controllers/categoryController");
 const productController = require("../controllers/productController");
 const orderController = require("../controllers/orderController");
@@ -91,34 +92,61 @@ adminRoute.get(
 
 
 
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, "./public/productAssets/");
+//   },
+//   filename: (req, file, cb) => {
+//     cb(
+//       null,
+//       file.fieldname + "_" + Date.now() + path.extname(file.originalname)
+//     );
+//   },
+// });
+
+// const upload = multer({ storage: storage });
+
+
+
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./public/productAssets/");
+  destination: function (req, file, cb) {
+    cb(null, "./public/productAssets");
   },
-  filename: (req, file, cb) => {
-    const uniqueFilename =
-      file.fieldname + "_" + uuid.v4() + path.extname(file.originalname);
-    cb(null, uniqueFilename);
+  filename: function (req, file, cb) {
+    cb(null, file.originalname); 
   },
 });
 
 const upload = multer({ storage: storage });
 
 
+
+
+
 adminRoute.post("/products/edit-product", productController.edit_product);
 
-adminRoute.post(
-  "/add-product",
-  upload.array("ProductImage", 4),
-  productController.add_Product
-);
+
+
+  adminRoute.post(
+    "/add-product",
+    upload.array("ProductImage", 4),
+    productController.add_Product
+  );
 
 
 
 adminRoute.post(
   "/products/edit-product",
-  upload.array("newImages", 6),
+  upload.array("ProductImage", 4),
   productController.edit_product
+);
+
+
+
+adminRoute.post(
+  "/products/editproductImagePOST",
+  upload.single("ProductImage"),
+  adminController.editproductImagePOST
 );
 
 

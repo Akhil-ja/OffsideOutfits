@@ -12,9 +12,11 @@ const walletController=require("../controllers/walletController")
 const wishlistController=require("../controllers/wishlistController")
 
 
-const express = require("express");
-const walletModel = require("../models/walletModel");
 
+
+
+
+const express = require("express");
 
 const userRoute = express();
 

@@ -235,7 +235,9 @@ const edit_product = async (req, res) => {
     console.error(error);
     res.status(500).send("Internal Server Error");
   }
-}
+};
+
+
 
 // *********Admin************
 
@@ -247,7 +249,7 @@ const addProduct = async (req, res) => {
     const currentPage = parseInt(req.query.page, 10) || 1;
     const totalProducts = await Product.countDocuments();
     const totalPages = Math.ceil(totalProducts / itemsPerPage);
-    const visiblePages = 5; // Define visiblePages
+    const visiblePages = 5; 
     const startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
 
     res.render("addProduct", {

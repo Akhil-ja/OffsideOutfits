@@ -257,7 +257,31 @@ const filterOrdersByDate = async (req, res) => {
   }
 };
 
+const editproductImagePOST = async (req, res) => {
+  try {
 
+    console.log("hello in image edit");
+    console.log(req.file);
+    const image = req.body.imagename;
+    const index = parseInt(req.body.index);
+    const productID = req.body.productID;
+    console.log(image, index, productID);
+
+    if (image) {
+      const productDetails = await Product.findOne({ _id: productID });
+      console.log(productDetails.images);
+      productDetails.images.splice(index, 1, image);
+      console.log(productDetails.images);
+      await productDetails.save();
+      console.log(productDetails.images);
+      res.json({ status: "okay" });
+    } else {
+      res.json({ status: "oops" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 
 
@@ -268,4 +292,5 @@ module.exports = {
   viewDashboard,
   filterOrdersByDate,
   loadadminProducts,
+  editproductImagePOST
 };
