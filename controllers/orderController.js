@@ -482,6 +482,8 @@ const returnOrder = async (req, res) => {
 
 const Payment = async (req, res) => {
   try {
+
+    console.log("in paymenty");
     const { userID, selectedAddress, paymentType } = req.body;
 
     
@@ -511,7 +513,8 @@ const Payment = async (req, res) => {
     });
 
     let orderProducts = [];
-    let total = cart.cartTotal;
+    let total = cart.cartTotal.toFixed(2);
+    console.log(typeof(cart.cartTotal));
     let orderAddress = "";
 
     if (orderDocument) {

@@ -18,6 +18,10 @@
     <link rel="stylesheet" href="assets/css/plugins/owl-carousel/owl.carousel.css">
     <link rel="stylesheet" href="assets/css/plugins/magnific-popup/magnific-popup.css">
     <link rel="stylesheet" href="assets/css/plugins/nouislider/nouislider.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/notyf@3.0.2/dist/notyf.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.css">
+    
+    
 </head>
 
 <style>
@@ -201,9 +205,11 @@
                                                 </a>
                     
                                                 <div class="product-action-vertical">
-                                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to
+                                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable" onclick="addToWishlist('<%= product._id %>')" ><span>add to
                                                             wishlist</span></a>
                                                 </div>
+
+
                                             </div>
                     
                                             <div class="product-body">
@@ -481,6 +487,8 @@
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3.0.2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
 
 
 
@@ -582,6 +590,48 @@
         location.reload();
     }
 </script>
+
+
+    <script>
+            function addToWishlist(productId) {
+                fetch('/addToWishlist', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ productId }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        const notyf = new Notyf();
+
+                        if (data.success) {
+                            console.log('Product added to wishlist:', data.wishlist);
+                            new Noty({
+                                type: 'success',
+                                text: 'Product added to Wishlist',
+                                timeout: 2000,
+                                layout: 'topRight',
+                            }).show();
+                        } else {
+                            if (data.error === "Product already in wishlist") {
+                                console.log('Product already in wishlist:', data.error);
+                                new Noty({
+                                    type: 'warning',
+                                    text: 'Product already in Wishlist',
+                                    timeout: 2000,
+                                    layout: 'topRight',
+                                }).show();
+                            } else {
+                                console.error('Error adding product to wishlist:', data.error);
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error adding product to wishlist:', error);
+                    });
+    }
+    </script>
 
 
 

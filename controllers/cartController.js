@@ -252,10 +252,15 @@ const cartRemove = async (req, res) => {
 
 const loadCheckout = async (req, res) => {
   try {
-    const userId = res.locals.currentUser._id.toString();
+    const userId = res.locals.currentUser._id;
     const userAddresses = await Address.find({ user: userId });
     console.log("User Addresses:", userAddresses);
     const cartItems = await Cart.find({ user: userId });
+
+    await Cart.updateOne(
+      { user: userId },
+      { couponApplied:null }
+    );
 
     const productIds = cartItems.reduce((ids, item) => {
       const itemProductIds = item.cartProducts.map(
@@ -277,8 +282,6 @@ const loadCheckout = async (req, res) => {
               p._id.equals(product.product)
             );
 
-         
-
             const productAmount =
               productDetail.priceAfterDiscount * product.quantity;
             totalAmountPerCart += productAmount;
@@ -299,20 +302,39 @@ const loadCheckout = async (req, res) => {
       })
     );
 
-    console.log("Total Amount:", totalAmount);
-    console.log("cart=", cartWithProductDetails);
+    
+     let couponApplied = null;
+     for (const cartItem of cartItems) {
+       if (cartItem.couponApplied) {
+        
+         couponApplied = cartItem.couponApplied;
+         break; 
+       }
+     }
 
     
+    await Promise.all(
+      cartItems.map(async (cartItem) => {
+        cartItem.cartTotal = totalAmount;
+        await cartItem.save();
+      })
+    );
+
+    console.log("Total Amount:", totalAmount);
+    console.log("Cart:", cartWithProductDetails);
+
     res.render("checkout", {
       userAddresses,
       cartItems: cartWithProductDetails,
       totalAmount,
+      couponApplied
     });
   } catch (error) {
     console.log(error.message);
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 
 
@@ -370,8 +392,12 @@ const checkQuantities = async (req, res) => {
   }
 };
 
+
+
+
 const Applycoupon = async (req, res) => {
   try {
+
 
     console.log("in apply coupon");
     const { couponCode, userID } = req.body;
@@ -446,8 +472,13 @@ const Applycoupon = async (req, res) => {
       cartWithProductDetails.forEach((cartItem) => {
         cartItem.totalAmountPerCart -= couponDiscount;
       });
-req.session.couponApplied = coupon._id;
-      await Cart.updateOne({ user: userID }, { cartTotal: newTotalAmount });
+
+      req.session.couponApplied = coupon._id;
+
+      await Cart.updateOne(
+        { user: userID },
+        { cartTotal: newTotalAmount, couponApplied: coupon._id }
+      );
       couponApplied = coupon.toObject();
       console.log("couponApplied in apply coupon:" + couponApplied);
       
@@ -458,6 +489,8 @@ req.session.couponApplied = coupon._id;
     console.log("New total:", newTotalAmount);
 
     res.json({ newTotalAmount, couponApplied });
+
+
   } catch (error) {
     console.log(error.message);
     res.status(500).json({ error: error.message });

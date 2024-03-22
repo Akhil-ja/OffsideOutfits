@@ -172,13 +172,31 @@
             <div class="page-content">
                 <div class="checkout">
                     <div class="container">
-                        <div class="checkout-discount">
-                            <form id="couponForm" action="#">
-                                <input type="text" class="form-control" required id="checkout-discount-input"
-                                    placeholder="Have a coupon? Click here to enter your code">
-                                <button type="submit" class="btn btn-outline-primary-2">APPLY</button>
-                            </form>
-                        </div>
+
+<div class="checkout-discount">
+    <form id="couponForm" action="#">
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <input type="text" class="form-control" required id="checkout-discount-input"
+                    placeholder="Have a coupon? Click here to enter your code">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-outline-primary-2 btn-block" id="applyCouponButton">APPLY</button>
+            </div>
+            <div class="col-md-6">
+                <button type="button" class="btn btn-outline-danger btn-block" id="removeCouponButton"
+                    onclick="removeCoupon()">Remove Coupon</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+
+
 
                         <form id="orderForm"     method="post">
                             <div class="row">
@@ -269,7 +287,7 @@
                                                             <% }); %>
                                             </tbody>
                                         </table>
-
+                                        
                                         <div class="mt-2" id="couponDetailsSection" style="display: none;">
                                             <p id="couponCodePlaceholder">Coupon Code: </p>
                                             <p id="discountValuePlaceholder">Discount Value: </p>
@@ -438,7 +456,9 @@
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
    
-
+<script>
+    document.getElementById('removeCouponButton').style.display = 'none'; 
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -523,7 +543,7 @@
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    function applyCoupon() {
         document.getElementById('couponForm').addEventListener('submit', async function (event) {
             event.preventDefault();
             const couponCode = document.getElementById('checkout-discount-input').value;
@@ -555,8 +575,9 @@
                         }
 
                         document.getElementById('couponDetailsSection').style.display = 'block';
+                        document.getElementById('applyCouponButton').style.display = 'none'; 
+                      document.getElementById('removeCouponButton').style.display = 'block'; 
                     } else {
-                       
                         console.error('Failed to apply coupon: No coupon data received');
                         Swal.fire({
                             icon: 'error',
@@ -565,7 +586,6 @@
                         });
                     }
                 } else {
-                   
                     console.error('Failed to apply coupon');
                     Swal.fire({
                         icon: 'error',
@@ -574,7 +594,6 @@
                     });
                 }
             } catch (error) {
-               
                 console.error('Error applying coupon:', error);
                 Swal.fire({
                     icon: 'error',
@@ -583,8 +602,21 @@
                 });
             }
         });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        applyCoupon();
     });
+
+
+    function removeCoupon() {
+        location.reload();
+    }
 </script>
+
+
+
+
 
 
 

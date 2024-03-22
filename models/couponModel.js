@@ -25,9 +25,12 @@ const couponSchema = new mongoose.Schema(
       required: true,
     },
     minimumOffer: {
-      type: Number, 
-      default: 500, 
+      type: Number,
+      default: 500,
     },
+    maximumOffer: {
+      type: Number,
+       },
     status: {
       type: String,
       enum: ["active", "blocked"],
