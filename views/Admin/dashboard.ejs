@@ -284,7 +284,7 @@
                             <th class="align-middle" scope="col">Total</th>
                             <th class="align-middle" scope="col">Coupon Applied</th>
                             <th class="align-middle" scope="col">Payment Method</th>
-                            <th class="align-middle" scope="col">Discount</th>
+                            
                         </tr>
                     </thead>
                         <tbody>
@@ -320,13 +320,7 @@
                                                     <i class="material-icons md-payment font-xxl text-muted mr-5"></i>RazorPay
                                                     <% } %>
                                         </td>
-                                        <td>
-                                            <% if (order.discountPercentage) { %>
-                                                <%= order.discountPercentage %>%
-                                                    <% } else { %>
-                                                        <span>No discount</span>
-                                                        <% } %>
-                                        </td>
+                                    
                                     </tr>
                                     <% }); %>
                         </tbody>

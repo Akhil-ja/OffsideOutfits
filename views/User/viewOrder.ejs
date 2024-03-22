@@ -316,11 +316,22 @@
     <!-- order-details.ejs -->
     
 <main class="main">
+<button onclick="pdf()" class="return-button-button mr-3 ml-3 mt-3 rounded-pill" type="button"
+    style="width: 120px; float: right;"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download"
+        viewBox="0 0 16 16">
+        <path
+            d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+        <path
+            d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
+    </svg>  Invoice</button>
+
     <div class="container">
+        <div id="invoice">
         <h1 class="title mb-3 mt-1" style="text-decoration: underline;font-size: xx-large;">Order Details</h1>
         <h10 class=" mb-3" style="font-size: small;"> <b>Order Id: </b><%=orderDetails.orderID%></h10>
 
         <div class="card mb-3">
+          
             <div class="card-body">
                 <h4 class="card-title">Order Placed Date: <%= orderDetails.orderDate.toLocaleDateString() %>
                 </h4>
@@ -352,6 +363,7 @@
         </div>
 
         <h4 class="card-title">Ordered Products</h4>
+       
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
@@ -400,6 +412,8 @@
                     Rs: <%=orderDetails.orderTotal.toFixed(2) %>/-
                 </p>
             </div>
+                </div>
+                </div>
 
         <div class="cancel-button">
             <% if (orderDetails.status==="pending" ) { %>
@@ -474,7 +488,7 @@
         </div>
 
     
-        </div>
+        
 
         
         <a href="/profile?selected=orders" class="btn btn-secondary m-5">Back</a>
@@ -618,22 +632,11 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         
         
-      <script src="assets/js/jquery.min.js"></script>
-<script src="assets/js/bootstrap.bundle.min.js"></script>
-<script src="assets/js/jquery.hoverIntent.min.js"></script>
-<script src="assets/js/jquery.waypoints.min.js"></script>
-<script src="assets/js/superfish.min.js"></script>
-<script src="assets/js/owl.carousel.min.js"></script>
-<script src="assets/js/wNumb.js"></script>
-<script src="assets/js/bootstrap-input-spinner.js"></script>
-<script src="assets/js/jquery.magnific-popup.min.js"></script>
-<script src="assets/js/nouislider.min.js"></script>
-<!-- Main JS File -->
-<script src="assets/js/main.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    
+
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
 
 
 
@@ -888,6 +891,12 @@
     }
 </script>
 
+<script>
+    function pdf() {
+        const table = document.getElementById("invoice")
+        html2pdf().from(table).save();
+    }
+</script>
 
 
 

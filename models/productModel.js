@@ -17,10 +17,9 @@
         type: Number,
         default: 0,
       },
-       priceAfterDiscount: {
-      type: Number,
-      
-    },
+      priceAfterDiscount: {
+        type: Number,
+      },
 
       description: {
         type: String,
@@ -43,7 +42,10 @@
         type: String,
         required: false,
       },
-
+      popularity: {
+        type: Number,
+        required: false,
+      },
       sizes: [
         {
           size: {
@@ -65,7 +67,7 @@
         {
           offer: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Offer", 
+            ref: "Offer",
             required: true,
           },
           discountPercentage: {
