@@ -10,20 +10,40 @@ const viewCoupons = async (req, res) => {
   try {
     const itemsPerPage = 2;
     const currentPage = parseInt(req.query.page) || 1;
+
+    
+    const updateResult = await Coupon.updateMany(
+      {
+        expiryDate: { $lt: new Date() },
+        status: { $ne: "blocked" },
+      },
+      {
+        $set: { status: "blocked" },
+      }
+    );
+
+    console.log("Number of coupons updated:", updateResult.nModified);
+
+   
     const totalCoupons = await Coupon.countDocuments({
       expiryDate: { $gte: new Date() },
-    }); 
+    });
+
     const totalPages = Math.ceil(totalCoupons / itemsPerPage);
     const visiblePages = 5;
     const startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
     const endPage = Math.min(totalPages, startPage + visiblePages - 1);
     const skipCount = (currentPage - 1) * itemsPerPage;
-    const coupons = await Coupon.find({expiryDate: { $gte: new Date() }}).skip(skipCount).limit(itemsPerPage);
 
-      
-
+   
+    const coupons = await Coupon.find({
+      expiryDate: { $gte: new Date() },
+    })
+      .skip(skipCount)
+      .limit(itemsPerPage);
 
     const error = req.query.error;
+
     res.render("coupons", {
       coupons,
       currentPage,
@@ -34,6 +54,7 @@ const viewCoupons = async (req, res) => {
     });
   } catch (error) {
     console.error(error.message);
+    res.status(500).send("Internal Server Error");
   }
 };
 

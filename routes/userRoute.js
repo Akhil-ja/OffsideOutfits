@@ -112,7 +112,7 @@ userRoute.get("/place-order", authRoutes.checkUser,authRoutes.isLogin, orderCont
 
 userRoute.post("/payment", orderController.Payment);
 
-userRoute.get("/cancel-order", orderController.cancelOrder);
+userRoute.post("/cancel-order", orderController.cancelOrder);
 userRoute.post("/return-order", orderController.returnOrder);
 
 

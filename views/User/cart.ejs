@@ -136,24 +136,24 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-lg-9">
-
+<table class="table table-cart table-mobile">
+    <thead>
+        <tr>
+            <th>Image</th>
+            <th>Product</th>
+            <th>Size</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
                                         <% if (cartItems && cartItems.length!== 0) { %>
                                             <% cartItems.forEach(cartItem=> { %>
                                                 <% if (cartItem.cartProducts && cartItem.cartProducts.length> 0) { %>
                                                     <% cartItem.cartProducts.forEach(product=> { %>
-                                                        <table class="table table-cart table-mobile">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Image</th>
-                                                                    <th>Product</th>
-                                                                    <th>Size</th>
-                                                                    <th>Price</th>
-                                                                    <th>Quantity</th>
-                                                                    <th>Total</th>
-                                                                    <th></th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
+                                                       
                                                         <tr data-cart-item="<%= cartItem._id %>" data-product-id="<%= product.productDetail._id %>">
                                                             <td class="image-col">
                                                                 <img src="/productAssets/<%= product.productDetail.images[0] %>" alt="Product Image"
@@ -197,19 +197,24 @@
                                                             <% }); %>
                                                                 <% } %>
                                                                     <% }); %>
-                                                                    </tbody>
-                                                                    </table>
+                                                                   
                                                                         <% } if (!cartItems || cartItems.length===0) { %>
                                                                            
                                                                                  
-                                                                                    <div class="alert text-center mt-4" >
-                                                                                        <strong style="color: red;">Cart is Empty</strong>
-                                                                                    </div>
+                                                                              
+                                                                                    <td colspan="7">
+                                                                                        <div class="alert text-center mt-4">
+                                                                                            <strong style="color: red;">Cart is Empty</strong>
+                                                                                        </div>
+                                                                                    </td>
                                                                                
+<% } %>
+                                                                            </tbody>
+                                                                            </table>
                                                                            
-                                                                            <% } %>
+                                                                            
                                                             
-                                                                               
+                                                                        
                                                             
                                                                                 <div class="cart-bottom">
                                             <div class="cart-discount">

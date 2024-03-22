@@ -20,7 +20,7 @@ const createOrders = async (req, res) => {
     const userID = req.session.userID;
     const selectedAddress = req.session.selectedAddress;
     const paymentType = req.session.paymentType;
-    const couponApplied=req.session.couponApplied
+   
     console.log("userid:" + userID);
     console.log("address:" + selectedAddress);
     console.log("paymenntType:" + paymentType);
@@ -32,6 +32,8 @@ const createOrders = async (req, res) => {
       path: "cartProducts.product",
       model: "Product",
     });
+
+ const couponApplied = cart.couponApplied;
 
     const orderDocument = await Address.findOne({
       "address._id": selectedAddress,
@@ -334,7 +336,7 @@ const razorpay = new RazorPay({
 const cancelOrder = async (req, res) => {
   try {
     console.log("in cancel order");
-    const orderId = req.query.orderID;
+    const orderId = req.query.orderId;
     const userID = res.locals.currentUser._id;
     console.log("userID:" + userID);
     console.log("Cancelling order with ID: " + orderId);
@@ -373,40 +375,52 @@ const cancelOrder = async (req, res) => {
       );
     }
 
-    if(updatedOrder.PaymentMethod!=="COD"){
-let userWallet = await Wallet.findOne({ user: userID });
+    if (updatedOrder.PaymentMethod !== "COD") {
+      let userWallet = await Wallet.findOne({ user: userID });
 
-if (!userWallet) {
-  userWallet = new Wallet({
-    user: userID,
-    money: updatedOrder.orderTotal,
-  });
-} else {
-  userWallet.money += updatedOrder.orderTotal;
-}
+      if (!userWallet) {
+        userWallet = new Wallet({
+          user: userID,
+          money: updatedOrder.orderTotal,
+        });
+      } else {
+        userWallet.money += updatedOrder.orderTotal;
+      }
 
-    userWallet.transactions.push({
-      amount: updatedOrder.orderTotal,
-      type: "cancelled",
-    });
+      userWallet.transactions.push({
+        amount: updatedOrder.orderTotal,
+        type: "cancelled",
+      });
 
-await userWallet.save();
+      await userWallet.save();
+    }
 
+    console.log("Order cancellation successful");
+
+    
+    if (req.xhr) {
+      return res.status(200).json({ message: "Order cancelled successfully" });
     }
 
     
-    console.log("Order cancellation successful");
-
     res.redirect(`/order-details?orderID=${orderId}`);
   } catch (error) {
     console.error("Error cancelling order:", error.message);
+    
+    if (req.xhr) {
+      return res.status(500).json({ error: "Order cancellation failed" });
+    }
+    
+    res.redirect(`/order-details?orderID=${orderId}`);
   }
 };
 
 
+
 const returnOrder = async (req, res) => {
   try {
-    const orderId = req.body.orderID; 
+    console.log("in return order");
+    const orderId = req.body.orderId; 
     const userID = res.locals.currentUser._id;
 
     console.log("Returning order with ID:", orderId);
@@ -415,7 +429,7 @@ const returnOrder = async (req, res) => {
    
     const updatedOrder = await Orders.findByIdAndUpdate(
       orderId,
-      { $set: { status: "returned" , returnReason: req.body.returnReason} },
+      { $set: { status: "returned", returnReason: req.body.returnReason } },
       { new: true }
     )
       .populate({
@@ -448,7 +462,6 @@ const returnOrder = async (req, res) => {
       );
     }
 
-    
     let userWallet = await Wallet.findOne({ user: userID });
 
     if (!userWallet) {
@@ -470,13 +483,16 @@ const returnOrder = async (req, res) => {
     console.log("Order return successful");
 
    
-    res.redirect(`/order-details?orderID=${orderId}`);
+     return res.status(200).json({ message: "Order returb successfully" });
+   
+    
   } catch (error) {
     console.error("Error returning order:", error.message);
-   
+
     res.status(500).send("Error returning order");
   }
 };
+
 
 
 

@@ -18,6 +18,186 @@
     <link rel="stylesheet" href="assets/css/plugins/owl-carousel/owl.carousel.css">
     <link rel="stylesheet" href="assets/css/plugins/magnific-popup/magnific-popup.css">
     <link rel="stylesheet" href="assets/css/plugins/nouislider/nouislider.css">
+    
+
+<link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet">
+
+
+
+
+    <style>
+        .cancel-button-button,
+        .confirm-button,
+        .confirm-cancel {
+            background-color: #fff;
+            color: #000000;
+            border: 1px solid #606060;
+            padding: 5px 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 210px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        }
+
+
+        .return-button-button,
+        .confirm-button,
+        .confirm-return {
+            background-color: #fff;
+            color: #000000;
+            border: 1px solid #606060;
+            padding: 5px 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 210px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        }
+
+         .actions button:hover,
+        .return-button-button:hover,
+        .confirm-button:hover,
+        .confirm-return:hover {
+            background-color: orangered;
+            color: #fff;
+             transition: background-color 0.3s, color 0.3s;
+        }
+
+        .actions button:hover,
+        .cancel-button-button:hover,
+        .confirm-button:hover,
+        .confirm-cancel:hover {
+            background-color: red;
+            color: #fff;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+        }
+
+        .popup-content {
+            background-color: white;
+            width: 400px;
+            padding: 20px;
+            border-radius: 10px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+             z-index: 10000;
+        }
+ .reason {
+            margin-left: 10px;
+        }
+.form-row {
+            display: inline-block;
+            margin-bottom: 10px;
+            /* Adjust as needed */
+        }
+        .option-list {
+            display: inline-block;
+            vertical-align: top;
+            /* Align select with the top of the label */
+        }
+
+        .option-list select {
+            border: 1px solid #ccc;
+            /* Adjust border properties as needed */
+            padding: 5px;
+            /* Optional: Adjust padding for better visual appearance */
+            box-sizing: border-box;
+            /* Ensure padding is included in the width */
+        }
+    </style>
+
+<style>
+    .returnPopUp {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 10000;
+    }
+
+    .popup-content {
+        background-color: white;
+        width: 400px;
+        padding: 20px;
+        border-radius: 10px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10000;
+    }
+
+    .reason {
+        margin-left: 10px;
+    }
+
+    .form-row {
+        display: inline-block;
+        margin-bottom: 10px;
+        /* Adjust as needed */
+    }
+
+    .option-list {
+        display: inline-block;
+        vertical-align: top;
+        /* Align select with the top of the label */
+    }
+
+    .option-list select {
+        border: 1px solid #ccc;
+        /* Adjust border properties as needed */
+        padding: 5px;
+        /* Optional: Adjust padding for better visual appearance */
+        box-sizing: border-box;
+        /* Ensure padding is included in the width */
+    }
+
+    .confirm-button {
+        background-color: #fff;
+        color: #000000;
+        border: 1px solid #606060;
+        padding: 5px 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 60px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .confirm-action {
+        background-color: #fff;
+        color: #000000;
+        border: 1px solid #606060;
+        padding: 5px 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 150px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .confirm-button:hover,
+    .confirm-action:hover {
+        background-color: orangered;
+        color: #fff;
+        transition: background-color 0.3s, color 0.3s;
+    }
+</style>
+
+
 </head>
 
 <body>
@@ -138,14 +318,19 @@
 <main class="main">
     <div class="container">
         <h1 class="title mb-3 mt-1" style="text-decoration: underline;font-size: xx-large;">Order Details</h1>
-        <h10 class=" mb-3" style="font-size: small;"> <b>Order Id:</b><%=orderDetails._id%></h10>
+        <h10 class=" mb-3" style="font-size: small;"> <b>Order Id: </b><%=orderDetails.orderID%></h10>
 
         <div class="card mb-3">
             <div class="card-body">
                 <h4 class="card-title">Order Placed Date: <%= orderDetails.orderDate.toLocaleDateString() %>
                 </h4>
                 <h4 class="card-title">Status:
-                    <span class="badge badge-pill badge-warning">
+                    <span class="badge <%= orderDetails.status === 'pending' ? 'badge-primary' :
+                                        orderDetails.status === 'completed' ? 'badge-success' :
+                                        orderDetails.status === 'returned' ? 'badge-warning' :
+                                        orderDetails.status === 'cancelled' ? 'badge-danger' :
+                                        orderDetails.status === 'delivered' ? 'badge-info' :
+                                        'badge-secondary' %>">
                         <%= orderDetails.status %>
                     </span>
                 </h4>
@@ -215,40 +400,80 @@
                     Rs: <%=orderDetails.orderTotal.toFixed(2) %>/-
                 </p>
             </div>
-            <% if (orderDetails.status==='pending' ) { %>
-                <div class="text-right">
-                    <a href="/cancel-order?orderID=<%= orderDetails._id %>" class="btn btn-danger"
-                        style="border-radius: 10px;">Cancel Order</a>
-                </div>
-                <% } else if (orderDetails.status==='delivered' ) { %>
-            <form action="/return-order" method="POST" id="returnOrderForm" style="display: none;">
-                <input type="hidden" name="orderID" value="<%= orderDetails._id %>">
-            
-                <div class="form-group">
-                    <label>Reason for Return:</label><br>
-                    <input type="radio" id="reason1" name="returnReason" value="Wrong size" required>
-                    <label for="reason1">Wrong size</label><br>
-                    <input type="radio" id="reason2" name="returnReason" value="Defective product" required>
-                    <label for="reason2">Defective product</label><br>
-                    <input type="radio" id="reason3" name="returnReason" value="Changed mind" required>
-                    <label for="reason3">Changed mind</label><br>
-                    <input type="radio" id="otherReason" name="returnReason" value="Other" required>
-                    <label for="otherReason">Other</label><br>
-                </div>
-            
-                <button type="submit" class="btn btn-primary">Submit Return</button>
-            </form>
 
-                        
-                        <div id="returnOrderButtonWrapper"  style="display: flex; justify-content: flex-end;">
-                            <button id="showReturnReasons" class="btn btn-primary" style="width: 150px;">Return Order</button>
-                        </div>
-
-
-
-
-
+        <div class="cancel-button">
+            <% if (orderDetails.status==="pending" ) { %>
+                <button onclick="showPopup()" class="cancel-button-button" style="float: right;">Cancel Order</button>
+                <% } else if (orderDetails.status==="delivered" ) { %>
+                    <button class="return-button-button" onclick="showReturnPopup()" style="float: right;">Return this
+                        Order</button>
                     <% } %>
+        </div>
+        
+        <div id="popup" class="popup">
+            <div class="popup-content">
+                <div class="main-pcontent">
+                    <div class="reason" style="display: flex; flex-direction: column;">
+                        <p>Are you sure you want to cancel this delivery?</p>
+                        <div class="form-row">
+                            <div class="option-list">
+                                <select id="reason" name="reason" onchange="checkReason()">
+                                    <option selected hidden disabled value="">Reason for Cancellation</option>
+                                    <option value="delay">Delayed delivery</option>
+                                    <option value="wrong">Wrong item</option>
+                                    <option value="changed">Changed mind</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <label style="display: none;" id="additionalReasonLabel" for="additionalReason">Additional
+                            Reason:</label>
+                        <textarea style="display: none;" id="additionalReason" name="additionalReason" rows="4"
+                            cols="40"></textarea>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <div style="display: flex; justify-content:end; gap: 15px;">
+                    <button class="confirm-button" style="width: 60px;" onclick="closePopup()">Close</button>
+                    <button class="confirm-cancel" id="confirm-cancel" data-order-id="<%= orderDetails._id %>">Confirm
+                        Cancellation</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="returnPopUp" class="returnPopUp" style="display: none;">
+            <div class="popup-content">
+                <div class="main-pcontent">
+                    <div class="reason" style="display: flex; flex-direction: column;">
+                        <p>Are you sure you want to return this order?</p>
+                        <div class="form-row">
+                            <div class="option-list">
+                                <select id="returnReason" name="returnReason" onchange="checkReturnReason()">
+                                    <option selected hidden disabled value="">Reason for Return</option>
+                                    <option value="defective">Defective product</option>
+                                    <option value="not-needed">Not needed anymore</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <label style="display: none;" id="additionalReturnReasonLabel" for="additionalReturnReason">Additional
+                            Reason:</label>
+                        <textarea style="display: none;" id="additionalReturnReason" name="additionalReturnReason" rows="4"
+                            cols="40"></textarea>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <div style="display: flex; justify-content:end; gap: 15px;">
+                    <button class="confirm-button" style="width: 60px;" onclick="closereturnPopup()">Close</button>
+                    <button class="confirm-action" id="confirm-return" data-order-id="<%= orderDetails._id %>">Confirm
+                        Return</button>
+                </div>
+            </div>
+        </div>
+
+    
         </div>
 
         
@@ -407,24 +632,8 @@
 <script src="assets/js/main.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
-<script>
-    document.getElementById('otherReason').addEventListener('change', function () {
-        if (this.checked) {
-            document.getElementById('otherReasonText').style.display = 'block';
-        } else {
-            document.getElementById('otherReasonText').style.display = 'none';
-        }
-    });
-</script>
-
-<script>
-    document.getElementById('showReturnReasons').addEventListener('click', function () {
-        document.getElementById('returnOrderButtonWrapper').style.display = 'none';
-        document.getElementById('returnOrderForm').style.display = 'block';
-    });
-</script>
-
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 
 
@@ -456,6 +665,232 @@
 
 
 
+<script>
+    function checkReason() {
+        var selectElement = document.getElementById("reason");
+        var additionalReasonField = document.getElementById("additionalReason");
+
+        if (selectElement.value === "other") {
+            additionalReasonLabel.style.display = "block";
+            additionalReasonField.style.display = "block";
+            additionalReasonField.required = true;
+        } else {
+            additionalReasonLabel.style.display = "none";
+            additionalReasonField.style.display = "none";
+            additionalReasonField.required = false;
+        }
+    }
+
+    function showPopup() {
+        document.getElementById('popup').style.display = 'block';
+    }
+
+     function showReturnPopup() {
+            document.getElementById('returnPopUp').style.display = 'block';
+        }
+
+    function closePopup() {
+        document.getElementById('popup').style.display = 'none';
+    }
+
+      function closereturnPopup() {
+            document.getElementById('returnPopUp').style.display = 'none';
+        }
+
+    document.querySelectorAll('.confirm-cancel').forEach(button => {
+        button.addEventListener('click', function () {
+            const orderId = this.getAttribute('data-order-id');
+            confirmCancellation(orderId);
+        });
+    });
+
+    function confirmCancellation(orderId) {
+        let reason = document.getElementById("reason").value;
+        let additionalReason = document.getElementById("additionalReason").value || "";
+
+        if (!reason) {
+            Toastify({
+                text: 'Select Reason for Cancellation',
+                duration: 3000,
+                gravity: 'top', 
+                position: 'center',
+                backgroundColor: '#ffa500',
+                className: 'toastify-info'
+            }).showToast();
+            return;
+        }
+
+        
+        fetch('/cancel-order?orderId=<%=orderDetails._id %>', {
+            method: 'POST',
+            body: JSON.stringify({ orderId: orderId, reason: reason, additionalReason: additionalReason }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }).then(response => {
+            console.log("Order cancelled db and response came");
+            if (response.ok) {
+                sessionStorage.setItem('orderCancelled', 'true');
+                window.location.reload();
+            } else if (response.status === 404 || response.status === 405) {
+                Toastify({
+                    text: 'Missing orderId details.',
+                    duration: 3000,
+                    gravity: 'top', // `top` or `bottom`
+                    position: 'center', // `left`, `center` or `right`
+                    backgroundColor: 'red',
+                    className: 'toastify-error'
+                }).showToast();
+            } else if (response.status === 406) {
+                Toastify({
+                    text: 'Missing order cancellation reason.',
+                    duration: 3000,
+                    gravity: 'top', 
+                    position: 'center', 
+                    backgroundColor: 'red',
+                    className: 'toastify-error'
+                }).showToast();
+            } else {
+                Toastify({
+                    text: 'Order Cancellation Failed',
+                    duration: 3000,
+                    gravity: 'top', 
+                    position: 'center', 
+                    backgroundColor: 'red',
+                    className: 'toastify-error'
+                }).showToast();
+            }
+        });
+
+        closePopup();
+    }
+</script>
+
+<script>
+    window.onload = function () {
+        if (sessionStorage.getItem('orderCancelled')) {
+            Toastify({
+                text: 'Order Cancelled',
+                duration: 4000,
+                gravity: 'top',
+                position: 'center', 
+                backgroundColor: 'green',
+                className: 'toastify-success'
+            }).showToast();
+            sessionStorage.removeItem('orderCancelled');
+        }
+    };
+</script>
+
+
+<script>
+    document.getElementById('confirm-return').addEventListener('click', function () {
+            const orderId = this.getAttribute('data-order-id');
+            confirmReturn(orderId);
+        });
+
+  
+
+    function confirmReturn(orderId) {
+
+        console.log("in confirm return");
+        let reason = document.getElementById("returnReason").value;
+        let additionalReason = document.getElementById("additionalReturnReason").value || "";
+
+        if (!reason) {
+            Toastify({
+                text: 'Select Reason for Return',
+                duration: 3000,
+                gravity: 'top', 
+                position: 'center',
+                backgroundColor: '#ffa500',
+                className: 'toastify-info'
+            }).showToast();
+            return;
+        }
+
+        fetch('/return-order', {
+                    method: 'POST',
+                    body: JSON.stringify({ orderId: orderId, reason: reason, additionalReason: additionalReason }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }).then(response => {
+                    console.log("Order return db and response came");
+                    if (response.ok) {
+                        sessionStorage.setItem('orderReturned', 'true');
+                        window.location.reload();
+                    } else if (response.status === 404 || response.status === 405) {
+                        Toastify({
+                            text: 'Missing orderId details.',
+                            duration: 3000,
+                            gravity: 'top',
+                            position: 'center',
+                            backgroundColor: 'red',
+                            className: 'toastify-error'
+                        }).showToast();
+                    } else if (response.status === 406) {
+                        Toastify({
+                            text: 'Missing order return reason.',
+                            duration: 3000,
+                            gravity: 'top',
+                            position: 'center',
+                            backgroundColor: 'red',
+                            className: 'toastify-error'
+                        }).showToast();
+                    } else {
+                        Toastify({
+                            text: 'Order Return Failed',
+                            duration: 3000,
+                            gravity: 'top',
+                            position: 'center',
+                            backgroundColor: 'red',
+                            className: 'toastify-error'
+                        }).showToast();
+                    }
+                });
+
+                closereturnPopup();
+            }
+        </script>
+
+        <script>
+            window.onload = function () {
+                if (sessionStorage.getItem('orderReturned')) {
+                    Toastify({
+                        text: 'Order Returned',
+                        duration: 2000,
+                        gravity: 'top',
+                        position: 'center',
+                        backgroundColor: 'orange',
+                        className: 'toastify-success'
+                    }).showToast();
+                    sessionStorage.removeItem('orderReturned');
+                }
+            };
+        </script>
+
+<script>
+    function checkReturnReason() {
+        var selectElement = document.getElementById("returnReason");
+        var additionalReasonField = document.getElementById("additionalReturnReason");
+        var additionalReasonLabel = document.getElementById("additionalReturnReasonLabel"); // Add this line
+
+        if (selectElement.value === "other") {
+            additionalReasonLabel.style.display = "block";
+            additionalReasonField.style.display = "block";
+            additionalReasonField.required = true;
+        } else {
+            additionalReasonLabel.style.display = "none";
+            additionalReasonField.style.display = "none";
+            additionalReasonField.required = false;
+        }
+    }
+</script>
+
+
+
+
 
 </body>
 
@@ -466,8 +901,4 @@
         
         
         </body>
-        
-        
-        
-        
         </html>

@@ -99,7 +99,7 @@ const viewDashboard = async (req, res) => {
     const skip = (page - 1) * limit;
 
    
-    const sortedOrders = await Order.find()
+    const sortedOrders = await Order.find({ status: "delivered" })
       .populate({
         path: "products.product",
         model: "Product",
@@ -139,14 +139,6 @@ const viewDashboard = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
-
-
-
-
-
-
-
-
 
 
 
@@ -199,7 +191,7 @@ const loadadminProducts = async (req, res) => {
 
 const filterOrdersByDate = async (req, res) => {
   try {
-    let query = {};
+      let query = { status: "delivered" };
     const { startDate, endDate, timeFilter } = req.query;
 
     if (startDate && endDate) {
