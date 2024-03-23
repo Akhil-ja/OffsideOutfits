@@ -306,48 +306,34 @@ const userLogout = async (req, res) => {
 };
 
 
-
 const loadProfile = async (req, res) => {
   try {
     const selectedValue = req.query.selected;
-  
     const userID = res.locals.currentUser._id;
-
     const userDetails = await User.findOne({ _id: userID });
-
     const matchingAddress = await Address.findOne({ user: userID });
-
-   const walletDetails = await Wallet.findOne({ user: userID });
+    const walletDetails = await Wallet.findOne({ user: userID })
       
-   console.log("walletDetails:" + walletDetails);
 
     let pageinfo = selectedValue;
-
     console.log(pageinfo);
-
     console.log(userID);
-
     const AllOrders = await Orders.find({ user: userID })
-      .populate({
-        path: "products.product",
-        model: "Product",
-      })
+      .populate({ path: "products.product", model: "Product" })
       .sort({ orderDate: -1 })
       .exec();
 
     if (!matchingAddress) {
-  console.error("Address not found for user:", userID);
-}
+      console.error("Address not found for user:", userID);
+    }
 
-res.render("profile", {
-  pageinfo,
-  matchingAddress,
-  AllOrders,
-  userDetails,
-  walletDetails,
-});
-
-    
+    res.render("profile", {
+      pageinfo,
+      matchingAddress,
+      AllOrders,
+      userDetails,
+      walletDetails,
+    });
   } catch (error) {
     console.log(error.message);
   }

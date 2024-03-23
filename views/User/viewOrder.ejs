@@ -433,17 +433,16 @@
                             <div class="option-list">
                                 <select id="reason" name="reason" onchange="checkReason()">
                                     <option selected hidden disabled value="">Reason for Cancellation</option>
-                                    <option value="delay">Delayed delivery</option>
-                                    <option value="wrong">Wrong item</option>
-                                    <option value="changed">Changed mind</option>
-                                    <option value="other">Other</option>
+                                    <option value="delay delivery">Delayed delivery</option>
+                                    <option value="wrong item">Wrong item</option>
+                                    <option value="changed mind">Changed mind</option>
+                                    <option value="Did't liked">Did't like</option>
+
+                                    <option value="others">Other</option>
                                 </select>
                             </div>
                         </div>
-                        <label style="display: none;" id="additionalReasonLabel" for="additionalReason">Additional
-                            Reason:</label>
-                        <textarea style="display: none;" id="additionalReason" name="additionalReason" rows="4"
-                            cols="40"></textarea>
+                        
                     </div>
                 </div>
                 <br>
@@ -467,14 +466,13 @@
                                     <option selected hidden disabled value="">Reason for Return</option>
                                     <option value="defective">Defective product</option>
                                     <option value="not-needed">Not needed anymore</option>
+                                    <option value="Wrong Size">Not correct Size</option>
                                     <option value="other">Other</option>
                                 </select>
                             </div>
                         </div>
-                        <label style="display: none;" id="additionalReturnReasonLabel" for="additionalReturnReason">Additional
-                            Reason:</label>
-                        <textarea style="display: none;" id="additionalReturnReason" name="additionalReturnReason" rows="4"
-                            cols="40"></textarea>
+                        
+                        
                     </div>
                 </div>
                 <br>
@@ -671,17 +669,7 @@
 <script>
     function checkReason() {
         var selectElement = document.getElementById("reason");
-        var additionalReasonField = document.getElementById("additionalReason");
-
-        if (selectElement.value === "other") {
-            additionalReasonLabel.style.display = "block";
-            additionalReasonField.style.display = "block";
-            additionalReasonField.required = true;
-        } else {
-            additionalReasonLabel.style.display = "none";
-            additionalReasonField.style.display = "none";
-            additionalReasonField.required = false;
-        }
+       
     }
 
     function showPopup() {
@@ -709,7 +697,7 @@
 
     function confirmCancellation(orderId) {
         let reason = document.getElementById("reason").value;
-        let additionalReason = document.getElementById("additionalReason").value || "";
+       
 
         if (!reason) {
             Toastify({
@@ -726,7 +714,7 @@
         
         fetch('/cancel-order?orderId=<%=orderDetails._id %>', {
             method: 'POST',
-            body: JSON.stringify({ orderId: orderId, reason: reason, additionalReason: additionalReason }),
+            body: JSON.stringify({ orderId: orderId, reason: reason }),
             headers: {
                 'Content-Type': 'application/json',
             }
@@ -739,8 +727,8 @@
                 Toastify({
                     text: 'Missing orderId details.',
                     duration: 3000,
-                    gravity: 'top', // `top` or `bottom`
-                    position: 'center', // `left`, `center` or `right`
+                    gravity: 'top', 
+                    position: 'center', 
                     backgroundColor: 'red',
                     className: 'toastify-error'
                 }).showToast();
@@ -798,7 +786,7 @@
 
         console.log("in confirm return");
         let reason = document.getElementById("returnReason").value;
-        let additionalReason = document.getElementById("additionalReturnReason").value || "";
+       
 
         if (!reason) {
             Toastify({
@@ -814,7 +802,7 @@
 
         fetch('/return-order', {
                     method: 'POST',
-                    body: JSON.stringify({ orderId: orderId, reason: reason, additionalReason: additionalReason }),
+                    body: JSON.stringify({ orderId: orderId, reason: reason }),
                     headers: {
                         'Content-Type': 'application/json',
                     }
@@ -876,18 +864,7 @@
 <script>
     function checkReturnReason() {
         var selectElement = document.getElementById("returnReason");
-        var additionalReasonField = document.getElementById("additionalReturnReason");
-        var additionalReasonLabel = document.getElementById("additionalReturnReasonLabel"); // Add this line
-
-        if (selectElement.value === "other") {
-            additionalReasonLabel.style.display = "block";
-            additionalReasonField.style.display = "block";
-            additionalReasonField.required = true;
-        } else {
-            additionalReasonLabel.style.display = "none";
-            additionalReasonField.style.display = "none";
-            additionalReasonField.required = false;
-        }
+       
     }
 </script>
 

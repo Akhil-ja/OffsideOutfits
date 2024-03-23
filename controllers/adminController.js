@@ -14,8 +14,6 @@ const Category=require("../models/categoryModel")
 
 
 
-
-
 const securePassword = async (password) => {
   try {
     const passwordHash = await bcrypt.hash(password, 10);
@@ -29,7 +27,13 @@ const loadAdminLog = async (req, res) => {
   try {
     const errorMessage = req.query.error || req.session.errorMessage;
     req.session.errorMessage = null;
-   res.cookie("jwt", "", { maxAge: 1 });  
+  
+
+  const jwtCookie = req.cookies.jwt;
+  if (jwtCookie) {
+    return res.redirect("/admin/dashboard");
+  }
+  
     res.render("login", { errorMessage });
   } catch (error) {
     console.log(error.message);
@@ -40,6 +44,8 @@ const loadAdminLog = async (req, res) => {
 
 const adminLogin = async (req, res) => {
   try {
+  
+
     const { email, password } = req.body;
     const userData = await User.findOne({ email: email });
 

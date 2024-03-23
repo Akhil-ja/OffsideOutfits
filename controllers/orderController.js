@@ -341,9 +341,12 @@ const cancelOrder = async (req, res) => {
     console.log("userID:" + userID);
     console.log("Cancelling order with ID: " + orderId);
 
+
+
+
     const updatedOrder = await Orders.findByIdAndUpdate(
       orderId,
-      { $set: { status: "cancelled" } },
+      { $set: { status: "cancelled",returnReason:req.body.reason } },
       { new: true }
     )
       .populate({
@@ -423,13 +426,15 @@ const returnOrder = async (req, res) => {
     const orderId = req.body.orderId; 
     const userID = res.locals.currentUser._id;
 
+    console.log("return reason:" + req.body.reason);
+
     console.log("Returning order with ID:", orderId);
     console.log("User ID:", userID);
 
    
     const updatedOrder = await Orders.findByIdAndUpdate(
       orderId,
-      { $set: { status: "returned", returnReason: req.body.returnReason } },
+      { $set: { status: "returned", returnReason: req.body.reason } },
       { new: true }
     )
       .populate({

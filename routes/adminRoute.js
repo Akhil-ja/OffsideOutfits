@@ -4,9 +4,6 @@ const authRoutes = require("../services/authRoutes");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 
-const uuid = require("uuid");
-
-const path = require("path");
 const categoryController = require("../controllers/categoryController");
 const productController = require("../controllers/productController");
 const orderController = require("../controllers/orderController");
@@ -154,38 +151,74 @@ adminRoute.post("/category", categoryController.createCategory);
 
 
 adminRoute.get(
-  "/logout",  adminController.adminLogout
+  "/logout",authRoutes.isAdminLogin,  adminController.adminLogout
 );
 
-adminRoute.get("/orders", orderController.adminViewOrders);
+adminRoute.get(
+  "/orders",
+  authRoutes.isAdminLogin,
+  orderController.adminViewOrders
+);
 
-adminRoute.get("/orders/details", orderController.adminGetOrderDetails);
+adminRoute.get(
+  "/orders/details",
+  authRoutes.isAdminLogin,
+  orderController.adminGetOrderDetails
+);
 
 adminRoute.patch(
   "/orders/details/update-status",
   orderController.UpdateOrderStatus
 );
 
-adminRoute.get("/coupons", couponController.viewCoupons);
+adminRoute.get(
+  "/coupons",
+  authRoutes.isAdminLogin,
+  couponController.viewCoupons
+);
 
 adminRoute.post("/createCoupon", couponController.createCoupon);
 
-adminRoute.get("/editStatus", couponController.editCouponStatus);
+adminRoute.get(
+  "/editStatus",
+  authRoutes.isAdminLogin,
+  couponController.editCouponStatus
+);
 
-adminRoute.get("/viewCoupon", couponController.viewCoupon);
+adminRoute.get(
+  "/viewCoupon",
+  authRoutes.isAdminLogin,
+  couponController.viewCoupon
+);
 
-adminRoute.get("/editCoupon", couponController.viewEditCoupon);
+adminRoute.get(
+  "/editCoupon",
+  authRoutes.isAdminLogin,
+  couponController.viewEditCoupon
+);
 adminRoute.post("/editCoupon", couponController.editCoupon);
 
-adminRoute.get("/offers", offerController.viewOffers);
+adminRoute.get("/offers", authRoutes.isAdminLogin, offerController.viewOffers);
 
 
 
-adminRoute.get("/categoryOffer", offerController.CategoryOffer);
+adminRoute.get(
+  "/categoryOffer",
+  authRoutes.isAdminLogin,
+  offerController.CategoryOffer
+);
 
-adminRoute.get("/productOffer", offerController.ProductOffer);
+adminRoute.get(
+  "/productOffer",
+  authRoutes.isAdminLogin,
+  offerController.ProductOffer
+);
 
-adminRoute.get("/referalOffers", offerController.ReferalOffer);
+adminRoute.get(
+  "/referalOffers",
+  authRoutes.isAdminLogin,
+  offerController.ReferalOffer
+);
 
 adminRoute.post("/categoryOffer", offerController.addCategoryOffer);
 
@@ -197,7 +230,11 @@ adminRoute.post("/toggleOfferStatus", offerController.toggleStatus);
 
 adminRoute.post("/toggleReferalStatus", offerController.toggleReferalStatus);
 
-adminRoute.get("/dashboard", adminController.viewDashboard);
+adminRoute.get(
+  "/dashboard",
+  authRoutes.isAdminLogin,
+  adminController.viewDashboard
+);
 
 adminRoute.post("/dashboard", adminController.filterOrdersByDate);
 

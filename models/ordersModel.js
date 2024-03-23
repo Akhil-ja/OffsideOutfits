@@ -44,7 +44,9 @@ const orderSchema = new mongoose.Schema(
     },
     returnReason: {
       type: String,
-  
+    },
+    cancelReason: {
+      type: String,
     },
     couponApplied: {
       type: mongoose.Schema.Types.ObjectId,

@@ -302,19 +302,23 @@
                             <th>Date</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <% walletDetails.transactions.slice(0, 3).forEach(transaction=> { %>
-                            <tr>
-                                <td>
-                                    <%= transaction.type %>
-                                </td>
-                                <td>Rs <%= transaction.amount.toFixed(2) %>/-</td>
-                                <td>
-                                    <%= new Date(transaction.createdAt).toLocaleDateString() %>
-                                </td>
-                            </tr>
-                            <% }); %>
-                    </tbody>
+                <tbody>
+                    <% const transactionsLength=walletDetails.transactions.length %>
+                        <% const startIndex=Math.max(transactionsLength - 3, 0) %>
+                            <% for (let i=startIndex; i < transactionsLength; i++) { %>
+                                <% const transaction=walletDetails.transactions[i] %>
+                                    <tr>
+                                        <td>
+                                            <%= transaction.type %>
+                                        </td>
+                                        <td>Rs <%= transaction.amount.toFixed(2) %>/-</td>
+                                        <td>
+                                            <%= new Date(transaction.createdAt).toLocaleDateString() %>
+                                        </td>
+                                    </tr>
+                                    <% } %>
+                </tbody>
+
                 </table>
             </div>
 
@@ -326,8 +330,7 @@
             </div>
         </div>
         <% } else { %>
-        <!-- Display when there is no wallet information -->
-        <div class="tab-pane fade" id="tab-wallet" role="tabpanel" aria-labelledby="tab-wallet-link">
+             <div class="tab-pane fade" id="tab-wallet" role="tabpanel" aria-labelledby="tab-wallet-link">
             <div class="wallet-info">
                 <h4>Your Wallet</h4>
                 <p class="balance">Balance: <b style="text-decoration: underline;">Rs: 0.00 /-</b></p>

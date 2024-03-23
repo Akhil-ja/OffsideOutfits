@@ -163,8 +163,7 @@
                         <div class="banner-content banner-content-center">
                             <h4 class="banner-subtitle text-white"><a href="#">New in</a></h4>
                             <h3 class="banner-title text-white"><a href="#"><strong>Club's</strong></a></h3>
-                            <a href="#" class="btn btn-outline-white banner-link underline"
-                                onclick="redirectToProductPage('65c0effe07b942e4b30613e3')">Shop Now</a>
+                            <a style="color: white;" onclick="redirectToProductPageAndApplyFilter('65c0effe07b942e4b30613e3')"  class="btn btn-outline-white banner-link underline">Shop Now</a>
                         </div>
                     </div>
                 </div>
@@ -176,8 +175,8 @@
                         <div class="banner-content banner-content-center">
                             <h4 class="banner-subtitle text-white"><a href="#">New in</a></h4>
                             <h3 class="banner-title text-white"><a href="#"><strong>Nation's</strong></a></h3>
-                            <a href="#" class="btn btn-outline-white banner-link underline"
-                                onclick="redirectToProductPage('65c0f00b07b942e4b30613e6')">Shop Now</a>
+                            <a style="color: white;" class="btn btn-outline-white banner-link underline"
+                                onclick="redirectToProductPageAndApplyFilter('65c0f00b07b942e4b30613e6')">Shop Now</a>
                         </div>
                     </div>
                 </div>
@@ -412,17 +411,17 @@
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
     <script src="assets/js/demos/demo-12.js"></script>
+
+
 <script>
-    function redirectToProductPage(categoryId) {
-        const newUrl = `/products?selectedCategories=${categoryId}`;
-        window.location.href = newUrl;
+    function redirectToProductPageAndApplyFilter(selectedCategory) {
+        
+        const url = `/products?category=${selectedCategory}`;
+        window.location.href = url;
     }
 </script>
 
 
+
 </body>
-
-
-<!-- molla/index-12.html  22 Nov 2019 09:58:58 GMT -->
-
 </html>

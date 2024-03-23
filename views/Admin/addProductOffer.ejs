@@ -194,7 +194,7 @@
     
         <div class="mb-3">
             <label for="selectedProducts" class="form-label">Select Products:</label>
-            <select multiple class="form-control" id="selectedProducts" name="selectedProducts[]" style="max-width: 900px;"
+            <select multiple class="form-control" id="selectedProducts" name="selectedProducts[]" style="max-width: 900px; height: 150px;"
                 required>
                 <% products.forEach(product=> { %>
                     <option value="<%= product._id %>">

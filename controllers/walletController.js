@@ -99,7 +99,7 @@ const addMoney = async (req, res) => {
 
 const ViewWalletHistory = async (req, res) => {
   try {
-    const page = parseInt(req.query.page, 10) || 1; 
+    const page = parseInt(req.query.page, 10) || 1;
     const transactionsPerPage = 2;
     const userID = res.locals.currentUser._id;
 
@@ -107,11 +107,16 @@ const ViewWalletHistory = async (req, res) => {
     const transactionsCount = wallet.transactions.length;
     const totalPages = Math.ceil(transactionsCount / transactionsPerPage);
 
-   
+    
+    wallet.transactions.sort((a, b) => b.createdAt - a.createdAt);
+
     const safePageNumber = Math.max(1, Math.min(page, totalPages));
 
     const startIndex = (safePageNumber - 1) * transactionsPerPage;
-    const endIndex = startIndex + transactionsPerPage;
+    const endIndex = Math.min(
+      startIndex + transactionsPerPage,
+      transactionsCount
+    );
     const transactions = wallet.transactions.slice(startIndex, endIndex);
 
     res.render("walletHistory", {
@@ -121,9 +126,10 @@ const ViewWalletHistory = async (req, res) => {
     });
   } catch (error) {
     console.error(error.message);
-   
+    
   }
 };
+
 
 
 

@@ -491,6 +491,37 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
 
 
+<script>
+    
+    function applyFilter() {
+        const applyButton = document.querySelector('button[type="button"][onclick="applyFilters()"]');
+        if (applyButton) {
+            applyButton.click();
+        }
+    }
+
+   
+   function preSelectCategoryAndApplyFilter() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedCategory = urlParams.get('category');
+        console.log("selectedCategory: " + selectedCategory); // Log the selected category
+        if (selectedCategory) {
+            const categoryCheckbox = document.getElementById(selectedCategory);
+            console.log("categoryCheckbox: ", categoryCheckbox); // Log the checkbox element
+            if (categoryCheckbox) {
+                categoryCheckbox.checked = true;
+                console.log("Checkbox checked: ", categoryCheckbox.checked); // Log whether checkbox is checked
+                applyFilter();
+            }
+        }
+    }
+
+
+   
+    window.onload = preSelectCategoryAndApplyFilter;
+</script>
+
+
 
     <script>
         function getElementValue(id) {
@@ -509,6 +540,10 @@
 
 
 <script>
+
+   
+
+
     document.getElementById("searchInput").addEventListener("keypress", function (event) {
         if (event.key === "Enter") {
             event.preventDefault();
@@ -572,8 +607,7 @@
                                             ${updatedProduct.priceAfterDiscount !== updatedProduct.price ? `<span class="strike-price">Rs: ${updatedProduct.price.toFixed(2)}</span> Rs: ${updatedProduct.priceAfterDiscount.toFixed(2)}` : `Rs: ${updatedProduct.price.toFixed(2)}`}
                                         </div>
                                     </div>
-                                </div>
-                            `;
+                                </div>`;
                             productsContainer.appendChild(productItem);
                         }
                     });

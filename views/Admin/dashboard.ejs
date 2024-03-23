@@ -290,6 +290,8 @@
                         <tbody>
                             <% const reversedOrders=orders.slice().reverse(); %>
                                 <% reversedOrders.forEach(order=> { %>
+
+                                   
                                     <tr>
                                         <td class="text-center">
                                             <div class="form-check"></div>
@@ -324,6 +326,20 @@
                                     </tr>
                                     <% }); %>
                         </tbody>
+<tfoot>
+    <tr>
+        <td colspan="6">Total Price: Rs: <span id="totalAmount">
+                <%=totalRevenue%>
+            </span></td>
+    </tr>
+    <tr>
+        <td colspan="6">Total Orders: <span id="totalOrders">
+                <%=totalOrders%>
+            </span></td>
+    </tr>
+</tfoot>
+
+
                     </table>
                     </div>
 
@@ -338,7 +354,7 @@
                                     </li>
                                     <% } %>
                     
-                                        <% const visiblePages=5; // Number of visible page links %>
+                                        <% const visiblePages=5; %>
                                             <% const startPage=Math.max(1, currentPage - Math.floor(visiblePages / 2)); %>
                                                 <% const endPage=Math.min(totalPages, startPage + visiblePages - 1); %>
                     
@@ -476,7 +492,7 @@
                     }).showToast();
                     return;
                 }
-  let headingText;
+                              let headingText;
                 switch (timeFilter) {
                     
                     case 'all':
@@ -543,8 +559,12 @@
 
             function renderTable(orders) {
                 const tableBody = document.querySelector('#ordersTable tbody');
+                const totalOrdersElement = document.getElementById('totalOrders');
+                const totalAmountElement = document.getElementById('totalAmount');
 
                 tableBody.innerHTML = '';
+
+                  let totalAmount = 0;
 
                 if (orders.length === 0) {
                     const noOrdersRow = document.createElement('tr');
@@ -552,6 +572,7 @@
                     tableBody.appendChild(noOrdersRow);
                 } else {
                     orders.forEach(order => {
+                           totalAmount += order.orderTotal;
                         const row = document.createElement('tr');
                         row.innerHTML = `
                         <td class="text-center">
@@ -562,14 +583,28 @@
                         <td>${new Date(order.orderDate).toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                         <td>Rs: ${order.orderTotal.toFixed(1)}</td>
                         <td>${order.couponApplied ? `<span class="badge badge-pill badge-soft-success">${order.couponApplied.code}</span>` : '<span class="badge badge-pill badge-soft-danger">Not Applied</span>'}</td>
-                        <td>${order.PaymentMethod === 'COD' ? '<i class="material-icons md-money font-xxl text-muted mr-5"></i>COD' : '<i class="material-icons md-payment font-xxl text-muted mr-5"></i>RazorPay'}</td>
-                        <td>${order.discountPercentage ? `${order.discountPercentage}%` : '<span>No discount</span>'}</td>`;
+                        <td>${order.PaymentMethod === 'COD' ? '<i class="material-icons md-money font-xxl text-muted mr-5"></i>COD' : '<i class="material-icons md-payment font-xxl text-muted mr-5"></i>RazorPay'}</td>`;
                         tableBody.appendChild(row);
                     });
+
+                
+                    
+                    totalOrdersElement.textContent = orders.length;
+                    totalAmountElement.textContent = totalAmount.toFixed(1);
+
+                    
                 }
+                 
             }
+
+             totalOrdersElement.style.display = 'block';
+        totalAmountElement.style.display = 'block';
+        totalOrdersElement.textContent = orders.length;
+        totalAmountElement.textContent = totalAmount.toFixed(1);
+           
         };
 
+         
     </script>
 
 <script>
