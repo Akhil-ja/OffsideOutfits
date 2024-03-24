@@ -303,20 +303,21 @@
                         </tr>
                     </thead>
                 <tbody>
-                    <% const transactionsLength=walletDetails.transactions.length %>
-                        <% const startIndex=Math.max(transactionsLength - 3, 0) %>
-                            <% for (let i=startIndex; i < transactionsLength; i++) { %>
-                                <% const transaction=walletDetails.transactions[i] %>
-                                    <tr>
-                                        <td>
-                                            <%= transaction.type %>
-                                        </td>
-                                        <td>Rs <%= transaction.amount.toFixed(2) %>/-</td>
-                                        <td>
-                                            <%= new Date(transaction.createdAt).toLocaleDateString() %>
-                                        </td>
-                                    </tr>
-                                    <% } %>
+                <% const transactionsLength=walletDetails.transactions.length %>
+                    <% const startIndex=Math.max(transactionsLength - 3, 0) %>
+                        <% for (let i=transactionsLength - 1; i>= startIndex; i--) { %>
+                            <% const transaction=walletDetails.transactions[i] %>
+                                <tr>
+                                    <td>
+                                        <%= transaction.type %>
+                                    </td>
+                                    <td>Rs <%= transaction.amount.toFixed(2) %>/-</td>
+                                    <td>
+                                        <%= new Date(transaction.createdAt).toLocaleDateString() %>
+                                    </td>
+                                </tr>
+                                <% } %>
+
                 </tbody>
 
                 </table>

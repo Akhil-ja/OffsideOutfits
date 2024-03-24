@@ -507,8 +507,6 @@ const Payment = async (req, res) => {
     console.log("in paymenty");
     const { userID, selectedAddress, paymentType } = req.body;
 
-    
-    
        console.log("Order Log:", { userID, selectedAddress, paymentType });
 
           req.session = req.session || {};
@@ -612,15 +610,45 @@ const Payment = async (req, res) => {
           email: "akhiljagadish124@gmail.com",
         });
       });
+    }else if (paymentType === "Wallet") {
+      
+
+      const amount = total;
+      
+
+      let wallet = await Wallet.findOne({ user: userID });
+
+      if (!wallet || wallet.money < amount) {
+        console.log("no enough money");
+      } else {
+
+        
+        wallet.money -= parseFloat(amount);
+        wallet.transactions.push({
+          amount: parseFloat(amount),
+          type: "Debit",
+        });
+        await wallet.save();
+
+        const redirectURL = "/place-order";
+        return res.status(303).json({
+          success: false,
+          message: "Payment type other than RazorPay. Redirecting...",
+          redirectURL: redirectURL,
+        });
+
+      }
+      
+
     } else {
       console.log("else");
       try {
-         const redirectURL = "/place-order";
-         return res.status(303).json({
-           success: false,
-           message: "Payment type other than RazorPay. Redirecting...",
-           redirectURL: redirectURL,
-         });
+        const redirectURL = "/place-order";
+        return res.status(303).json({
+          success: false,
+          message: "Payment type other than RazorPay. Redirecting...",
+          redirectURL: redirectURL,
+        });
       } catch (saveError) {
         console.error("Error saving order to the database:", saveError);
         return res.status(500).json({

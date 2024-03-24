@@ -3,6 +3,7 @@ const User = require("../models/userModel");
 const Product = require("../models/productModel");
 const Address = require("../models/addressModel");
 const Coupon=require("../models/couponModel")
+const Wallet = require("../models/walletModel");
 const Order=require("../models/ordersModel")
 
 
@@ -256,6 +257,7 @@ const loadCheckout = async (req, res) => {
     const userAddresses = await Address.find({ user: userId });
     console.log("User Addresses:", userAddresses);
     const cartItems = await Cart.find({ user: userId });
+const wallet = await Wallet.findOne({ user: userId });
 
     await Cart.updateOne(
       { user: userId },
@@ -327,7 +329,8 @@ const loadCheckout = async (req, res) => {
       userAddresses,
       cartItems: cartWithProductDetails,
       totalAmount,
-      couponApplied
+      couponApplied,
+      wallet,
     });
   } catch (error) {
     console.log(error.message);

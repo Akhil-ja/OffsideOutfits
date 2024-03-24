@@ -100,7 +100,7 @@ const addMoney = async (req, res) => {
 const ViewWalletHistory = async (req, res) => {
   try {
     const page = parseInt(req.query.page, 10) || 1;
-    const transactionsPerPage = 2;
+    const transactionsPerPage = 6;
     const userID = res.locals.currentUser._id;
 
     const wallet = await Wallet.findOne({ user: userID });
