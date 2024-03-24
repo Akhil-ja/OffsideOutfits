@@ -271,7 +271,7 @@
                     <thead class="table-light">
                         <tr>
                             <th colspan="8" class="text-center">
-                                <h3 id="tableHeading">Orders</h3>
+                                <h3 id="tableHeading">All Orders</h3>
                             </th>
                         </tr>
                         <tr>
@@ -288,8 +288,8 @@
                         </tr>
                     </thead>
                         <tbody>
-                            <% const reversedOrders=orders.slice().reverse(); %>
-                                <% reversedOrders.forEach(order=> { %>
+                          
+                                <% orders.forEach(order=> { %>
 
                                    
                                     <tr>
@@ -329,7 +329,7 @@
 <tfoot>
     <tr>
         <td colspan="6">Total Price: Rs: <span id="totalAmount">
-                <%=totalRevenue%>
+                <%=totalRevenue.toFixed(1)%>
             </span></td>
     </tr>
     <tr>
@@ -439,6 +439,17 @@
                 const startDate = document.getElementById('startDateInput').value;
                 const endDate = document.getElementById('endDateInput').value;
                 const timeFilter = document.getElementById('timeFilter').value;
+
+                if (!startDate && !endDate && (timeFilter === 'all' )) {
+
+                    Toastify({
+                        text: "Please enter dates or select a filter",
+                        duration: 2000,
+                        gravity: "top",
+                        backgroundColor: "linear-gradient(to right, #ff5e62, #ff9966)",
+                    }).showToast();
+                    return;
+                }
 
                 if (!startDate && !endDate && (timeFilter === 'specific' || timeFilter === 'custom')) {
                 

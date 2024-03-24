@@ -8,7 +8,7 @@ const Coupon =require("../models/couponModel")
 
 const viewCoupons = async (req, res) => {
   try {
-    const itemsPerPage = 2;
+    const itemsPerPage = 6;
     const currentPage = parseInt(req.query.page) || 1;
 
     
@@ -24,21 +24,22 @@ const viewCoupons = async (req, res) => {
 
     console.log("Number of coupons updated:", updateResult.nModified);
 
-   
+    
     const totalCoupons = await Coupon.countDocuments({
       expiryDate: { $gte: new Date() },
     });
 
+    
     const totalPages = Math.ceil(totalCoupons / itemsPerPage);
     const visiblePages = 5;
     const startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
     const endPage = Math.min(totalPages, startPage + visiblePages - 1);
     const skipCount = (currentPage - 1) * itemsPerPage;
 
-   
     const coupons = await Coupon.find({
       expiryDate: { $gte: new Date() },
     })
+      .sort({ expiryDate: -1 }) 
       .skip(skipCount)
       .limit(itemsPerPage);
 
@@ -57,6 +58,7 @@ const viewCoupons = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 
 const createCoupon = async (req, res) => {

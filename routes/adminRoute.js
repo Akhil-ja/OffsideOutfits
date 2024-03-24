@@ -41,7 +41,7 @@ adminRoute.post("/login", adminController.adminLogin);
 adminRoute.get(
   "/products",
   authRoutes.isAdminLogin,
-  adminController.loadadminProducts
+  adminController.loadAdminProducts
 );
 adminRoute.get("/users", authRoutes.isAdminLogin, userController.loadUsers);
 adminRoute.get(

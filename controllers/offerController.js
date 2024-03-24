@@ -26,7 +26,9 @@ const viewOffers=async(req,res)=>{
 
     const referralOffers = await ReferralCode.find();
 
-    res.render("offers", { offers, referralOffers });
+    
+
+    res.render("offers", { offers, referralOffers, });
   } catch (error) {
     console.log(error.message);
   }
@@ -55,7 +57,12 @@ const ProductOffer = async (req, res) => {
 
 const ReferalOffer = async (req, res) => {
   try {
-   res.render("addReferalOffer");;
+    const editReferralOffer = await ReferralCode.findOne({
+      _id: "65f685296d68b4e72942bd25",
+    });
+
+   res.render("addReferalOffer", { editReferralOffer });
+
   } catch (error) {
     console.log(error.message);
   }
@@ -138,14 +145,16 @@ const addReferalOffer = async (req, res) => {
       referringUserReward,
     } = req.body;
 
-    const referralOffer = new ReferralCode({
-      title,
-      description,
-      startDate,
-      endDate,
-      referredUserReward,
-      referringUserReward,
-    });
+ let referralOffer = await ReferralCode.findOne({
+   _id: "65f685296d68b4e72942bd25",
+ });
+
+     referralOffer.title = req.body.title;
+     referralOffer.description = req.body.description;
+     referralOffer.startDate = req.body.startDate;
+     referralOffer.endDate = req.body.endDate;
+     referralOffer.referredUserReward = req.body.referredUserReward;
+     referralOffer.referringUserReward = req.body.referringUserReward;
 
     await referralOffer.save();
 

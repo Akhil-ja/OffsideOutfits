@@ -405,6 +405,8 @@ const Applycoupon = async (req, res) => {
     console.log("in apply coupon");
     const { couponCode, userID } = req.body;
 
+  const user=await User.findOne({_id:userID})
+
     let couponApplied = null;
     let couponDiscount = 0; 
     const cartItems = await Cart.find({ user: userID });
@@ -454,6 +456,21 @@ const Applycoupon = async (req, res) => {
 
     const coupon = await Coupon.findOne({ code: couponCode });
     if (coupon) {
+
+const couponExist = await User.findOne({
+  _id: userID,
+  usedCoupons: { $in: [coupon._id] },
+});
+
+console.log("user:" + couponExist);
+
+
+   if (couponExist !== null) {
+     console.log("already used");
+     return res.status(400).json({ error: "Coupon Already Used" });
+   }
+      
+      
       
       if (coupon.discountType === "percentage") {
         couponDiscount = (coupon.discountValue / 100) * initialTotalAmount;
@@ -466,7 +483,6 @@ const Applycoupon = async (req, res) => {
           );
           return res.status(400).json({ error: "Coupon not applicable" });
         }
-        
       }
 
       newTotalAmount = initialTotalAmount - couponDiscount;
@@ -487,7 +503,7 @@ const Applycoupon = async (req, res) => {
       
     } else {
       console.log("No such coupon exists");
-      return res.status(400).json({ error: "Coupon not found" });
+      return res.status(400).json({ error: "Coupon Does not exist" });
     }
     console.log("New total:", newTotalAmount);
 

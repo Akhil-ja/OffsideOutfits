@@ -6,6 +6,8 @@ const productModel = require("../models/productModel");
 const RazorPay = require("razorpay");
 const Wallet =require("../models/walletModel")
 const mongoose = require("mongoose");
+const userModel = require("../models/userModel");
+const User = require("../models/userModel");
 
 
 
@@ -123,6 +125,13 @@ const newOrder = new Orders({
 });
 
 await newOrder.save();
+
+
+await User.updateOne(
+  { _id: userID },
+  { $push: { usedCoupons: couponApplied } }
+);
+
 
        
           cart.cartProducts = [];

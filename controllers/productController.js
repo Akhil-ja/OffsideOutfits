@@ -12,7 +12,7 @@ const loadProducts = async (req, res) => {
       req.query;
     console.log("search" + search);
 
-    const limit = 8; 
+    const limit = 12; 
     const skip = (page - 1) * limit;
 
     let products;

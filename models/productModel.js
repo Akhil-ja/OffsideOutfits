@@ -3,6 +3,10 @@
 
   const productSchema = new mongoose.Schema(
     {
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
       pname: {
         type: String,
         required: true,
@@ -62,6 +66,10 @@
       is_listed: {
         type: String,
         default: 1,
+      },
+      popularity: {
+        type: Number,
+        default: 0,
       },
       appliedOffers: [
         {

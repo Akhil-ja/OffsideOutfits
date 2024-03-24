@@ -563,7 +563,6 @@
             event.preventDefault();
             const couponCode = document.getElementById('checkout-discount-input').value;
             const userID = "<%= currentUser._id %>";
-
             try {
                 const response = await fetch('/applyCoupon', {
                     method: 'POST',
@@ -576,24 +575,42 @@
                 if (response.ok) {
                     const data = await response.json();
                     document.getElementById('totalAmount').innerText = data.newTotalAmount.toFixed(2);
-
                     if (data.couponApplied) {
                         const couponCodePlaceholder = document.getElementById('couponCodePlaceholder');
                         const discountValuePlaceholder = document.getElementById('discountValuePlaceholder');
-
                         couponCodePlaceholder.textContent = 'Coupon Code: ' + data.couponApplied.code;
-
                         if (data.couponApplied.discountType === 'percentage') {
                             discountValuePlaceholder.textContent = 'Discount Percent: ' + data.couponApplied.discountValue + '%';
                         } else if (data.couponApplied.discountType === 'fixed') {
                             discountValuePlaceholder.textContent = 'Discount Value: Rs ' + data.couponApplied.discountValue;
                         }
-
                         document.getElementById('couponDetailsSection').style.display = 'block';
-                        document.getElementById('applyCouponButton').style.display = 'none'; 
-                      document.getElementById('removeCouponButton').style.display = 'block'; 
+                        document.getElementById('applyCouponButton').style.display = 'none';
+                        document.getElementById('removeCouponButton').style.display = 'block';
+                    } else if (data.error === "Coupon Already Used") {
+                        console.error('Coupon Already Used');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Coupon already used.',
+                        });
                     } else {
                         console.error('Failed to apply coupon: No coupon data received');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to apply coupon. Please try again.',
+                        });
+                    }
+                } else if (response.status === 400 && response.headers.get('Content-Type').includes('application/json')) {
+                    const data = await response.json();
+                    if (data.error === "Coupon Already Used") {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Coupon already used.',
+                        });
+                    } else {
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
@@ -622,7 +639,6 @@
     document.addEventListener('DOMContentLoaded', function () {
         applyCoupon();
     });
-
 
     function removeCoupon() {
         location.reload();
