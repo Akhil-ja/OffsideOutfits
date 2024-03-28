@@ -103,6 +103,7 @@ for (const item of cart.cartProducts) {
 }
 
 cart.cartTotal = parseFloat(cartTotal.toFixed(2));
+cart.oldCartTotal = parseFloat(cartTotal.toFixed(2));
 
 await cart.save();
 
@@ -181,6 +182,7 @@ const cartQuantity = async (req, res) => {
     }
 
     cart.cartTotal = parseFloat(cartTotal.toFixed(2));
+    cart.oldCartTotal = parseFloat(cartTotal.toFixed(2));
 
     await cart.save();
 
@@ -234,6 +236,7 @@ const cartRemove = async (req, res) => {
    }
 
    cart.cartTotal = parseFloat(cartTotal.toFixed(2));
+   cart.oldCartTotal = parseFloat(cartTotal.toFixed(2));
 
    await cart.save();
 
@@ -341,7 +344,6 @@ const wallet = await Wallet.findOne({ user: userId });
 
 
 
-
 const checkQuantities = async (req, res) => {
   try {
     const cartItems = await Cart.find({
@@ -355,7 +357,7 @@ const checkQuantities = async (req, res) => {
 
     for (const cartItem of cartItems) {
       for (const item of cartItem.cartProducts) {
-        const product = item.product; 
+        const product = item.product;
 
         const selectedSize = item.size;
         const selectedQuantity = item.quantity;
@@ -365,25 +367,24 @@ const checkQuantities = async (req, res) => {
         );
 
         if (!sizeInfo) {
-          errors.push({
-            product: product.pname,
-            error: `Size info error ${selectedSize} not available for product ${product.pname}`,
-          });
+          errors.push(
+            `Size info error ${selectedSize} not available for product ${product.pname}`
+          );
         }
 
-        const availableStock = sizeInfo.quantity;
+        const availableStock = sizeInfo ? sizeInfo.quantity : 0;
 
         if (selectedQuantity > availableStock) {
-          errors.push({
-            
-            error: `Insufficient stock for product ${product.pname} size ${selectedSize}`,
-          });
+          errors.push(
+            `Insufficient stock for product ${product.pname} size ${selectedSize}`
+          );
         }
       }
     }
 
     if (errors.length > 0) {
-      res.status(400).send(errors);
+      const errorMessage = errors.join(". "); 
+      res.status(400).send(errorMessage);
     } else {
       res
         .status(200)
@@ -394,6 +395,7 @@ const checkQuantities = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 
 

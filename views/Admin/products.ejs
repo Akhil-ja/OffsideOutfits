@@ -179,7 +179,7 @@
 
 <div class="card-body">
     <ul class="list-group">
-    <% for (let i=0; i< products.length; i++) { %>
+        <% for (let i=0; i < products.length; i++) { %>
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <div class="img-wrap me-3">
                     <img src="/productAssets/<%= products[i].images[0] %>" alt="Product Image" class="img-fluid rounded"
@@ -189,10 +189,19 @@
                     <a href="#" class="title text-truncate mb-0">
                         <%= products[i].pname %>
                     </a>
-                    <div class="price mt-2">
-                       
-                                <%= products[i].price %>
-                           
+                    <div class="d-flex flex-wrap mt-2">
+                        <div class="price me-3">
+                            <span class="text-muted">Price:</span>
+                            <%= products[i].price %>
+                        </div>
+                        <div class="brand me-3">
+                            <span class="text-muted">Brand:</span>
+                            <%= products[i].brand %>
+                        </div>
+                        <div class="category">
+                            <span class="text-muted">Category:</span>
+                            <%= products[i].category.cName %>
+                        </div>
                     </div>
                 </div>
                 <div class="action-buttons">
@@ -210,6 +219,8 @@
             <% } %>
     </ul>
 </div>
+
+
 
 
             </div>

@@ -153,32 +153,27 @@ const loadAdminProducts = async (req, res) => {
     const itemsPerPage = 6;
     const currentPage = parseInt(req.query.page) || 1;
 
-    // Fetch total number of products
     const totalProducts = await Product.countDocuments();
 
-    // Calculate total number of pages
     const totalPages = Math.ceil(totalProducts / itemsPerPage);
 
-    // Calculate visible pages for pagination
     const visiblePages = 5;
     const startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
     const endPage = Math.min(totalPages, startPage + visiblePages - 1);
 
-    // Calculate number of products to skip for pagination
     const skipCount = (currentPage - 1) * itemsPerPage;
 
-    // Fetch products sorted by creation date in descending order
-    const products = await Product.find()
-      .sort({ createdAt: -1 })
-      .skip(skipCount)
-      .limit(itemsPerPage);
+ const products = await Product.find()
+   .populate("category")
+   .sort({ createdAt: -1 })
+   .skip(skipCount)
+   .limit(itemsPerPage);
 
-    // Fetch categories
-    const categories = await Category.find();
+
+    
 
     res.render("products", {
       products,
-      categories,
       currentPage,
       totalPages,
       startPage,

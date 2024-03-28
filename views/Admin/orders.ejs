@@ -163,45 +163,66 @@
 <div class="card mb-4">
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>#ID</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Email</th>
-                       
-                        <th scope="col">Status</th>
-                        <th scope="col">Date</th>
-                        <th scope="col" class="text-end">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% AllOrders.forEach(order=> { %>
-                        <tr>
-                            <td>
-                                <%= order.orderID %>
-                            </td>
-                            <td><b>
-                                    <%= order.user.name %>
-                                </b></td>
-                            <td><b>
-                                    <%= order.user.email %>
-                                </b></td>
-                           
-                            <td><span class="badge rounded-pill alert-warning">
-                                    <%= order.status %>
-                                </span></td>
-                            <td>
-                                <%= order.orderDate.toLocaleDateString() %>
-                            </td>
-                            <td class="text-end">
-                        <a href="/admin/orders/details?orderID=<%= order._id %>" class="btn btn-md rounded font-sm">Detail</a>
 
-                            </td>
-                        </tr>
-                        <% }); %>
-                </tbody>
-            </table>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Order Total</th> <!-- Added Price column -->
+                    <th scope="col">Status</th>
+                    <th scope="col">Date</th>
+                    <th scope="col" class="text-end">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% AllOrders.forEach(order=> { %>
+                    <tr>
+                        <td>
+                            <%= order.orderID %>
+                        </td>
+                        <td><b>
+                                <%= order.user.name %>
+                            </b></td>
+                        <td><b>
+                                <%= order.user.email %>
+                            </b></td>
+                        <!-- Displaying Price -->
+                        <td>
+                            <% order.products.forEach(product=> { %>
+                                <div>
+                                    <%= product.price %>
+                                </div>
+                                <% }); %>
+                        </td>
+                        <td>
+                            <span class="badge rounded-pill alert-warning">
+                                <%= order.status %>
+                            </span>
+                            <span class="badge rounded-pill <%= 
+                            order.status === 'pending' ? 'badge-primary' :
+                            order.status === 'completed' ? 'badge-success' :
+                            order.status === 'returned' ? 'badge-warning' :
+                            order.status === 'cancelled' ? 'badge-danger' :
+                            order.status === 'delivered' ? 'badge-info' :
+                            'badge-secondary' %>">
+                                <%= order.status %>
+                            </span>
+                        </td>
+                        <td>
+                            <%= order.orderDate.toLocaleDateString() %>
+                        </td>
+                        <td class="text-end">
+                            <a href="/admin/orders/details?orderID=<%= order._id %>"
+                                class="btn btn-md rounded font-sm">Detail</a>
+                        </td>
+                    </tr>
+                    <% }); %>
+            </tbody>
+        </table>
+
+
         </div> <!-- table-responsive //end -->
     </div> <!-- card-body end// -->
 </div> <!-- card end// -->

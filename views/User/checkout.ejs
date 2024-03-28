@@ -377,10 +377,8 @@
                     <div class="row">
                         <div class="col-sm-6 col-lg-3">
                             <div class="widget widget-about">
-                                <img src="assets/images/logo.png" class="footer-logo" alt="Footer Logo" width="105"
-                                    height="25">
-                                <p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate
-                                    magna eros eu erat. </p>
+                            <img src="assets/images/LogoFooter.png" class="footer-logo" alt="Footer Logo" width="280" height="25">
+                                <p></p>
 
                                 <div class="social-icons">
                                     <a href="#" class="social-icon" target="_blank" title="Facebook"><i
@@ -455,10 +453,11 @@
     </div><!-- End .page-wrapper -->
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
 
-    <!-- Mobile Menu -->
-    
+  
+"error":"Insufficient stock for product Argentina Home 2005-06 Retro Jersey size M"
 
-    <!-- Plugins JS File -->
+
+
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/jquery.hoverIntent.min.js"></script>
@@ -503,7 +502,6 @@
                     console.log("Server Response:", res);
 
                     if (res.success) {
-                    
                         var options = {
                             "key": res.key_id,
                             "amount": res.amount,
@@ -513,7 +511,6 @@
                             "image": "https://dummyimage.com/600x400/000/fff",
                             "order_id": res.order_id,
                             "handler": function (response) {
-                               
                                 window.location.href = "/place-order";
                             },
                             "prefill": {
@@ -537,25 +534,36 @@
 
                         razorpayObject.open();
                     } else {
-                       
                         if (res.redirectURL) {
                             window.location.href = res.redirectURL;
-                        }  else {
-                       
-                        alert("Order creation failed. Check console for details.");
-                        console.error(res);
-                    }}
+                        } else if (res.message) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: res.message,
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Insufficient stock',
+                            });
+                            console.error(res);
+                        }
+                    }
                 })
-            
                 .catch(error => {
                     console.error('Error during order logging:', error);
-                    alert("Error during order logging. Check console for details.");
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Insufficient stock',
+                    });
                 });
         });
     });
-
-    
 </script>
+
 
 <script>
     function applyCoupon() {

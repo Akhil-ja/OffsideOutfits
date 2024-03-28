@@ -147,6 +147,7 @@
 
     <section class="content-main">
         <div class="content-header">
+            
             <div>
                 <h2 class="content-title card-title">Categories</h2>
                 <p></p>
@@ -184,25 +185,55 @@
             </div>
         </div>
     
-        <% categories.forEach((category, index)=> { %>
-            <div class="mb-4 container">
-                <p style="font-weight: bolder;">
-                    <%= category.cName %>
-                </p>
-                <% if (category.status==="active" ) { %>
-                    <a href="/admin/category/delete?id=<%= category._id %>"
-                        class="btn btn-sm font-sm btn-light rounded delete-btn">
-                        <i class="material-icons md-delete_forever"></i> Delete
-                    </a>
-                    <% } %>
-            </div>
-            <% }) %>
+<% categories.forEach((category, index)=> { %>
+    <div class="mb-4 container">
+        <p style="font-weight: bolder;">
+            <%= category.cName %>
+        </p>
+        <% if (category.status==="active" ) { %>
+            <a href="/admin/category/delete?id=<%= category._id %>"
+                class="btn btn-sm font-sm btn-light rounded toggle-btn">
+                <i class="material-icons md-toggle_on"></i> Disable
+            </a>
+            <% } else { %>
+                <a href="/admin/category/delete?id=<%= category._id %>"
+                    class="btn btn-sm font-sm btn-light rounded toggle-btn">
+                    <i class="material-icons md-toggle_off"></i> Enable
+                </a>
+                <% } %>
+    </div>
+    <% }) %>
 
     
+            <div class="pagination-area mt-15 mb-50">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-start">
+                        <% if (currentPage> 1) { %>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <% } %>
+                                <% for (let i=1; i <=totalPages; i++) { %>
+                                    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                        <a class="page-link" href="?page=<%= i %>">
+                                            <%= i %>
+                                        </a>
+                                    </li>
+                                    <% } %>
+                                        <% if (currentPage < totalPages) { %>
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                            <% } %>
+                    </ul>
+                </nav>
+            </div>
+
     </section>
-
-
-
 
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">

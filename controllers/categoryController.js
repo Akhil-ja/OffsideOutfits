@@ -17,9 +17,25 @@ const getCategories = async () => {
 
 const viewCategory = async (req, res) => {
   try {
-    const categories = await Category.find();
+    const page = parseInt(req.query.page) || 1;
+    const perPage = 2;
+
+    const totalCategories = await Category.countDocuments();
+    const totalPages = Math.ceil(totalCategories / perPage);
+
+    const categories = await Category.find()
+      .sort({ createdAt: -1 }) 
+      .skip((page - 1) * perPage) 
+      .limit(perPage); 
+
+
     const errorMessage = "";
-    res.render("category", { categories, errorMessage });
+    res.render("category", {
+      categories,
+      errorMessage,
+      currentPage: page,
+      totalPages,
+    });
   } catch (error) {
     console.log(error.message);
   }
@@ -65,7 +81,8 @@ const deleteCategory = async (req, res) => {
     if (!category) {
       return res.status(404).send("Category not found");
     }
-    category.status = "disabled"; 
+   
+    category.status = category.status === "active" ? "disabled" : "active";
     await category.save();
     res.redirect("/admin/category");
   } catch (error) {

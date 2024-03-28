@@ -206,13 +206,15 @@
                                     </div>
                                 
                                  
-                                    <p class="lead">
-                                        <strong>Referral Code:</strong>
-                                        <span id="couponDisplay">
-                                            <%= userDetails.referralCode %>
-                                        </span>
-                                        <button class="btn btn-outline-dark btn-round ml-3 btn-smaller" onclick="copyToClipboard('couponDisplay')">Copy</button>
-                                    </p>
+                                <p class="lead">
+                                    <strong>Referral Code:</strong>
+                                    <span id="couponDisplay">
+                                        <%= userDetails.referralCode %>
+                                    </span>
+                                    <button class="btn btn-outline-dark btn-round ml-3 btn-smaller"
+                                        onclick="copyToClipboard('couponDisplay')">Copy</button>
+                                </p>
+
                                 </div>
 
 
@@ -223,53 +225,56 @@
 
 
 
-                                    <div class="container-fluid">
-                                        <h2 class="title mb-3">Orders List</h2>
-                                    
-                                        <% if (AllOrders.length===0) { %>
-                                            <p>You have not ordered anything yet.</p>
-                                            <% } else { %>
-                                            <ul class="list-group">
-                                                <% AllOrders.forEach(order=> { %>
-                                                    <li class="list-group-item mb-3" onclick="window.location='/order-details?orderID=<%= order._id %>'"
-                                                        style="cursor: pointer; border: 1px solid #dee2e6; border-radius: 2rem;">
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <div class="text-right">
-                                                                <ul>
-                                                                    <% order.products.forEach(productInfo=> { %>
-                                                                        <li>
-                                                                            <%= productInfo.product.pname %>
-                                                                        </li>
-                                                                        <% }) %>
-                                                                </ul>
-                                                            </div>
-                                                            <div>
-                                                                <a href="/order-details?orderID=<%= order._id %>" class="text-decoration-none">
-                                                                    <strong>Order ID:</strong>
-                                                                    <%= order.orderID %>
-                                                                </a>
-                                                                <p class="mb-1">
-                                                                    <strong>Status:</strong>
-                                                                <span class="badge <%= order.status === 'pending' ? 'badge-primary' :
-                                                                                    order.status === 'completed' ? 'badge-success' :
-                                                                                    order.status === 'returned' ? 'badge-warning' :
-                                                                                    order.status === 'cancelled' ? 'badge-danger' :
-                                                                                    order.status === 'delivered' ? 'badge-info' :
-                                                                                    'badge-secondary' %>">
+                            <div class="container-fluid">
+                                <h2 class="title mb-3">Orders List</h2>
+                            
+                                <% if (AllOrders.length===0) { %>
+                                    <p>You have not ordered anything yet.</p>
+                                    <% } else { %>
+                                        <ul class="list-group">
+                                            <% AllOrders.forEach(order=> { %>
+                                                <li class="list-group-item mb-3" onclick="window.location='/order-details?orderID=<%= order._id %>'"
+                                                    style="cursor: pointer; border: 1px solid #dee2e6; border-radius: 2rem;">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div class="text-right">
+                                                            <ul>
+                                                                <% order.products.forEach(productInfo=> { %>
+                                                                    <li>
+                                                                        <%= productInfo.product.pname %>
+                                                                    </li>
+                                                                    <% }) %>
+                                                            </ul>
+                                                        </div>
+                                                        <div>
+                                                            <a href="/order-details?orderID=<%= order._id %>" class="text-decoration-none">
+                                                                <strong>Order ID:</strong>
+                                                                <%= order.orderID %>
+                                                            </a>
+                                                            <p class="mb-1">
+                                                                <strong>Status:</strong>
+                                                                <span
+                                                                    class="badge <%= order.status === 'pending' ? 'badge-primary' : order.status === 'completed' ? 'badge-success' : order.status === 'returned' ? 'badge-warning' : order.status === 'cancelled' ? 'badge-danger' : order.status === 'delivered' ? 'badge-info' : 'badge-secondary' %>">
                                                                     <%= order.status %>
                                                                 </span>
-                                                                </p>
-                                                                <p class="mb-0">
-                                                                    <strong>Order Date:</strong>
-                                                                    <%= new Date(order.orderDate).toLocaleDateString() %>
-                                                                </p>
-                                                            </div>
+                                                            </p>
+                                                            <p class="mb-0">
+                                                                <strong>Order Date:</strong>
+                                                                <%= new Date(order.orderDate).toLocaleDateString() %>
+                                                            </p>
+                                                        <p class="mb-0">
+                                                            <strong>Order Total:</strong>
+                                                            <span style="text-decoration: underline; color:blueviolet;">
+                                                                <%= order.orderTotal.toFixed(1) %>
+                                                            </span>
+                                                        </p>
+
                                                         </div>
-                                                    </li>
-                                                    <% }); %>
-                                            </ul>
-                                                <% } %>
-                                    </div>
+                                                    </div>
+                                                </li>
+                                                <% }); %>
+                                        </ul>
+                                        <% } %>
+                            </div>
 
 
 

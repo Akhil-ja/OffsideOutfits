@@ -233,17 +233,20 @@
                         <div class="details-filter-row details-row-size mb-md-1">
                             <label>Size:</label>
                             <% if (product.sizes && product.sizes.length> 0) { %>
-                                <select id="sizeDropdown" class="js-select2">
-                                    <% product.sizes.forEach(size=> { %>
-                                        <% if (size.quantity> 0) { %>
-                                            <option value="<%= size.size %>">
-                                                <%= size.size %>
+                            <select id="sizeDropdown" class="form-select"
+                                style="width: 70px; padding: 8px; border-radius: 5px; border-color: #ced4da; background-color: #fff;">
+                                <% product.sizes.forEach(size=> { %>
+                                    <% if (size.quantity> 0) { %>
+                                        <option value="<%= size.size %>">
+                                            <%= size.size %>
+                                        </option>
+                                        <% } else { %>
+                                            <option value="<%= size.size %>" disabled>
+                                                <%= size.size %> (Out of Stock)
                                             </option>
-                                            <% } else { %>
-                                                <option value="<%= size.size %>" disabled><%= size.size %>(Out of Stock)</option>
-                                                <% } %>
-                                                    <% }); %>
-                                </select>
+                                            <% } %>
+                                                <% }); %>
+                            </select>
                                 <% } else { %>
                                     <p class="out-of-stock-message">Product is out of stock</p>
                                     <% } %>
@@ -447,7 +450,7 @@
 <script>
     async function addToCart(productId) {
         const userId = '<%=currentUser._id %>';
-        const size = document.getElementById('sizeDropdown').value; // Get the selected size
+        const size = document.getElementById('sizeDropdown').value; 
 
         const data = {
             productId: productId,

@@ -122,6 +122,7 @@ const newOrder = new Orders({
   orderTotal: totalAmount,
   PaymentMethod: paymentType,
   couponApplied: couponApplied,
+  originalOrderTotal: cart.oldCartTotal,
 });
 
 await newOrder.save();
@@ -136,6 +137,7 @@ await User.updateOne(
        
           cart.cartProducts = [];
           cart.cartTotal=0;
+          cart.oldCartTotal=0;
           await cart.save();
 
           return res.render("orderConfirmation", {
@@ -579,7 +581,8 @@ const Payment = async (req, res) => {
           ) {
             return res.status(400).json({
               success: false,
-              message: `Sorry, we don't have enough stock in size ${orderProduct.size}. Please choose a lower quantity.`,
+             message: `Sorry, we don't have enough stock for ${product.pname} in size ${orderProduct.size}. Please choose a lower quantity.`,
+    
             });
           }
         }
