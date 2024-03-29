@@ -363,6 +363,14 @@
         </div>
 
         <h4 class="card-title">Ordered Products</h4>
+
+    <% if (orderDetails.productEdited===true) { %>
+        <div class="alert" role="alert" style="color: red;">
+            The product prices have been changed since you placed your order.
+        </div>
+        <% } %>
+
+        
        
         <div class="card">
             <div class="card-body">
@@ -393,7 +401,18 @@
                                     <td class="align-middle">
                                         <%= productInfo.quantity %>
                                     </td>
-                                    <td class="align-middle">Rs <%= productInfo.price.toFixed(2) %>
+
+                                    <% if (orderDetails.status==='payment failed' ) { %>
+                                    <td class="align-middle">Rs <%= productInfo.product.priceAfterDiscount.toFixed(2) %>
+                                      <% }else{%>
+                                        <td class="align-middle">Rs <%= productInfo.price.toFixed(2) %>
+                                        </td>
+
+                                    <%  } %>
+
+                                    
+
+                                    
                                     </td>
                                 </tr>
                                 <% }); %>
@@ -490,7 +509,13 @@
 
         
         <a href="/profile?selected=orders" class="btn btn-secondary m-5">Back</a>
-    </div>
+        
+        <% if (orderDetails.status==='payment failed') { %>
+             <a style="background-color: orangered;" href="/profile?selected=orders" class="btn btn-outline-dark btn-round">Complete Payment</a>
+    
+    <% } %>
+       
+        </div>
 </main>
 
 

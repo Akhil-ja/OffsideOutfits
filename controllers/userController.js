@@ -313,7 +313,11 @@ const loadProfile = async (req, res) => {
     const userDetails = await User.findOne({ _id: userID });
     const matchingAddress = await Address.findOne({ user: userID });
     const walletDetails = await Wallet.findOne({ user: userID })
-      
+      .populate({
+        path: "transactions",
+        options: { sort: { createdAt: -1 } },
+      })
+      .exec();
 
     let pageinfo = selectedValue;
     console.log(pageinfo);

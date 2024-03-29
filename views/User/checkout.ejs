@@ -347,12 +347,19 @@
                                                 </div><!-- End .card-header -->
                                                 <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
                                                     <div class="card-body">
-                                                        Your Wallet Balance: <span class="wallet-balance" style="color: blue; text-decoration: underline;">
-                                                            <%= wallet.money.toFixed(2) %>/-Rs
-                                                        </span>
-                                                    </div><!-- End .card-body -->
-                                                </div><!-- End .collapse -->
-                                            </div><!-- End .card -->
+                                                        <% if (wallet) { %>
+                                                            Your Wallet Balance: <span class="wallet-balance" style="color: blue; text-decoration: underline;">
+                                                                <%= wallet.money.toFixed(2) %>/-Rs
+                                                            </span>
+                                                            <% } else { %>
+                                                                Your Wallet Balance: <span class="wallet-balance" style="color: red;">
+                                                                    Wallet not found
+                                                                </span>
+                                                                <% } %>
+                                                    </div>
+                                                </div>
+
+                                            </div>
 
                                            
                                         </div><!-- End .accordion -->
@@ -528,11 +535,28 @@
 
                         var razorpayObject = new Razorpay(options);
 
+                         razorpayObject.open();
+
                         razorpayObject.on('payment.failed', function (response) {
-                            alert("Payment Failed");
+                              razorpayObject.close();
+                        Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Payment Failed',
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 4000,
+                                timerProgressBar: true,
+                               
+                            });
+
+
+                              window.location.href = "/pending-order";
+                           
                         });
 
-                        razorpayObject.open();
+                       
                     } else {
                         if (res.redirectURL) {
                             window.location.href = res.redirectURL;
@@ -563,6 +587,8 @@
         });
     });
 </script>
+
+
 
 
 <script>

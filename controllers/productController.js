@@ -1,15 +1,17 @@
 const Product = require("../models/productModel");
 const Category = require("../models/categoryModel");
-const categoryModel = require("../models/categoryModel");
-const productModel = require("../models/productModel");
+const offerController = require("../controllers/offerController");
+
 
 
 
 const loadProducts = async (req, res) => {
   try {
     console.log("in load products");
-    const { priceSort, nameSort, selectedCategories, search, page, sortBy } =
-      req.query;
+   
+    
+
+    const { priceSort, nameSort, selectedCategories, search, page, sortBy } = req.query;
     console.log("search" + search);
 
     const limit = 12; 

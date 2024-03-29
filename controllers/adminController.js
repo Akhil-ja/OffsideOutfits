@@ -146,10 +146,25 @@ const viewDashboard = async (req, res) => {
   }
 };
 
-
+const updateProductPriceAfterDiscount = async () => {
+  try {
+    const products = await Product.find();
+console.log("updateProductPriceAfterDiscount");
+    for (const product of products) {
+      const discountedPrice =
+        product.price - (product.price * product.discountPercentage) / 100;
+      product.priceAfterDiscount = discountedPrice;
+      await product.save();
+    }
+  } catch (error) {
+    console.error("Error updating product priceAfterDiscount:", error);
+  }
+};
 
 const loadAdminProducts = async (req, res) => {
   try {
+console.log("loadAdminProducts");
+    updateProductPriceAfterDiscount();
     const itemsPerPage = 6;
     const currentPage = parseInt(req.query.page) || 1;
 

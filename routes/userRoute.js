@@ -110,6 +110,15 @@ userRoute.post("/remove-from-cart", cartController.cartRemove);
 
 userRoute.get("/place-order", authRoutes.checkUser,authRoutes.isLogin, orderController.createOrders);
 
+userRoute.get(
+  "/pending-order",
+  authRoutes.checkUser,
+  authRoutes.isLogin,
+  orderController.createPendingOrders
+);
+
+
+
 userRoute.post("/payment", orderController.Payment);
 
 userRoute.post("/cancel-order", orderController.cancelOrder);

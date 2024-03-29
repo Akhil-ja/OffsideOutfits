@@ -37,13 +37,20 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    originalOrderTotal:{
-       type: Number,
+    originalOrderTotal: {
+      type: Number,
       default: 0,
     },
     status: {
       type: String,
-      enum: ["pending", "completed", "returned", "cancelled", "delivered"],
+      enum: [
+        "pending",
+        "completed",
+        "returned",
+        "cancelled",
+        "delivered",
+        "payment failed",
+      ],
       default: "pending",
     },
     returnReason: {
@@ -60,6 +67,10 @@ const orderSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    productEdited: {
+      type: Boolean,
+      default:false
+    },
     address: {
       type: Object,
       required: false,
@@ -67,6 +78,11 @@ const orderSchema = new mongoose.Schema(
     PaymentMethod: {
       type: String,
       required: true,
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "completed"],
+      default: "pending",
     },
   },
   {

@@ -131,8 +131,12 @@
 
     <main class="main">
         <div class="container">
+            <% if (newOrder.status==='payment failed') {%>
+                 <h2 class="title mb-3 mt-4">Order Pending</h2>
+                 <span style="color: red;">Due to failed Payment</span>
+        <% }else {%>
             <h2 class="title mb-3">Order Confirmation</h2>
-
+            <%}%>
            
         <div class="row">
             <% if (orderProducts && orderProducts.length> 0) { %>

@@ -175,6 +175,150 @@ await User.updateOne(
 
 
 
+const createPendingOrders=async(req,res)=>{
+ try {
+   console.log("create order");
+
+   const userID = req.session.userID;
+   const selectedAddress = req.session.selectedAddress;
+   const paymentType = req.session.paymentType;
+
+   console.log("userid:" + userID);
+   console.log("address:" + selectedAddress);
+   console.log("paymenntType:" + paymentType);
+
+   let orderAddress = "";
+
+   const cart = await Cart.findOne({ user: userID }).populate({
+     path: "cartProducts.product",
+     model: "Product",
+   });
+
+   const couponApplied = cart.couponApplied;
+
+   const orderDocument = await Address.findOne({
+     "address._id": selectedAddress,
+   });
+
+   if (orderDocument) {
+     orderAddress = orderDocument.address.find(
+       (addr) => addr._id.toString() === selectedAddress
+     );
+
+     console.log("orderAddress:" + orderAddress);
+
+     if (orderAddress) {
+       const totalAmount = cart.cartTotal;
+
+       const orderProducts = cart.cartProducts.map((cartProduct) => ({
+         product: cartProduct.product,
+         quantity: cartProduct.quantity,
+         price: cartProduct.product.priceAfterDiscount,
+         size: cartProduct.size,
+       }));
+
+       orderProducts.forEach((orderProduct) => {
+         console.log("size:" + orderProduct.size);
+       });
+
+       try {
+         for (const orderProduct of orderProducts) {
+           const product = orderProduct.product;
+
+           const sizeInfoIndex = product.sizes.findIndex(
+             (sizeObj) => sizeObj.size === orderProduct.size
+           );
+
+           if (
+             sizeInfoIndex === -1 ||
+             product.sizes[sizeInfoIndex].quantity < orderProduct.quantity
+           ) {
+             return res.status(400).json({
+               success: false,
+               message: `Sorry, we don't have enough stock in size ${orderProduct.size}. Please choose a lower quantity.`,
+             });
+           }
+
+          
+           await product.save();
+         }
+
+         const generateRandomNumber = () => {
+           return Math.floor(1000 + Math.random() * 9000);
+         };
+
+         const isOrderIdExists = async (orderId) => {
+           const existingOrder = await Orders.findOne({ orderID: orderId });
+           return !!existingOrder;
+         };
+
+         let generatedOrderId;
+
+         do {
+           const randomNumber = generateRandomNumber();
+
+           generatedOrderId = `OOF${randomNumber}`;
+         } while (await isOrderIdExists(generatedOrderId));
+
+         const newOrder = new Orders({
+           orderID: generatedOrderId,
+           user: userID,
+           products: orderProducts,
+           status: "payment failed",
+           address: orderAddress,
+           orderDate: Date.now(),
+           orderTotal: totalAmount,
+           PaymentMethod: paymentType,
+           couponApplied: couponApplied,
+           paymentStatus:"pending",
+           originalOrderTotal: cart.oldCartTotal,
+         });
+
+         await newOrder.save();
+
+        
+
+         cart.cartProducts = [];
+         cart.cartTotal = 0;
+         cart.oldCartTotal = 0;
+         await cart.save();
+
+         return res.render("orderConfirmation", {
+           orderAddress,
+           orderProducts,
+           newOrder,
+           updatedTotalAmount: totalAmount,
+         });
+
+
+
+         
+       } catch (error) {
+         console.error(error);
+         return res
+           .status(400)
+           .json({ success: false, message: error.message });
+       }
+     } else {
+       return res.status(404).json({
+         success: false,
+         message: "Address not found. Please choose a valid address.",
+       });
+     }
+   } else {
+     return res.status(404).json({
+       success: false,
+       message: "Document not found. Please try again.",
+     });
+   }
+ } catch (error) {
+   console.error(error.message);
+   return res
+     .status(500)
+     .json({ success: false, message: "Internal server error." });
+ }
+}
+
 
 const viewOrders = async (req, res) => {
   try {
@@ -196,31 +340,95 @@ const viewOrders = async (req, res) => {
 };
 
 
-const getOrderDetails=async(req,res)=>{
+const getOrderDetails = async (req, res) => {
   try {
-
+    console.log("getOrderDetails");
     const orderId = req.query.orderID;
-    const orderDetails = await Orders.findById(orderId).populate({
-      path: "products.product",
-      model: "Product",
+    const orderDetails = await Orders.findById(orderId)
+      .populate({
+        path: "products.product",
+        model: "Product",
+        select: "pname priceAfterDiscount images",
+      })
+      .populate("couponApplied");
+
+    if (!orderDetails) {
+      return res.status(404).send("Order not found");
+    }
+
+    let priceMismatches = [];
+    let orderTotal = orderDetails.orderTotal;
+    const originalOrderTotal =
+      orderDetails.originalOrderTotal || orderDetails.orderTotal; // Fallback to orderTotal if originalOrderTotal is not set
+
+    const updatedProducts = orderDetails.products.map((product) => {
+      const currentPrice = product.product.priceAfterDiscount;
+      const priceMismatch = currentPrice !== product.price;
+
+      if (priceMismatch && orderDetails.status === "payment failed") {
+        priceMismatches.push({
+          product: product.product.pname,
+          oldPrice: product.price,
+          newPrice: currentPrice,
+        });
+        console.error(
+          `Price mismatch for product ${product.product.pname}: Old price ${product.price}, New price ${currentPrice}`
+        );
+
+        const priceDifference = currentPrice - product.price;
+        product.price = currentPrice;
+        orderTotal += priceDifference * product.quantity;
+      }
+
+      const productTotal = currentPrice * product.quantity;
+      return {
+        ...product._doc,
+        product: {
+          ...product.product._doc,
+          priceAfterDiscount: currentPrice,
+        },
+      };
     });
 
-     if (!orderDetails) {
-       return res.status(404).send("Order not found");
-     }
-      const TotalAmount = (products) => {
-        let totalAmount = 0;
-        products.forEach((productInfo) => {
-          totalAmount += productInfo.priceAfterDiscount * productInfo.quantity;
+    if (priceMismatches.length > 0) {
+      console.error(`Price mismatches found for order ${orderId}`);
+      orderDetails.originalOrderTotal = originalOrderTotal;
+      orderDetails.orderTotal = orderTotal;
+      await orderDetails.save();
+      await Orders.findByIdAndUpdate(orderId, {
+        $set: { productEdited: true },
+      });
+
+      // Calculate total amount based on original prices if coupon is applied
+      if (orderDetails.couponApplied) {
+        const coupon = orderDetails.couponApplied;
+        let couponDiscount = 0;
+        updatedProducts.forEach((product) => {
+          const originalProductPrice = product.price; // Use original product price for coupon calculation
+          couponDiscount += (originalProductPrice * coupon.discountValue) / 100;
         });
-        return totalAmount;
-      };
-     const totalAmount = TotalAmount(orderDetails.products);
-     res.render("viewOrder", { orderDetails, totalAmount });
+        orderTotal = Math.max(0, orderTotal - couponDiscount); // Apply coupon discount to the total amount
+      }
+    }
+
+    const updatedOrderDetails = {
+      ...orderDetails._doc,
+      orderTotal,
+      priceMismatches,
+      products: updatedProducts,
+    };
+
+    res.render("viewOrder", {
+      orderDetails: updatedOrderDetails,
+    });
   } catch (error) {
     console.error(error.message);
+    res.status(500).send("Internal server error");
   }
-}
+};
+
+
+
 
 const adminViewOrders = async (req, res) => {
   try {
@@ -691,4 +899,5 @@ module.exports = {
   Payment,
   cancelOrder,
   returnOrder,
+  createPendingOrders,
 };
