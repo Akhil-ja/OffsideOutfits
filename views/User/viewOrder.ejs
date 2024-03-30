@@ -511,7 +511,8 @@
         <a href="/profile?selected=orders" class="btn btn-secondary m-5">Back</a>
         
         <% if (orderDetails.status==='payment failed') { %>
-             <a style="background-color: orangered;" href="/profile?selected=orders" class="btn btn-outline-dark btn-round">Complete Payment</a>
+            <button style="background-color: orangered;" class="btn btn-outline-dark btn-round"
+                onclick="completePayment('<%= orderDetails._id %>')">Complete Payment</button>
     
     <% } %>
        
@@ -659,6 +660,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 
 
 
@@ -899,6 +902,103 @@
         html2pdf().from(table).save();
     }
 </script>
+
+
+
+<script>
+    async function completePayment(orderID) {
+        try {
+            const response = await fetch('/completePayment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ orderID }),
+            });
+
+            // if (!response.ok) {
+            //     throw new Error('Network response was not ok');
+            // }
+
+            const res = await response.json();
+
+            console.log("Server Response:", res);
+
+            if (res.success) {
+                const options = {
+                    "key": res.key_id,
+                    "amount": res.amount,
+                    "currency": "INR",
+                    "name": res.name,
+                    "description": res.msg,
+                    "image": "https://dummyimage.com/600x400/000/fff",
+                    "order_id": res.order_id,
+                    "handler": function (response) {
+                      window.location.href = `/completePayment?orderID=${orderID}`;
+
+                    },
+                    "prefill": {
+                        "contact": res.contact,
+                        "name": res.name,
+                        "email": res.email
+                    },
+                    "notes": {
+                        "description": res.description
+                    },
+                    "theme": {
+                        "color": "#2300a3"
+                    }
+                };
+
+                 var razorpayObject = new Razorpay(options);
+
+                razorpayObject.open();
+
+                razorpayObject.on('payment.failed', function (response) {
+                    razorpayObject.close();
+
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Payment Failed',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true,
+                    });
+                });
+            } else {
+                if (res.redirectURL) {
+                    window.location.href = res.redirectURL;
+                } else if (response.status === 401) {
+                    // Handle insufficient stock error
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: res.error
+                    });
+                }else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Payment failed...................',
+                    });
+                    console.error(res);
+                }
+            }
+        } catch (error) {
+            console.error('Error during order logging:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Payment failed////////////',
+            });
+        }
+    }
+</script>
+
 
 
 

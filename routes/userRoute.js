@@ -121,9 +121,12 @@ userRoute.get(
 
 userRoute.post("/payment", orderController.Payment);
 
+userRoute.post("/completePayment", orderController.pendingPayment);
+
 userRoute.post("/cancel-order", orderController.cancelOrder);
 userRoute.post("/return-order", orderController.returnOrder);
 
+userRoute.get("/completePayment", orderController.completePayment);
 
 
 userRoute.get(
@@ -132,7 +135,11 @@ userRoute.get(
   orderController.getOrderDetails
 );
 
+
 userRoute.get("/checkQuantities", cartController.checkQuantities);
+
+
+
 
 
 userRoute.get("/add-delete",addressController.deleteAddress);

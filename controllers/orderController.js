@@ -8,9 +8,15 @@ const Wallet =require("../models/walletModel")
 const mongoose = require("mongoose");
 const userModel = require("../models/userModel");
 const User = require("../models/userModel");
+const ObjectId = mongoose.Types.ObjectId;
 
 
 
+
+const razorpay = new RazorPay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
 
 
 
@@ -359,7 +365,7 @@ const getOrderDetails = async (req, res) => {
     let priceMismatches = [];
     let orderTotal = orderDetails.orderTotal;
     const originalOrderTotal =
-      orderDetails.originalOrderTotal || orderDetails.orderTotal; // Fallback to orderTotal if originalOrderTotal is not set
+      orderDetails.originalOrderTotal || orderDetails.orderTotal; 
 
     const updatedProducts = orderDetails.products.map((product) => {
       const currentPrice = product.product.priceAfterDiscount;
@@ -399,16 +405,16 @@ const getOrderDetails = async (req, res) => {
         $set: { productEdited: true },
       });
 
-      // Calculate total amount based on original prices if coupon is applied
+    
       if (orderDetails.couponApplied) {
         const coupon = orderDetails.couponApplied;
         let couponDiscount = 0;
         updatedProducts.forEach((product) => {
-          const originalProductPrice = product.price; // Use original product price for coupon calculation
+          const originalProductPrice = product.price; 
           couponDiscount += (originalProductPrice * coupon.discountValue) / 100;
         });
-        orderTotal = Math.max(0, orderTotal - couponDiscount); // Apply coupon discount to the total amount
-      }
+        orderTotal = Math.max(0, orderTotal - couponDiscount); 
+            }
     }
 
     const updatedOrderDetails = {
@@ -545,11 +551,6 @@ const UpdateOrderStatus=async(req,res)=>{
 }
 
 
-
-const razorpay = new RazorPay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
 
 
 const cancelOrder = async (req, res) => {
@@ -888,6 +889,113 @@ const Payment = async (req, res) => {
 
 
 
+const pendingPayment = async (req,res) => {
+  try {
+
+    const {orderID}=req.body
+
+    console.log("orderID:" + orderID);
+     const order = await Orders.findOne({ _id: orderID }).populate(
+       "products.product"
+     );
+
+    for (const orderProduct of order.products) {
+      const product = orderProduct.product;
+
+      
+      const sizeInfo = product.sizes.find(size => size.size === orderProduct.size);
+
+      if (!sizeInfo || sizeInfo.quantity < orderProduct.quantity) {
+        return res.status(401).json({
+          success: false,
+          error: `Insufficient stock for product ${product.pname} with size ${orderProduct.size}`
+        });
+      }
+    }
+
+    const orderTotal = order.orderTotal;
+
+    const options = {
+      amount: orderTotal * 100, 
+      currency: "INR",
+      receipt: "razorUser@gmail.com",
+    };
+
+    razorpay.orders.create(options, async (err, order) => {
+      if (err) {
+        console.error(err);
+        return res
+          .status(500)
+          .json({ success: false, message: "Error creating order." });
+      }
+
+      const orderID = order.id;
+
+      return res.status(200).json({
+        success: true,
+        msg: "Order created successfully",
+        order_id: orderID,
+        amount: orderTotal, 
+        key_id: process.env.RAZORPAY_KEY_ID,
+        contact: 8469237811,
+        name: "Offside Outfits",
+        email: "akhiljagadish124@gmail.com",
+      });
+    });
+  } catch (error) {
+    console.error("Error creating Razorpay payment:", error);
+    return { success: false, message: "Error creating Razorpay payment" };
+  }
+};
+
+
+
+
+const completePayment=async(req,res)=>{
+  try {
+
+    console.log("in completePayment");
+    
+    const orderID = req.query.orderID;
+
+    console.log("orderID:" + orderID);
+
+const order = await Orders.findOne({ _id:orderID }).populate("products.product");
+
+if (!order) {
+  return res.status(404).json({ success: false, message: "Order not found" });
+}
+
+   order.status = "pending";
+    order.paymentStatus = "completed";
+    order.productEdited=false;
+   await order.save();
+
+
+   for (const orderProduct of order.products) {
+     const product = orderProduct.product;
+
+     
+     const sizeInfo = product.sizes.find(
+       (size) => size.size === orderProduct.size
+     );
+
+       
+     sizeInfo.quantity -= orderProduct.quantity;
+
+   
+     await product.save();
+   }
+
+   res.redirect(`order-details?orderID=${orderID}`);
+  } catch (error) {
+      console.error(error.message);
+  }
+}
+
+
+
+
 
 module.exports = {
   createOrders,
@@ -900,4 +1008,6 @@ module.exports = {
   cancelOrder,
   returnOrder,
   createPendingOrders,
+  completePayment,
+  pendingPayment,
 };
