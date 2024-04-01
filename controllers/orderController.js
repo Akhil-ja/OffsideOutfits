@@ -993,7 +993,32 @@ if (!order) {
   }
 }
 
+const generateInvoice=async(req,res)=>{
 
+}
+
+const loadInvoice = async (req, res) => {
+  try {
+    const orderId = req.query.orderID; 
+
+    console.log("orderId:" + orderId);
+    const order = await Orders.findOne({ _id: orderId }).populate(
+      "products.product"
+    );
+
+
+    console.log("order:" + order);
+
+    if (!order) {
+      return res.status(404).send("Order not found");
+    }
+
+    res.render("invoice", { order });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal server error");
+  }
+};
 
 
 
@@ -1010,4 +1035,6 @@ module.exports = {
   createPendingOrders,
   completePayment,
   pendingPayment,
+  generateInvoice,
+  loadInvoice,
 };

@@ -139,7 +139,9 @@ userRoute.get(
 userRoute.get("/checkQuantities", cartController.checkQuantities);
 
 
+userRoute.get("/generateInvoice", orderController.generateInvoice);
 
+userRoute.get("/Invoice", orderController.loadInvoice);
 
 
 userRoute.get("/add-delete",addressController.deleteAddress);

@@ -23,7 +23,31 @@
 <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet">
 
 
+<style>
+    /* CSS for adjusting the width and height of the invoice popup */
+    #invoicePopup-window {
+        position: fixed;
+        z-index: 100;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 20px;
+        max-width: 90%;
+        max-height: 90%;
+        overflow: auto;
+    }
 
+    /* Media query for smaller screens */
+    @media (max-width: 768px) {
+        #invoicePopup-window {
+            width: 90%;
+            height: 90%;
+        }
+    }
+</style>
 
     <style>
         .cancel-button-button,
@@ -316,14 +340,149 @@
     <!-- order-details.ejs -->
     
 <main class="main">
-<button onclick="pdf()" class="return-button-button mr-3 ml-3 mt-3 rounded-pill" type="button"
-    style="width: 120px; float: right;"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download"
+
+
+
+<a  type="submit" id="invoicePopup" class="return-button-button mr-3 mt-3 rounded-pill"
+    style="width: 100px; float: right;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="16" fill="currentColor" class="bi bi-download"
         viewBox="0 0 16 16">
         <path
             d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
         <path
             d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z" />
-    </svg>  Invoice</button>
+    </svg>
+    Invoice
+</a>
+
+<div id="invoicePopup-window" class="py-3 py-md-5" style="display: none;">
+    <div>
+        <span type="button" onclick="closePopup()" style='font-size:10px;' title="Close">&#10060;</span>
+    </div>
+    <div style="margin-left: 950px;">
+        <a type="submit" id="invoiceDownload" style="border-style: none;" title="Download">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" width="36" height="36">
+                <!-- Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc. -->
+                <path
+                    d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-167l80 80c9.4 9.4 24.6 9.4 33.9 0l80-80c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-39 39V184c0-13.3-10.7-24-24-24s-24 10.7-24 24V318.1l-39-39c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9z" />
+            </svg>
+        </a>
+    </div>
+    <div id="invoice_download" class="container">
+        <div class="row justify-content-center">
+            <div id="setA4size" class="col-12 col-lg-9 col-xl-8 col-xxl-7"
+                style=" margin-top: 120px; margin-left: 10px; margin-right: 10px;">
+                <div class="row gy-3 mb-3">
+                    <div class="col-6">
+                        <h2 class="text-uppercase text-endx m-0">Invoice</h2>
+                    </div>
+                    <div class="col-6">
+                        <a class="d-block text-end" href="#!">
+                            <img src="assets\images\Logo1.png"   class="img-fluid" alt="BootstrapBrain Logo"
+                                width="120" height="35">
+                        </a>
+                    </div>
+                    <div class="col-12">
+                        <h4>From</h4>
+                        <address>
+                            <strong style="font-size: x-large;font-weight: 700;">OffsideOutfits</strong><br>
+                            
+                        </address>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12 col-sm-6 col-md-8">
+                        <h4>Bill To</h4>
+                        <address>
+                            <strong>
+                                <%= orderDetails.address.AddName %>
+                            </strong><br>
+                            <%= orderDetails.address.House %>, <%= orderDetails.address.street %><br>
+                                    <%= orderDetails.address.city %>, <%= orderDetails.address.state %>,
+                                            <%= orderDetails.address.PIN %><br>
+                                               
+                                                   
+                        </address>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-4">
+                        <h4 class="row">
+                            <span class="col-6">Order ID</span>    
+                            <span class="col-6 text-sm-end">
+                            #<%= orderDetails.orderID %>
+                            </span>
+                        </h4>
+                        <div class="row">
+                            
+                            <span class="col-6">Invoice Date</span>
+                            <span class="col-6 text-sm-end" id="currentDate"></span>
+                            <span class="col-6">Payment</span>
+                            <span class="col-6 text-sm-end">
+                                <%= orderDetails.PaymentMethod %>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="text-uppercase">Product</th>
+                                    <th scope="col" class="text-uppercase">Qty</th>
+                                    
+                                    <th scope="col" class="text-uppercase">Size</th>
+                                    <th scope="col" class="text-uppercase text-end">Unit Price</th>
+                                    <th scope="col" class="text-uppercase text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                <% orderDetails.products.forEach(product=> { %>
+                                    <tr>
+                                       
+                                        <td>
+                                            <%= product.product.pname %> 
+                                        </td>
+
+                                        <td scope="row">
+                                            <%= product.quantity %>
+                                        </td>
+                                        <td>
+                                             <%= product.size %>
+                                        </td>
+                                        <td class="text-end">
+                                           
+                                                <%= product.price %>
+                                                    
+                                        </td>
+
+
+                                        <td class="text-end">
+                                            <%= product.price * product.quantity %>
+                                        </td>
+
+                                    </tr>
+                                    <% }) %>
+                                        <tr>
+                                            <td colspan="3" class="text-end">Subtotal</td>
+                                            <td class="text-end">
+                                                <%= orderDetails.orderTotal %>
+                                            </td>
+                                        </tr>
+                                        
+                                       
+                            </tbody>
+                        </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
     <div class="container">
         <div id="invoice">
@@ -416,6 +575,8 @@
                                     </td>
                                 </tr>
                                 <% }); %>
+
+                                
                         </tbody>
                     </table>
 
@@ -423,7 +584,40 @@
                 </div>
             </div>
         </div>
-
+<% if (orderDetails.couponApplied) { %>
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered text-center">
+                    <h6 class="mt-4">Coupon Applied</h6>
+                    <thead>
+                        <tr>
+                            <th scope="col" class="font-weight-bold">Coupon Name</th>
+                            <th scope="col" class="font-weight-bold">Discount Type</th>
+                            <th scope="col" class="font-weight-bold">Discount Value</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            
+                            <td>
+                                <%= orderDetails.couponApplied.name %>
+                            </td>
+                            <td>
+                                <%= orderDetails.couponApplied.discountType %>
+                            </td>
+                            <td>
+                                <%= orderDetails.couponApplied.discountValue %>
+                            </td>
+                           
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <% } %>
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title">Total Amount</h4>
@@ -661,6 +855,10 @@
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.debug.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 
 
@@ -896,12 +1094,33 @@
     }
 </script>
 
+
+
 <script>
-    function pdf() {
-        const table = document.getElementById("invoice")
-        html2pdf().from(table).save();
+    function generateInvoice(orderId) {
+        fetch(`/generateInvoice?orderID=${orderId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to generate invoice');
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `invoice_${orderId}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(error => {
+                console.error('Error generating invoice:', error);
+                // Handle error
+            });
     }
 </script>
+
 
 
 
@@ -999,6 +1218,49 @@
     }
 </script>
 
+<script>
+    var popupLink = document.getElementById("invoicePopup");
+    var popupWindow = document.getElementById("invoicePopup-window");
+    var closeButton = document.getElementById("previewClose");
+    popupLink.addEventListener("click", function (event) {
+        event.preventDefault();
+        popupWindow.style.display = "block";
+    });
+    function closePopup() {
+        popupWindow.style.display = "none";
+    };
+</script>
+
+<script>
+    const currentDate = new Date();
+
+    const formattedDate = currentDate.toLocaleDateString('en-US');
+
+    document.getElementById('currentDate').textContent = formattedDate;
+</script>
+
+<script>
+    function invoicePDF() {
+        if (typeof jsPDF !== 'undefined') {
+            const content = document.getElementById('invoice_download');;
+            html2canvas(content).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF();
+                const imgWidth = 200;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                pdf.save('invoice.pdf');
+            })
+        } else {
+            console.error('jsPDF library is not available');
+        }
+    }
+
+    document.getElementById('invoiceDownload').addEventListener('click', function () {
+        invoicePDF();
+    });
+
+</script>
 
 
 
