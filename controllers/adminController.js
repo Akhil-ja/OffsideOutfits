@@ -7,7 +7,11 @@ const ExcelJS = require("exceljs");
 const PDFDocument = require("pdfkit");
 
 
-const Category=require("../models/categoryModel")
+
+
+
+const Category=require("../models/categoryModel");
+const ordersModel = require("../models/ordersModel");
 
 
 
@@ -98,13 +102,12 @@ const adminLogout= async(req,res)=>{
 
 
 
-const viewDashboard = async (req, res) => {
+const viewsalesReport = async (req, res) => {
   try {
     const page = parseInt(req.query.page, 10) || 1;
     const limit = 10;
     const skip = (page - 1) * limit;
 
-   
     const sortedOrders = await Order.find({ status: "delivered" })
       .populate({
         path: "products.product",
@@ -120,7 +123,6 @@ const viewDashboard = async (req, res) => {
       })
       .sort({ orderDate: -1 });
 
-    
     const orders = sortedOrders.slice(skip, skip + limit);
 
     const totalOrders = sortedOrders.length;
@@ -132,7 +134,7 @@ const viewDashboard = async (req, res) => {
     );
     const totalProducts = await Product.countDocuments();
 
-    res.render("dashboard", {
+    res.render("salesReport", {
       orders,
       totalRevenue,
       totalOrders,
@@ -295,13 +297,128 @@ const editproductImagePOST = async (req, res) => {
 };
 
 
+const viewDashboard = async (req, res) => {
+  try {
+    let daily = await salesReport(1);
+    let weekly = await salesReport(7);
+    let monthly = await salesReport(30);
+    let yearly = await salesReport(365);
+    let orderChart = await orderPieChart();
+    let allProductsCount = await Product.countDocuments();
+
+     const orders = await ordersModel.find();
+     const totalRevenue =await calculateTotalRevenue(orders);
+     const totalOrders = orders.length;
+     const totalProducts = await Product.countDocuments();
+     const totalCategories = await Category.find().count();
+
+    res.render("dashboard", {
+      daily,
+      weekly,
+      monthly,
+      yearly,
+      allProductsCount,
+      orderChart,
+      totalRevenue,
+      totalOrders,
+      totalProducts,
+      totalCategories,
+    });
+  } catch (error) {
+    console.error("Error in viewDashboard:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+async function calculateTotalRevenue() {
+  try {
+  
+    const orders = await ordersModel.find();
+    let totalRevenue = 0;
+    orders.forEach((order) => {
+      totalRevenue += order.orderTotal;
+    });
+    return totalRevenue.toFixed(2);
+  } catch (error) {
+    console.error("Error calculating total revenue:", error);
+    throw error;
+  }
+}
+
+async function orderPieChart() {
+  const statuses = [
+    "pending",
+    "completed",
+    "returned",
+    "cancelled",
+    "delivered",
+    "payment failed",
+  ];
+
+  const counts = await Promise.all(
+    statuses.map((status) => ordersModel.countDocuments({ status }))
+  );
+
+  return { statuses, counts };
+}
+
+
+async function salesReport(date) {
+  try {
+    const currentDate = new Date();
+    const startDate = new Date(currentDate);
+    startDate.setDate(currentDate.getDate() - date);
+    startDate.setHours(0, 0, 0, 0);
+    const endDate = new Date(currentDate);
+    endDate.setHours(23, 59, 59, 999);
+
+    const orders = await ordersModel.find({
+      status: "delivered",
+      orderDate: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+    });
+
+    const labels = [];
+    const data = [];
+
+    for (let i = 0; i < date; i++) {
+      const dateLabel = new Date(startDate);
+      dateLabel.setDate(startDate.getDate() + i);
+      labels.push(dateLabel.toLocaleDateString());
+
+      const dailyOrders = orders.filter((order) => {
+        const orderDate = new Date(order.orderDate);
+        return (
+          orderDate.getFullYear() === dateLabel.getFullYear() &&
+          orderDate.getMonth() === dateLabel.getMonth() &&
+          orderDate.getDate() === dateLabel.getDate()
+        );
+      });
+
+      const dailyRevenue = dailyOrders.reduce(
+        (total, order) => total + order.orderTotal,
+        0
+      );
+
+      data.push(dailyRevenue);
+    }
+
+    return { labels, data };
+  } catch (err) {
+    console.log("Error in sales report:", err.message);
+    throw err;
+  }
+}
 
 module.exports = {
   loadAdminLog,
   adminLogin,
   adminLogout,
+  viewsalesReport,
   viewDashboard,
   filterOrdersByDate,
   loadAdminProducts,
-  editproductImagePOST
+  editproductImagePOST,
 };

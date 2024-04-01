@@ -231,12 +231,18 @@ adminRoute.post("/toggleOfferStatus", offerController.toggleStatus);
 adminRoute.post("/toggleReferalStatus", offerController.toggleReferalStatus);
 
 adminRoute.get(
+  "/salesReport",
+  authRoutes.isAdminLogin,
+  adminController.viewsalesReport
+);
+
+adminRoute.get(
   "/dashboard",
   authRoutes.isAdminLogin,
   adminController.viewDashboard
 );
 
-adminRoute.post("/dashboard", adminController.filterOrdersByDate);
+adminRoute.post("/salesReport", adminController.filterOrdersByDate);
 
 
 
