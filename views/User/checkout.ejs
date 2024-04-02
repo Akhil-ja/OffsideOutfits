@@ -363,6 +363,8 @@
                                                         <% if (wallet) { %>
                                                             Your Wallet Balance: <span class="wallet-balance" style="color: blue; text-decoration: underline;">
                                                                 <%= wallet.money.toFixed(2) %>/-Rs
+
+                                                                <span id="walletAmount" hidden><%= wallet.money.toFixed(2) %></span>
                                                             </span>
                                                             <% } else { %>
                                                                 Your Wallet Balance: <span class="wallet-balance" style="color: red;">
@@ -495,7 +497,7 @@
 </script>
 
 <script>
-   document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
         const placeOrderBtn = document.getElementById('placeOrderBtn');
 
         placeOrderBtn.addEventListener('click', function (event) {
@@ -517,14 +519,7 @@
                     paymentType,
                 }),
             })
-                .then(response => {
-                    if (response.status === 406) {
-                        throw new Error('No Balance in Wallet');
-                    } else if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(res => {
                     console.log("Server Response:", res);
 
@@ -568,9 +563,15 @@
                                 showConfirmButton: false,
                                 timer: 4000,
                                 timerProgressBar: true,
+
                             });
+
+
                             window.location.href = "/pending-order";
+
                         });
+
+
                     } else {
                         if (res.redirectURL) {
                             window.location.href = res.redirectURL;
@@ -595,12 +596,11 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: error.message,
+                        text: 'Insufficient stock',
                     });
                 });
         });
     });
-
 </script>
 
 
@@ -625,6 +625,8 @@
                 if (response.ok) {
                     const data = await response.json();
                     document.getElementById('totalAmount').innerText = data.newTotalAmount.toFixed(2);
+                     const WalletTotal= document.getElementById('walletAmount').innerText 
+
                   
                     const cashOnDeliveryRadio = document.querySelector('input[name="PaymentType"][value="COD"]');
                     if (data.newTotalAmount > 1000) {
@@ -634,6 +636,15 @@
                         cashOnDeliveryRadio.disabled = false;
                          cashOnDeliveryAlert.style.display = 'none';
                     }
+
+                     if (data.newTotalAmount > 1000) {
+                        cashOnDeliveryRadio.disabled = true;
+                        cashOnDeliveryAlert.style.display = 'block';
+                    } else {
+                        cashOnDeliveryRadio.disabled = false;
+                        cashOnDeliveryAlert.style.display = 'none';
+                    }
+
                     if (data.couponApplied) {
                         const couponCodePlaceholder = document.getElementById('couponCodePlaceholder');
                         const discountValuePlaceholder = document.getElementById('discountValuePlaceholder');

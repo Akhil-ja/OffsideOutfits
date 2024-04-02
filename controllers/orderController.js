@@ -729,24 +729,20 @@ const returnOrder = async (req, res) => {
 
 const Payment = async (req, res) => {
   try {
-
     console.log("in paymenty");
     const { userID, selectedAddress, paymentType } = req.body;
 
-       console.log("Order Log:", { userID, selectedAddress, paymentType });
+    console.log("Order Log:", { userID, selectedAddress, paymentType });
 
-          req.session = req.session || {};
+    req.session = req.session || {};
 
-          req.session.selectedAddress = selectedAddress;
-          req.session.paymentType = paymentType;
-          req.session.userID = userID;
+    req.session.selectedAddress = selectedAddress;
+    req.session.paymentType = paymentType;
+    req.session.userID = userID;
 
-           req.session.save();
+    req.session.save();
 
-          console.log(
-            "session address in payment:" + req.session.selectedAddress
-          );
-
+    console.log("session address in payment:" + req.session.selectedAddress);
 
     const cart = await Cart.findOne({ user: userID }).populate({
       path: "cartProducts.product",
@@ -759,7 +755,7 @@ const Payment = async (req, res) => {
 
     let orderProducts = [];
     let total = cart.cartTotal.toFixed(2);
-    console.log(typeof(cart.cartTotal));
+    console.log(typeof cart.cartTotal);
     let orderAddress = "";
 
     if (orderDocument) {
@@ -768,8 +764,6 @@ const Payment = async (req, res) => {
       );
 
       console.log("The address:" + orderAddress);
-
-      
 
       if (orderAddress) {
         orderProducts = cart.cartProducts.map((cartProduct) => ({
@@ -780,8 +774,6 @@ const Payment = async (req, res) => {
         }));
 
         console.log("ordered products:", orderProducts);
-
-        
 
         for (const orderProduct of orderProducts) {
           const product = orderProduct.product;
@@ -796,8 +788,7 @@ const Payment = async (req, res) => {
           ) {
             return res.status(400).json({
               success: false,
-             message: `Sorry, we don't have enough stock for ${product.pname} in size ${orderProduct.size}. Please choose a lower quantity.`,
-    
+              message: `Sorry, we don't have enough stock for ${product.pname} in size ${orderProduct.size}. Please choose a lower quantity.`,
             });
           }
         }
@@ -837,20 +828,14 @@ const Payment = async (req, res) => {
           email: "akhiljagadish124@gmail.com",
         });
       });
-    }else if (paymentType === "Wallet") {
-      
-
+    } else if (paymentType === "Wallet") {
       const amount = total;
-      
 
       let wallet = await Wallet.findOne({ user: userID });
 
       if (!wallet || wallet.money < amount) {
-         return res.status(406).send();
-
+        console.log("no enough money");
       } else {
-
-        
         wallet.money -= parseFloat(amount);
         wallet.transactions.push({
           amount: parseFloat(amount),
@@ -864,10 +849,7 @@ const Payment = async (req, res) => {
           message: "Payment type other than RazorPay. Redirecting...",
           redirectURL: redirectURL,
         });
-
       }
-      
-
     } else {
       console.log("else");
       try {
