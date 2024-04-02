@@ -42,7 +42,7 @@
         required: true,
       },
 
-      brand: {
+           brand: {
         type: String,
         required: false,
       },

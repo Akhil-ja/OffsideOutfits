@@ -290,8 +290,8 @@
             </div>
 
             <div class="mb-3">
-                <label for="minimumOffer" class="form-label">Minimum Offer</label>
-                <input type="number" class="form-control" id="minimumOffer" name="minimumOffer" placeholder="Enter minimum offer"
+                <label for="minimumOffer" class="form-label">Minimum purchase value</label>
+                <input type="number" class="form-control" id="minimumOffer" name="minimumOffer" placeholder="Enter Minimum purchase value"
                     required>
                 <p id="minimumOffer-error" class="error-message" style="color: red;"></p>
             </div>
@@ -371,6 +371,9 @@
             return false;
         } else if (discountType === 'percentage' && parseFloat(discountValue) > 99) {
             discountValueError.textContent = 'Percentage cannot exceed 99.';
+            return false;
+        } else if (discountType === 'fixed' && parseFloat(discountValue) >= parseFloat(minimumOffer)) {
+            discountValueError.textContent = 'Discount Value must be less than the Minimum Purchase Value for fixed discounts.';
             return false;
         } else {
             discountValueError.textContent = '';

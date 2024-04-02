@@ -230,6 +230,8 @@ adminRoute.post("/toggleOfferStatus", offerController.toggleStatus);
 
 adminRoute.post("/toggleReferalStatus", offerController.toggleReferalStatus);
 
+adminRoute.post("/deleteOffer", offerController.deleteOffer);
+
 adminRoute.get(
   "/salesReport",
   authRoutes.isAdminLogin,

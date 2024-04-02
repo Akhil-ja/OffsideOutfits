@@ -304,21 +304,29 @@
                                         
                                         
                                             
-                                        
-                                            <div class="card">
-                                                <div class="card-header" id="heading-3">
-                                                    <h2 class="card-title">
-                                                        <input class="collapsed mb-1" type="radio" name="PaymentType" value="COD" checked data-toggle="collapse"
-                                                            href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
-                                                        Cash on delivery
-                                                    </h2>
-                                                </div><!-- End .card-header -->
-                                                <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
-                                                    <div class="card-body">
-                                                        Cash on delivery (COD) is a type of transaction where a customer pays for a product upon delivery.
-                                                    </div><!-- End .card-body -->
-                                                </div><!-- End .collapse -->
-                                            </div><!-- End .card -->
+                                    <div class="card">
+                                        <div class="card-header" id="heading-3">
+                                            <h2 class="card-title">
+                                                <input class="collapsed mb-1" type="radio" name="PaymentType" value="COD" <% if(totalAmount.toFixed(2)>
+                                                1000) { %>disabled<% } %> checked data-toggle="collapse" href="#collapse-3" aria-expanded="false"
+                                                    aria-controls="collapse-3">
+                                                    Cash on delivery
+                                            </h2>
+                                        </div>
+                                        <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
+                                            <div class="card-body">
+                                                Cash on delivery (COD) is a type of transaction where a customer pays for a product upon delivery.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <% if(totalAmount.toFixed(2)> 1000) { %>
+                                        <div class="alert alert-danger m-3" role="alert">
+                                            Orders above Rs 1000 cannot be paid using Cash on Delivery.
+                                        </div>
+                                        <% } %>
+
+
                                             
                                             <div class="card">
                                                 <div class="card-header" id="heading-4">

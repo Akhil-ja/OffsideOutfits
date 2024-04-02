@@ -169,7 +169,7 @@
 
 
 <div class="card-body">
-    <!-- Category Offers -->
+  
     <% const categoryOffers=offers.filter(offer=> offer.categoryOffer && offer.categoryOffer.discountPercentage !== 0);
         %>
         <% if (categoryOffers.length> 0) { %>
@@ -207,16 +207,19 @@
                             <td>
                                 <%= offer.categoryOffer.category.cName %>
                             </td>
-                        <td>
-                            <button onclick="toggleStatus('<%= offer._id %>')" class="btn btn-<%= offer.isActive ? 'danger' : 'success' %>">
-                                <%= offer.isActive ? 'Block' : 'Activate' %>
-                            </button>
-                        </td>
-
+                            <td>
+                                <% if (offer.isActive) { %>
+                                    <button onclick="toggleStatus('<%= offer._id %>')" class="btn btn-danger">Block</button>
+                                    <% } else { %>
+                                        <button onclick="toggleStatus('<%= offer._id %>')" class="btn btn-success">Activate</button>
+                                        <button onclick="deleteOffer('<%= offer._id %>')" class="btn btn-danger">Delete</button>
+                                        <% } %>
+                            </td>
                         </tr>
                         <% }) %>
                 </tbody>
             </table>
+
             <% } %>
 
                 <!-- Product Offers -->
@@ -258,9 +261,12 @@
                                             <%= offer.productOffer.products.map(product=> product.pname).join(', ') %>
                                         </td>
                                     <td>
-                                        <button onclick="toggleStatus('<%= offer._id %>')" class="btn btn-<%= offer.isActive ? 'danger' : 'success' %>">
-                                            <%= offer.isActive ? 'Block' : 'Activate' %>
-                                        </button>
+                                        <% if (offer.isActive) { %>
+                                            <button onclick="toggleStatus('<%= offer._id %>')" class="btn btn-danger">Block</button>
+                                            <% } else { %>
+                                                <button onclick="toggleStatus('<%= offer._id %>')" class="btn  btn-success">Activate</button>
+                                                <button onclick="deleteOffer('<%= offer._id %>')" class="btn btn-danger">Delete</button>
+                                                <% } %>
                                     </td>
                                     </tr>
                                     <% }) %>
@@ -306,7 +312,7 @@
                                                 </td>
                                                 <td>
                                                     <button onclick="toggleReferalStatus('<%= offer._id %>')"
-                                                        class="btn btn-<%= offer.isActive ? 'danger' : 'success' %>">
+                                                        class="btn  btn-<%= offer.isActive ? 'danger' : 'success' %>">
                                                         <%= offer.isActive ? 'Block' : 'Activate' %>
                                                     </button>
                                                 </td>
@@ -399,6 +405,30 @@
                             });
                     }
                 </script>
+
+
+<script>
+    function deleteOffer(offerId){
+        fetch('/admin/deleteOffer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ offerId }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    console.error('Failed to update status');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
 
                 </body>
                 

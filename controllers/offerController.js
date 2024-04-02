@@ -348,7 +348,19 @@ const updateProductDiscount = async () => {
   }
 };
 
+const deleteOffer=async(req,res)=>{
+   try {
+     const { offerId } = req.body;
 
+    
+     await Offer.findByIdAndDelete(offerId);
+
+     res.json({ success: true });
+   } catch (error) {
+     console.error("Error deleting offer:", error);
+     res.status(500).json({ success: false, error: "Failed to delete offer" });
+   }
+}
 
 
 module.exports = {
@@ -361,4 +373,5 @@ module.exports = {
   addReferalOffer,
   toggleStatus,
   toggleReferalStatus,
+  deleteOffer,
 };

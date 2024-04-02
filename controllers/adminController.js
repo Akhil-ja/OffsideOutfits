@@ -366,11 +366,22 @@ async function orderPieChart() {
 async function salesReport(date) {
   try {
     const currentDate = new Date();
-    const startDate = new Date(currentDate);
-    startDate.setDate(currentDate.getDate() - date);
-    startDate.setHours(0, 0, 0, 0);
-    const endDate = new Date(currentDate);
-    endDate.setHours(23, 59, 59, 999);
+    let startDate, endDate;
+
+    if (date === 1) {
+      
+      startDate = new Date(currentDate);
+      startDate.setHours(0, 0, 0, 0);
+      endDate = new Date(currentDate);
+      endDate.setHours(23, 59, 59, 999);
+    } else {
+      
+      startDate = new Date(currentDate);
+      startDate.setDate(currentDate.getDate() - date);
+      startDate.setHours(0, 0, 0, 0);
+      endDate = new Date(currentDate);
+      endDate.setHours(23, 59, 59, 999);
+    }
 
     const orders = await ordersModel.find({
       status: "delivered",

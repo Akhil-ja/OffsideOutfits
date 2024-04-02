@@ -90,6 +90,10 @@ orderProducts.forEach((orderProduct) => {
             }
 
             product.sizes[sizeInfoIndex].quantity -= orderProduct.quantity;
+
+
+             product.popularity =
+               (product.popularity || 0) + orderProduct.quantity;
             await product.save();
           }
 
@@ -243,9 +247,10 @@ const createPendingOrders=async(req,res)=>{
                success: false,
                message: `Sorry, we don't have enough stock in size ${orderProduct.size}. Please choose a lower quantity.`,
              });
+             
            }
 
-          
+       
            await product.save();
          }
 
@@ -278,6 +283,7 @@ const createPendingOrders=async(req,res)=>{
            couponApplied: couponApplied,
            paymentStatus:"pending",
            originalOrderTotal: cart.oldCartTotal,
+          
          });
 
          await newOrder.save();
@@ -983,7 +989,7 @@ if (!order) {
        
      sizeInfo.quantity -= orderProduct.quantity;
 
-   
+      product.popularity = (product.popularity || 0) + orderProduct.quantity;
      await product.save();
    }
 
