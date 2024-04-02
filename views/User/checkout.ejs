@@ -320,11 +320,16 @@
                                         </div>
                                     </div>
                                     
-                                    <% if(totalAmount.toFixed(2)> 1000) { %>
-                                        <div class="alert alert-danger m-3" role="alert">
+                                <% if(totalAmount.toFixed(2)> 1000) { %>
+                                    <div class="alert alert-danger m-3" role="alert" id="cashOnDeliveryAlert">
+                                        Orders above Rs 1000 cannot be paid using Cash on Delivery.
+                                    </div>
+                                    <% } else { %>
+                                        <div class="alert alert-danger m-3" role="alert" id="cashOnDeliveryAlert" style="display: none;">
                                             Orders above Rs 1000 cannot be paid using Cash on Delivery.
                                         </div>
                                         <% } %>
+
 
 
                                             
@@ -606,6 +611,7 @@
         document.getElementById('couponForm').addEventListener('submit', async function (event) {
             event.preventDefault();
             const couponCode = document.getElementById('checkout-discount-input').value;
+            const cashOnDeliveryAlert = document.getElementById('cashOnDeliveryAlert');
             const userID = "<%= currentUser._id %>";
             try {
                 const response = await fetch('/applyCoupon', {
@@ -619,6 +625,15 @@
                 if (response.ok) {
                     const data = await response.json();
                     document.getElementById('totalAmount').innerText = data.newTotalAmount.toFixed(2);
+                  
+                    const cashOnDeliveryRadio = document.querySelector('input[name="PaymentType"][value="COD"]');
+                    if (data.newTotalAmount > 1000) {
+                        cashOnDeliveryRadio.disabled = true;
+                          cashOnDeliveryAlert.style.display = 'block';
+                    } else {
+                        cashOnDeliveryRadio.disabled = false;
+                         cashOnDeliveryAlert.style.display = 'none';
+                    }
                     if (data.couponApplied) {
                         const couponCodePlaceholder = document.getElementById('couponCodePlaceholder');
                         const discountValuePlaceholder = document.getElementById('discountValuePlaceholder');

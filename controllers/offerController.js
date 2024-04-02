@@ -14,7 +14,19 @@ const ReferralCode = require("../models/referalCodeModel");
 
 const viewOffers=async(req,res)=>{
   try {
-    const offers = await Offer.find()
+
+    const updateResult = await Offer.updateMany(
+      {
+        endDate: { $lte: new Date() },
+      },
+      {
+        $set: { isActive: false },
+      }
+    );
+
+    const offers = await Offer.find({
+      endDate: { $gte: new Date() },
+    })
       .populate({
         path: "productOffer.products",
         model: "Product",

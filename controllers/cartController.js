@@ -413,6 +413,17 @@ const Applycoupon = async (req, res) => {
     let couponDiscount = 0; 
     const cartItems = await Cart.find({ user: userID });
 
+ const coupon = await Coupon.findOne({ code: couponCode });
+ 
+     if (coupon) {
+     
+      const currentDate = new Date();
+      if (coupon.expiryDate < currentDate) {
+        console.log("Coupon has expired");
+        return res.status(400).json({ error: "Coupon has expired" });
+      }
+    }
+
     const productIds = cartItems.reduce((_ids_, _item_) => {
       const itemProductIds = _item_.cartProducts.map(
         (_product_) => _product_.product
@@ -456,7 +467,7 @@ const Applycoupon = async (req, res) => {
     const initialTotalAmount = totalAmount;
     let newTotalAmount = initialTotalAmount;
 
-    const coupon = await Coupon.findOne({ code: couponCode });
+   
     if (coupon) {
 
 const couponExist = await User.findOne({
