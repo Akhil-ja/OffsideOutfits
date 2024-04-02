@@ -217,6 +217,9 @@
 
 
 
+
+
+
                         <!-- card end// -->
                     </div>
                     <div class="col-lg-3">
@@ -358,6 +361,38 @@
         
 </script>
 
+<script>
+    function limitFiles(input, maxFiles) {
+       
+        if (input.files && input.files.length > maxFiles) {
+            input.value = ''; 
+            alert("You can only upload a maximum of " + maxFiles + " files.");
+        }
+    }
+
+    function previewImages(event) {
+        const preview = document.getElementById('imagePreview');
+        preview.innerHTML = ''; 
+        const files = event.target.files;
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.maxWidth = '100px'; 
+                img.style.maxHeight = '100px'; 
+                img.style.marginRight = '5px'; 
+                img.style.marginBottom = '5px'; 
+                preview.appendChild(img);
+            }
+
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
 
     <script>
         function getElementValue(id) {

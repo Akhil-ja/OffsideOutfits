@@ -315,26 +315,26 @@ const viewDashboard = async (req, res) => {
     const topProducts = await Product.find().sort({ popularity: -1 }).limit(10);
 
     const topCategories = await Product.aggregate([
-      { $sort: { popularity: -1 } }, 
-      { $limit: 10 }, 
+     
       {
         $group: {
-          _id: "$category", 
-          totalPopularity: { $sum: "$popularity" }, 
+          _id: "$category",
+          totalPopularity: { $sum: "$popularity" },
         },
       },
-      { $sort: { totalPopularity: -1 } }, 
+     
+      { $sort: { totalPopularity: -1 } },
     ]);
 
     const categoryIds = topCategories.map((category) => category._id);
-
     const categoryMap = new Map();
-    const categories = await Category.find({ _id: { $in: categoryIds } });
 
+    const categories = await Category.find({ _id: { $in: categoryIds } });
     categories.forEach((category) => {
       categoryMap.set(category._id.toString(), category);
     });
 
+    
     const sortedCategories = topCategories.map((category) =>
       categoryMap.get(category._id.toString())
     );
