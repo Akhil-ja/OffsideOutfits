@@ -572,7 +572,15 @@
                         });
 
 
-                    } else {
+                    }else if(res.status==="NoBalance"){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: "NO enough Balance in the Wallet",
+                        });
+                    }
+                    
+                    else {
                         if (res.redirectURL) {
                             window.location.href = res.redirectURL;
                         } else if (res.message) {

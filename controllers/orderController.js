@@ -834,7 +834,9 @@ const Payment = async (req, res) => {
       let wallet = await Wallet.findOne({ user: userID });
 
       if (!wallet || wallet.money < amount) {
-        console.log("no enough money");
+        res.json({ status: "NoBalance" });
+         
+        
       } else {
         wallet.money -= parseFloat(amount);
         wallet.transactions.push({

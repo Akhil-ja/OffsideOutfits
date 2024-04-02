@@ -163,7 +163,7 @@ const cartQuantity = async (req, res) => {
 
     console.log(`Stock for ${selectedSize}: ${availableStock}`);
 
-    if (newQuantity > availableStock) {
+    if (newQuantity > productInCart.quantity && newQuantity > availableStock) {
       return res.status(400).json({
         error: "Requested quantity exceeds available stock.",
         type: "insufficientStock",
@@ -197,6 +197,7 @@ const cartQuantity = async (req, res) => {
     res.status(500).json({ error: "Internal server error." });
   }
 };
+
 
 
 

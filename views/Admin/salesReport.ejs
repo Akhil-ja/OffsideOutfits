@@ -503,7 +503,7 @@
                 document.getElementById('tableHeading').innerText = headingText;
 
 
-                let url = `/admin/dashboard?startDate=${startDate}&endDate=${endDate}`;
+                let url = `/admin/salesReport?startDate=${startDate}&endDate=${endDate}`;
 
                 if (timeFilter !== 'All' && timeFilter !== 'custom') {
                     url += `&timeFilter=${timeFilter}`;
