@@ -276,6 +276,40 @@
                                         <% } %>
                             </div>
 
+<% if (totalPages> 1) { %>
+    <nav aria-label="Transaction navigation">
+        <ul class="pagination justify-content-center">
+            <% if (currentPage> 1) { %>
+                <li class="page-item">
+                    <a class="page-link" href="/profile?selected=orders&page=<%= currentPage - 1 %>"
+                        aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+                <% } %>
+
+                    <% for (let i=1; i <=totalPages; i++) { %>
+                        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                            <a class="page-link" href="/profile?selected=orders&page=<%= i %>">
+                                <%= i %>
+                            </a>
+                        </li>
+                        <% } %>
+
+                            <% if (currentPage < totalPages) { %>
+                                <li class="page-item">
+                                    <a class="page-link" href="/profile?selected=orders&page=<%= currentPage + 1 %>"
+                                        aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                                <% } %>
+        </ul>
+    </nav>
+    <% } %>
+
 
 
                                     </div>
@@ -896,8 +930,8 @@
 </script>
 
 <script>
-    function copyToClipboard(elementId) {
-        const couponText = document.getElementById(elementId).innerText;
+   function copyToClipboard(elementId) {
+        const couponText = document.getElementById(elementId).innerText.trim(); 
         const tempInput = document.createElement("input");
         tempInput.value = couponText;
         document.body.appendChild(tempInput);
@@ -905,19 +939,19 @@
         document.execCommand("copy");
         document.body.removeChild(tempInput);
 
-      
         const toast = Toastify({
             text: 'Referral Code Copied to clipboard',
             duration: 3000,
-            gravity: 'top', 
-            position: 'right', 
-            backgroundColor: 'linear-gradient(to right, #e0f7fa, #e0f7fa)', 
+            gravity: 'top',
+            position: 'right',
+            backgroundColor: 'linear-gradient(to right, #e0f7fa, #e0f7fa)',
         });
 
-         toast.showToast();
+        toast.showToast();
         const toastElement = document.querySelector('.toastify');
-        toastElement.style.color = 'black'; 
+        toastElement.style.color = 'black';
     }
+
 </script>
 
 

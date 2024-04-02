@@ -469,7 +469,7 @@
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
 
   
-"error":"Insufficient stock for product Argentina Home 2005-06 Retro Jersey size M"
+
 
 
 
@@ -490,7 +490,7 @@
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+   document.addEventListener('DOMContentLoaded', function () {
         const placeOrderBtn = document.getElementById('placeOrderBtn');
 
         placeOrderBtn.addEventListener('click', function (event) {
@@ -512,7 +512,14 @@
                     paymentType,
                 }),
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (response.status === 406) {
+                        throw new Error('No Balance in Wallet');
+                    } else if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(res => {
                     console.log("Server Response:", res);
 
@@ -543,11 +550,11 @@
 
                         var razorpayObject = new Razorpay(options);
 
-                         razorpayObject.open();
+                        razorpayObject.open();
 
                         razorpayObject.on('payment.failed', function (response) {
-                              razorpayObject.close();
-                        Swal.fire({
+                            razorpayObject.close();
+                            Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
                                 text: 'Payment Failed',
@@ -556,15 +563,9 @@
                                 showConfirmButton: false,
                                 timer: 4000,
                                 timerProgressBar: true,
-                               
                             });
-
-
-                              window.location.href = "/pending-order";
-                           
+                            window.location.href = "/pending-order";
                         });
-
-                       
                     } else {
                         if (res.redirectURL) {
                             window.location.href = res.redirectURL;
@@ -589,11 +590,12 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'Insufficient stock',
+                        text: error.message,
                     });
                 });
         });
     });
+
 </script>
 
 

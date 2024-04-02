@@ -140,96 +140,84 @@ const resentOTP = async (req, res) => {
 
 
 
-  const insertUser = async (req, res) => {
-    try {
-      if (req.body.otp === req.session.tempUserDetails.otp) {
+const insertUser = async (req, res) => {
+  try {
+    if (req.body.otp === req.session.tempUserDetails.otp) {
+      const referralCode = crypto.randomBytes(3).toString("hex");
+      const user = new User({
+        name: req.session.tempUserDetails.fullname,
+        email: req.session.tempUserDetails.email,
+        phone: req.session.tempUserDetails.phone,
+        password: req.session.tempUserDetails.password,
+        is_admin: 0,
+        is_verified: 1,
+        referralCode: referralCode,
+      });
+      const userData = await user.save();
+      const userID = userData._id;
 
-        const referralCode = crypto.randomBytes(3).toString("hex");
-
-        const user = new User({
-          name: req.session.tempUserDetails.fullname,
-          email: req.session.tempUserDetails.email,
-          phone: req.session.tempUserDetails.phone,
-          password: req.session.tempUserDetails.password,
-          is_admin: 0,
-          is_verified: 1,
-          referralCode: referralCode, 
+      // Check if a referral code was provided during registration
+      if (req.session.tempUserDetails.referalUserID) {
+        const referral = await ReferralCode.findOne({
+          code: req.session.tempUserDetails.referralCode,
         });
+        if (referral) {
+          const referredUserReward = referral.referredUserReward;
+          const referringUserReward = referral.referringUserReward;
 
-        const userData = await user.save();
-        const userID = userData._id;
+          // Add referral reward to the referred user's wallet
+          let referredUserwallet = await Wallet.findOne({
+            user: req.session.tempUserDetails.referalUserID,
+          });
+          if (!referredUserwallet) {
+            referredUserwallet = new Wallet({
+              user: req.session.tempUserDetails.referalUserID,
+              money: parseFloat(referredUserReward),
+              transactions: [
+                {
+                  amount: parseFloat(referredUserReward),
+                  type: "Referal",
+                },
+              ],
+            });
+          } else {
+            referredUserwallet.money += parseFloat(referredUserReward);
+            referredUserwallet.transactions.push({
+              amount: parseFloat(referredUserReward),
+              type: "Referal",
+            });
+          }
+          await referredUserwallet.save();
 
-
-  const referalUserID=req.session.tempUserDetails.referalUserID
-
-
-  const referral= await ReferralCode.findOne();
-
-
-const referredUserReward = referral.referredUserReward;
-
-const referringUserReward = referral.referringUserReward;
-
-
-
-  let referredUserwallet = await Wallet.findOne({ user: referalUserID });
-
-
-
-  if (!referredUserwallet) {
-    referredUserwallet = new Wallet({
-      user: userID,
-      money: parseFloat(referredUserReward),
-      transactions: [
-        {
-          amount: parseFloat(referredUserReward),
-          type: "credit",
-        },
-      ],
-    });
-
-    await referredUserwallet.save();
-  } else {
-    referredUserwallet.money += parseFloat(referringUserReward);
-    referredUserwallet.transactions.push({
-      amount: parseFloat(referringUserReward),
-      type: "credit",
-    });
-    await referredUserwallet.save();
-  }
-        
-  let userWallet = await Wallet.findOne({ user: userID });
-
-  if (!userWallet) {
-    userWallet = new Wallet({
-      user: userID,
-      money: parseFloat(referringUserReward),
-      transactions: [
-        {
-          amount: parseFloat(referringUserReward),
-          type: "Referal Amount",
-        },
-      ],
-    });
-
-    await userWallet.save();
-  } else {
-    userWallet.money += parseFloat(referringUserReward);
-    userWallet.transactions.push({
-      amount: parseFloat(referringUserReward),
-      type: "Referal Amount",
-    });
-    await wallet.save();
-  }
-
-
+          // Add referral reward to the new user's wallet
+          let userWallet = await Wallet.findOne({ user: userID });
+          if (!userWallet) {
+            userWallet = new Wallet({
+              user: userID,
+              money: parseFloat(referringUserReward),
+              transactions: [
+                {
+                  amount: parseFloat(referringUserReward),
+                  type: "Referal Amount",
+                },
+              ],
+            });
+          } else {
+            userWallet.money += parseFloat(referringUserReward);
+            userWallet.transactions.push({
+              amount: parseFloat(referringUserReward),
+              type: "Referal Amount",
+            });
+          }
+          await userWallet.save();
+        }
+      }
 
       const token = authRoutes.createToken(userID);
       res.cookie("jwt", token, {
         httpOnly: true,
         maxAge: authRoutes.maxAge * 1000,
       });
-      console.log(token);
       res.redirect("/home");
     } else {
       res.render("OTPpage", { errorMessage: "Not valid OTP" });
@@ -237,8 +225,10 @@ const referringUserReward = referral.referringUserReward;
     }
   } catch (error) {
     console.log(error.message);
+    res.status(500).send("Internal Server Error");
   }
 };
+
 
 
 
@@ -322,14 +312,27 @@ const loadProfile = async (req, res) => {
     let pageinfo = selectedValue;
     console.log(pageinfo);
     console.log(userID);
+
+    
+    const page = parseInt(req.query.page) || 1; 
+    const perPage = 5; 
+
+   
     const AllOrders = await Orders.find({ user: userID })
       .populate({ path: "products.product", model: "Product" })
       .sort({ orderDate: -1 })
+      .skip((page - 1) * perPage)
+      .limit(perPage)
       .exec();
+
+    const orderCount = await Orders.countDocuments({ user: userID });
 
     if (!matchingAddress) {
       console.error("Address not found for user:", userID);
     }
+
+   
+    const totalPages = Math.ceil(orderCount / perPage);
 
     res.render("profile", {
       pageinfo,
@@ -337,11 +340,14 @@ const loadProfile = async (req, res) => {
       AllOrders,
       userDetails,
       walletDetails,
+      currentPage: page,
+      totalPages: totalPages,
     });
   } catch (error) {
     console.log(error.message);
   }
 };
+
 
 
 

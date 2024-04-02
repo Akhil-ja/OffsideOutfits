@@ -167,38 +167,43 @@ const viewEditCoupon = async (req, res) => {
   }
 };
 
-const editCoupon=async(req,res)=>{
-     try {
-         console.log("in edit coupon");
-       const { couponId, name, code, discountType, discountValue, expiryDate } =
-         req.body;
-console.log(req.body.couponId);
-       
-       const existingCoupon = await Coupon.findById(couponId);
-
-       console.log(existingCoupon);
-
-       if (!existingCoupon) {
-         return res.status(404).send("Coupon not found");
-       }
-
-   
-       existingCoupon.name = name;
-       existingCoupon.code = code;
-       existingCoupon.discountType = discountType;
-       existingCoupon.discountValue = discountValue;
-       existingCoupon.expiryDate = expiryDate;
-
-       
-       await existingCoupon.save();
-
+const editCoupon = async (req, res) => {
+  try {
+    const {
+      couponId,
+      name,
+      code,
+      discountType,
+      discountValue,
+      expiryDate,
       
-       res.redirect(`/admin/coupons`);
-     } catch (error) {
-       console.error(error);
-       res.status(500).send("Internal Server Error");
-     }
-}
+      minimumOffer,
+    } = req.body;
+
+    const existingCoupon = await Coupon.findById(couponId);
+
+    if (!existingCoupon) {
+      return res.status(404).send("Coupon not found");
+    }
+
+    existingCoupon.name = name;
+    existingCoupon.code = code;
+    existingCoupon.discountType = discountType;
+    existingCoupon.discountValue = discountValue;
+    existingCoupon.expiryDate = expiryDate;
+    existingCoupon.minimumOffer = minimumOffer;
+
+    await existingCoupon.save();
+
+    res.redirect(`/admin/coupons`);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
+
 module.exports = {
   viewCoupons,
   createCoupon,

@@ -85,42 +85,7 @@
                         <span class="text">Offers</span>
                     </a>
                 </li>
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-transactions-1.html"> <i
-                            class="icon material-icons md-monetization_on"></i>
-                        <span class="text">Transactions</span>
-                    </a>
-
-                </li>
-
-                <li class="menu-item">
-                    <a class="menu-link" href="page-reviews.html"> <i class="icon material-icons md-comment"></i>
-                        <span class="text">Reviews</span>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a class="menu-link" href="page-brands.html"> <i class="icon material-icons md-stars"></i>
-                        <span class="text">Brands</span> </a>
-                </li>
-                <li class="menu-item">
-                    <a class="menu-link" disabled href="#"> <i class="icon material-icons md-pie_chart"></i>
-                        <span class="text">Statistics</span>
-                    </a>
-                </li>
-            </ul>
-            <hr>
-            <ul class="menu-aside">
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="#"> <i class="icon material-icons md-settings"></i>
-                        <span class="text">Settings</span>
-                    </a>
-
-                </li>
-                <li class="menu-item">
-                    <a class="menu-link" href="page-blank.html"> <i class="icon material-icons md-local_offer"></i>
-                        <span class="text"> Starter page </span>
-                    </a>
-                </li>
+               
             </ul>
             <br>
             <br>
@@ -131,11 +96,11 @@
         <header class="main-header navbar">
             <div class="col-search">
                 <form class="searchform">
-                    <div class="input-group">
+                    <!-- <div class="input-group">
                         <input list="search_terms" type="text" class="form-control" placeholder="Search term">
                         <button class="btn btn-light bg" type="button"> <i
                                 class="material-icons md-search"></i></button>
-                    </div>
+                    </div> -->
 
                 </form>
             </div>
@@ -242,7 +207,7 @@
                     
                     <div class="card mb-4">
                         <article class="card-body">
-                            <h5 class="card-title">Sale statistics</h5>
+                            <h5 class="card-title">Sale Statistics</h5>
                             <div id="chartContainer">
                                 <canvas id="chartCanvas"></canvas>
                             </div>
@@ -252,7 +217,7 @@
                      
                 <div class="card mb-4" >
                 <article class="card-body">
-                    <h5 class="card-title">order report</h5>
+                    <h5 class="card-title">Order Report</h5>
                     <div id="chartContainer2">
                         <canvas id="chartCanvas2"></canvas>
                     </div>
@@ -265,14 +230,59 @@
 
 
 
-                <div class="col-xl-4 col-lg-12">
+    <div class="row">
+        <div class="col-xl-4 col-lg-12">
+            <div class="card mb-4">
                 <article class="card-body">
-                    <h5 class="card-title">Top 10</h5>
+                    <h5 class="card-title">Top 10 Products</h5>
                     <div>
-                        <span>yyfvvjhvhifyiyfikkbj</span>
+                        <ol>
+                            <% topProducts.forEach((product, index)=> { %>
+                                <li>
+                                    <%= index + 1 %>. <%= product.pname %>
+                                </li>
+                                <% }); %>
+                        </ol>
                     </div>
                 </article>
-                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-lg-12">
+            <div class="card mb-4">
+                <article class="card-body">
+                    <h5 class="card-title">Top 10 Categories</h5>
+                    <div>
+                        <ol>
+                            <% topCategories.forEach((category, index)=> { %>
+                                <li>
+                                    <%= index + 1 %>. <%= category.cName %>
+                                </li>
+                                <% }); %>
+                        </ol>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <div class="col-xl-4 col-lg-12">
+            <div class="card mb-4">
+                <article class="card-body">
+                    <h5 class="card-title">Top 10 Brands</h5>
+                    <div>
+                        <ol>
+                            <% topBrands.forEach((brand, index)=> { %>
+                                <li>
+                                    <%= index + 1 %>. <%= brand._id %>
+                                </li>
+                                <% }); %>
+                        </ol>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+
+
+
             </div>
 
 
@@ -366,6 +376,7 @@
                 const dailyDataString = '<%= JSON.stringify(daily) %>';
                 const dailyData = JSON.parse(decodeHtmlEntities(dailyDataString));
                 renderChart(dailyData);
+                   
             });
 
             document.getElementById('btnWeekly').addEventListener('click', function () {

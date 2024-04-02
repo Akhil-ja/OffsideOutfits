@@ -18,7 +18,7 @@ const getCategories = async () => {
 const viewCategory = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const perPage = 2;
+    const perPage = 5;
 
     const totalCategories = await Category.countDocuments();
     const totalPages = Math.ceil(totalCategories / perPage);

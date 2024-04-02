@@ -306,11 +306,52 @@ const viewDashboard = async (req, res) => {
     let orderChart = await orderPieChart();
     let allProductsCount = await Product.countDocuments();
 
-     const orders = await ordersModel.find();
-     const totalRevenue =await calculateTotalRevenue(orders);
-     const totalOrders = orders.length;
-     const totalProducts = await Product.countDocuments();
-     const totalCategories = await Category.find().count();
+    const orders = await ordersModel.find();
+    const totalRevenue = await calculateTotalRevenue(orders);
+    const totalOrders = orders.length;
+    const totalProducts = await Product.countDocuments();
+    const totalCategories = await Category.find().count();
+
+    const topProducts = await Product.find().sort({ popularity: -1 }).limit(10);
+
+    const topCategories = await Product.aggregate([
+      { $sort: { popularity: -1 } }, 
+      { $limit: 10 }, 
+      {
+        $group: {
+          _id: "$category", 
+          totalPopularity: { $sum: "$popularity" }, 
+        },
+      },
+      { $sort: { totalPopularity: -1 } }, 
+    ]);
+
+    const categoryIds = topCategories.map((category) => category._id);
+
+    const categoryMap = new Map();
+    const categories = await Category.find({ _id: { $in: categoryIds } });
+
+    categories.forEach((category) => {
+      categoryMap.set(category._id.toString(), category);
+    });
+
+    const sortedCategories = topCategories.map((category) =>
+      categoryMap.get(category._id.toString())
+    );
+
+    
+    const topBrands = await Product.aggregate([
+      {
+        $group: {
+          _id: "$brand", 
+          totalPopularity: { $sum: "$popularity" }, 
+        },
+      },
+      { $sort: { totalPopularity: -1 } }, 
+      { $limit: 10 }, 
+    ]);
+
+    
 
     res.render("dashboard", {
       daily,
@@ -323,12 +364,17 @@ const viewDashboard = async (req, res) => {
       totalOrders,
       totalProducts,
       totalCategories,
+      topProducts,
+      topCategories: sortedCategories,
+      topBrands,
     });
   } catch (error) {
     console.error("Error in viewDashboard:", error);
     res.status(500).send("Internal Server Error");
   }
 };
+
+
 
 async function calculateTotalRevenue() {
   try {
