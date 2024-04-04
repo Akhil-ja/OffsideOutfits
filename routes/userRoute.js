@@ -47,6 +47,7 @@ userRoute.use(authRoutes.isBlocked);
 
 userRoute.get(
   "/home",
+  authRoutes.isBlocked,
   authRoutes.checkUser,
   authRoutes.isLogin,
   userController.loadHome

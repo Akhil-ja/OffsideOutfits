@@ -259,14 +259,12 @@ const loadCheckout = async (req, res) => {
   try {
     const userId = res.locals.currentUser._id;
     const userAddresses = await Address.find({ user: userId });
-    console.log("User Addresses:", userAddresses);
     const cartItems = await Cart.find({ user: userId });
-const wallet = await Wallet.findOne({ user: userId });
+    const wallet = await Wallet.findOne({ user: userId });
+    const user = await User.findOne({ _id: userId });
 
-    await Cart.updateOne(
-      { user: userId },
-      { couponApplied:null }
-    );
+    // Update couponApplied to null if no coupon is applied
+    await Cart.updateOne({ user: userId }, { couponApplied: null });
 
     const productIds = cartItems.reduce((ids, item) => {
       const itemProductIds = item.cartProducts.map(
@@ -308,26 +306,30 @@ const wallet = await Wallet.findOne({ user: userId });
       })
     );
 
-    
-     let couponApplied = null;
-     for (const cartItem of cartItems) {
-       if (cartItem.couponApplied) {
-        
-         couponApplied = cartItem.couponApplied;
-         break; 
-       }
-     }
+    let couponApplied = null;
 
-    
-    await Promise.all(
-      cartItems.map(async (cartItem) => {
-        cartItem.cartTotal = totalAmount;
-        await cartItem.save();
-      })
-    );
+    // If a coupon is applied, retrieve its details
+    for (const cartItem of cartItems) {
+      if (cartItem.couponApplied) {
+        couponApplied = cartItem.couponApplied;
+        break;
+      }
+    }
 
-    console.log("Total Amount:", totalAmount);
-    console.log("Cart:", cartWithProductDetails);
+    // Construct the coupon query based on whether a coupon is applied or not
+    const availableCouponsQuery = {
+      status: "active",
+      expiryDate: { $gt: new Date() },
+    };
+
+    // If a coupon is applied, exclude it from the available coupons list
+    if (couponApplied) {
+      availableCouponsQuery._id = {
+        $nin: user.usedCoupons.map((coupon) => coupon._id),
+      };
+    }
+
+    const availableCoupons = await Coupon.find(availableCouponsQuery);
 
     res.render("checkout", {
       userAddresses,
@@ -335,12 +337,14 @@ const wallet = await Wallet.findOne({ user: userId });
       totalAmount,
       couponApplied,
       wallet,
+      availableCoupons,
     });
   } catch (error) {
     console.log(error.message);
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 
 

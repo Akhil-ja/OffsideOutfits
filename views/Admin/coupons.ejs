@@ -352,7 +352,7 @@
 
         const today = new Date().toISOString().split('T')[0];
 
-        if (expiryDate < today) {
+        if (expiryDate <= today) {
             expiryDateError.textContent = 'Expiry Date must be greater than today.';
             return false;
         } else {

@@ -452,13 +452,13 @@
                                         </td>
                                         <td class="text-end">
                                            
-                                                <%= product.price %>
+                                                <%= product.price.toFixed(2) %>
                                                     
                                         </td>
 
 
                                         <td class="text-end">
-                                            <%= product.price * product.quantity %>
+                                            <%= product.price.toFixed(2) * product.quantity %>
                                         </td>
 
                                     </tr>
@@ -466,7 +466,7 @@
                                         <tr>
                                             <td colspan="3" class="text-end">Subtotal</td>
                                             <td class="text-end">
-                                                <%= orderDetails.orderTotal %>
+                                                <%= orderDetails.orderTotal.toFixed(2) %>
                                             </td>
                                         </tr>
                                         
