@@ -8,9 +8,12 @@ const authRoutes = require("../services/authRoutes");
 const crypto = require("crypto");
 const ReferralCode = require("../models/referalCodeModel");
 const bcrypt = require("bcrypt");
+const { log } = require("console");
 
 
-
+const generateRandomCode = () => {
+  return Math.floor(1000 + Math.random() * 9000).toString();
+};
 
 const securePassword = async (password) => {
   try {
@@ -37,10 +40,7 @@ const loadlogin = async (req, res) => {
 };
 
 
-const generateRandomCode = () => {
-  return Math.floor(1000 + Math.random() * 9000).toString(); 
 
-}
 
  const otpNull = (req, res) => {
    setInterval(() => {
@@ -57,7 +57,7 @@ const initialSignUp = async (req, res) => {
     console.log("in initial signup");
     const referralCode = req.body.referralCode;
 
-let referredUser = null;
+       let referredUser = null;
 
 
     if (referralCode) {
@@ -349,7 +349,17 @@ const loadProfile = async (req, res) => {
 };
 
 
-
+const viewforgotPassword=async(req,res)=>{
+  try {
+ const jwtCookie = req.cookies.jwt;
+ if (jwtCookie) {
+   return res.redirect("/home");
+ } 
+      res.render("forgotPasssword");
+  } catch (error) {
+    
+  }
+}
 
 
 // ***********Admin****************
@@ -511,6 +521,143 @@ const editUserDetails = async (req, res) => {
 };
 
 
+const sendMailForgotPassword=async(req,res)=>{
+  try {
+
+     const jwtCookie = req.cookies.jwt;
+     if (jwtCookie) {
+       return res.redirect("/home");
+     } 
+
+    const {email}=req.body;
+    console.log("email:" + email);
+
+    const user = await User.findOne({ email: email });
+
+     req.session.forgotPasswordUser = user._id;
+
+
+    console.log("user:" + user);
+
+    if (!user) {
+      return res.render("loginRegister", {
+        errorMessage: "User Does not exists. Please register.",
+      });
+    }
+
+    const otp= await generateRandomCode();
+
+     console.log("OTP:" + otp);
+
+     req.session.forgotPasswordOTP = otp;
+
+     console.log("OTP stored in session:", otp);
+
+    const subject = "This is the code for Verifying Email";
+   
+    const text = `Your verification code is: ${otp}`;
+
+    await sendEmail(email, subject, text);
+
+    res.render("forgotPasswordOTP");
+
+
+  } catch (error) {
+     console.error(error.message);
+  }
+}
+
+
+const verifyForgotOTP = async (req, res) => {
+  try {
+
+     const jwtCookie = req.cookies.jwt;
+     if (jwtCookie) {
+       return res.redirect("/home");
+     } 
+
+    const { otp } = req.body;
+
+   
+    const forgotPasswordOTP = req.session.forgotPasswordOTP;
+
+      if (otp === forgotPasswordOTP) {
+     
+      res.status(200).send("Success");
+    } else {
+    
+      res.status(400).send("OTP is not correct");
+    }
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
+
+const viewChangePassword=async(req,res)=>{
+  try {
+   const jwtCookie = req.cookies.jwt;
+   if (jwtCookie) {
+     return res.redirect("/home");
+   } 
+    res.render("ChangePassword");
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+const ChangeForgotPassword = async (req, res) => {
+  try {
+    console.log("in Change Password");
+    const { newPassword } = req.body;
+
+    const userID = req.session.forgotPasswordUser;
+
+    const user = await User.findOne({ _id: userID });
+
+    const spassword = await securePassword(newPassword);
+    user.password = spassword;
+    await user.save();
+
+    const token = authRoutes.createToken(userID);
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      maxAge: authRoutes.maxAge * 1000,
+    });
+    res.redirect("/home");
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
+const resendForgotOTP = async (req, res) => {
+  try {
+    const userID = req.session.forgotPasswordUser;
+    const user = await User.findOne({ _id: userID });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const email = user.email;
+    const otp = await generateRandomCode();
+    req.session.forgotPasswordOTP = otp;
+    console.log("OTP stored in session:", otp);
+    const subject = "This is the code for Verifying Email";
+    const text = `Your verification code is: ${otp}`;
+    await sendEmail(email, subject, text);
+
+
+    return res.status(200).end(); 
+
+    
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 
 
@@ -528,4 +675,10 @@ module.exports = {
   edit_User,
   changePassword,
   editUserDetails,
+  sendMailForgotPassword,
+  viewforgotPassword,
+  verifyForgotOTP,
+  viewChangePassword,
+  ChangeForgotPassword,
+  resendForgotOTP,
 };

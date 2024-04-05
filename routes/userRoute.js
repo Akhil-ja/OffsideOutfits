@@ -41,6 +41,19 @@ userRoute.get("/register", userController.loadlogin)
 userRoute.post("/verify-otp", userController.insertUser);
 userRoute.get("/resend-otp", userController.resentOTP);
 
+userRoute.get("/forgot-Password", userController.viewforgotPassword);
+
+userRoute.post("/forgot-password-mail", userController.sendMailForgotPassword);
+
+userRoute.post("/verify-forgot-otp", userController.verifyForgotOTP);
+
+userRoute.get("/change-forgot-password", userController.viewChangePassword);
+
+userRoute.post("/change-forgot-password", userController.ChangeForgotPassword);
+
+userRoute.get("/resend-forgot-otp", userController.resendForgotOTP);
+
+
 
 
 userRoute.use(authRoutes.isBlocked);

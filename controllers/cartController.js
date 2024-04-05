@@ -263,7 +263,7 @@ const loadCheckout = async (req, res) => {
     const wallet = await Wallet.findOne({ user: userId });
     const user = await User.findOne({ _id: userId });
 
-    // Update couponApplied to null if no coupon is applied
+    
     await Cart.updateOne({ user: userId }, { couponApplied: null });
 
     const productIds = cartItems.reduce((ids, item) => {
