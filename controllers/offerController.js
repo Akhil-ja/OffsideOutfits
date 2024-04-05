@@ -1,4 +1,4 @@
-const Offer=require("../models/offerModel");
+const Offer = require("../models/offerModel");
 const Cart = require("../models/cartModel");
 const User = require("../models/userModel");
 const Product = require("../models/productModel");
@@ -11,10 +11,8 @@ const productModel = require("../models/productModel");
 const ReferralCode = require("../models/referalCodeModel");
 
 
-
-const viewOffers=async(req,res)=>{
+const viewOffers = async (req, res) => {
   try {
-
     const updateResult = await Offer.updateMany(
       {
         endDate: { $lte: new Date() },
@@ -38,15 +36,11 @@ const viewOffers=async(req,res)=>{
 
     const referralOffers = await ReferralCode.find();
 
-    
-
-    res.render("offers", { offers, referralOffers, });
+    res.render("offers", { offers, referralOffers });
   } catch (error) {
     console.log(error.message);
   }
-}
-
-
+};
 
 const CategoryOffer = async (req, res) => {
   try {
@@ -66,85 +60,77 @@ const ProductOffer = async (req, res) => {
   }
 };
 
-
 const ReferalOffer = async (req, res) => {
   try {
     const editReferralOffer = await ReferralCode.findOne({
       _id: "65f685296d68b4e72942bd25",
     });
 
-   res.render("addReferalOffer", { editReferralOffer });
-
+    res.render("addReferalOffer", { editReferralOffer });
   } catch (error) {
     console.log(error.message);
   }
 };
 
-const addCategoryOffer=async(req,res)=>{
-   try {
+const addCategoryOffer = async (req, res) => {
+  try {
     console.log("in add category");
-     const {
-       title,
-       description,
-       startDate,
-       endDate,
-       category,
-       discountPercentage,
-     } = req.body;
-
-     
-     const categoryOffer = new Offer({
-       title,
-       description,
-       startDate,
-       endDate,
-       categoryOffer: {
-         category, 
-         discountPercentage,
-       },
-     });
-
-     await categoryOffer.save();
-     res.redirect("/admin/offers");
-   } catch (error) {
-     console.error(error.message);
-    
-   }
-}
-
-const addProductOffer=async(req,res)=>{
-try {
- 
- 
-  const {
-    title,
-    description,
-    startDate,
-    endDate,
-    selectedProducts,
-    discountPercentage,
-  } = req.body;
-
-  const productOffer = new Offer({
-    title,
-    description,
-    startDate,
-    endDate,
-    productOffer: {
-      products: selectedProducts,
+    const {
+      title,
+      description,
+      startDate,
+      endDate,
+      category,
       discountPercentage,
-    },
-  });
+    } = req.body;
 
-  await productOffer.save();
+    const categoryOffer = new Offer({
+      title,
+      description,
+      startDate,
+      endDate,
+      categoryOffer: {
+        category,
+        discountPercentage,
+      },
+    });
 
-  res.redirect("/admin/offers");
-} catch (error) {
-  console.error(error.message);
-}
-}
+    await categoryOffer.save();
+    res.redirect("/admin/offers");
+  } catch (error) {
+    console.error(error.message);
+  }
+};
 
+const addProductOffer = async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      startDate,
+      endDate,
+      selectedProducts,
+      discountPercentage,
+    } = req.body;
 
+    const productOffer = new Offer({
+      title,
+      description,
+      startDate,
+      endDate,
+      productOffer: {
+        products: selectedProducts,
+        discountPercentage,
+      },
+    });
+
+    await productOffer.save();
+
+    res.redirect("/admin/offers");
+  } catch (error) {
+    console.error(error.message);
+  }
+};
 
 const addReferalOffer = async (req, res) => {
   try {
@@ -157,16 +143,16 @@ const addReferalOffer = async (req, res) => {
       referringUserReward,
     } = req.body;
 
- let referralOffer = await ReferralCode.findOne({
-   _id: "65f685296d68b4e72942bd25",
- });
+    let referralOffer = await ReferralCode.findOne({
+      _id: "65f685296d68b4e72942bd25",
+    });
 
-     referralOffer.title = req.body.title;
-     referralOffer.description = req.body.description;
-     referralOffer.startDate = req.body.startDate;
-     referralOffer.endDate = req.body.endDate;
-     referralOffer.referredUserReward = req.body.referredUserReward;
-     referralOffer.referringUserReward = req.body.referringUserReward;
+    referralOffer.title = req.body.title;
+    referralOffer.description = req.body.description;
+    referralOffer.startDate = req.body.startDate;
+    referralOffer.endDate = req.body.endDate;
+    referralOffer.referredUserReward = req.body.referredUserReward;
+    referralOffer.referringUserReward = req.body.referringUserReward;
 
     await referralOffer.save();
 
@@ -183,7 +169,9 @@ const toggleReferalStatus = async (req, res) => {
     const offer = await ReferralCode.findById(offerId);
 
     if (!offer) {
-      return res.status(404).json({ success: false, message: "Offer not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Offer not found" });
     }
 
     offer.isActive = !offer.isActive;
@@ -196,12 +184,10 @@ const toggleReferalStatus = async (req, res) => {
   }
 };
 
-
 const toggleStatus = async (req, res) => {
   try {
-
     console.log("in toggle");
-    console.log("toggle status");   
+    console.log("toggle status");
     const { offerId } = req.body;
     console.log("offerId:" + offerId);
 
@@ -215,16 +201,12 @@ const toggleStatus = async (req, res) => {
         model: "category",
       });
 
-   
     offer.isActive = !offer.isActive;
-   console.log("status changes");
+    console.log("status changes");
     await offer.save();
 
-
-    if (offer.isActive)
-     await applyActiveOffersToProducts(offerId);
-else
-removeInactiveOffersFromProducts(offerId);
+    if (offer.isActive) await applyActiveOffersToProducts(offerId);
+    else removeInactiveOffersFromProducts(offerId);
 
     res.json({ success: true });
   } catch (error) {
@@ -232,8 +214,6 @@ removeInactiveOffersFromProducts(offerId);
     res.json({ success: false });
   }
 };
-
-
 
 const applyActiveOffersToProducts = async (offerId) => {
   try {
@@ -284,13 +264,12 @@ const applyActiveOffersToProducts = async (offerId) => {
         { $push: { appliedOffers: appliedOfferDetails } }
       );
     }
-await updateProductDiscount();
+    await updateProductDiscount();
     console.log("Active offers applied to products successfully.");
   } catch (error) {
     console.error("Error applying active offers to products:", error);
   }
 };
-
 
 const removeInactiveOffersFromProducts = async (offerId) => {
   try {
@@ -319,7 +298,6 @@ const removeInactiveOffersFromProducts = async (offerId) => {
         },
         { $pull: { appliedOffers: { offer: offerId } } }
       );
-      
     }
 
     if (offer.productOffer && offer.productOffer.products.length > 0) {
@@ -333,9 +311,8 @@ const removeInactiveOffersFromProducts = async (offerId) => {
         },
         { $pull: { appliedOffers: { offer: offerId } } }
       );
-     
     }
-await updateProductDiscount();
+    await updateProductDiscount();
     console.log(" offers removed from products successfully.");
   } catch (error) {
     console.error("Error removing inactive offers from products:", error);
@@ -360,21 +337,19 @@ const updateProductDiscount = async () => {
   }
 };
 
-const deleteOffer=async(req,res)=>{
-   try {
-     const { offerId } = req.body;
 
-    
-     await Offer.findByIdAndDelete(offerId);
+const deleteOffer = async (req, res) => {
+  try {
+    const { offerId } = req.body;
 
-     res.json({ success: true });
-   } catch (error) {
-     console.error("Error deleting offer:", error);
-     res.status(500).json({ success: false, error: "Failed to delete offer" });
-   }
-}
+    await Offer.findByIdAndDelete(offerId);
 
-
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting offer:", error);
+    res.status(500).json({ success: false, error: "Failed to delete offer" });
+  }
+};
 module.exports = {
   viewOffers,
   ReferalOffer,

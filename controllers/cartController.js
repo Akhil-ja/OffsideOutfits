@@ -407,130 +407,69 @@ const checkQuantities = async (req, res) => {
 
 const Applycoupon = async (req, res) => {
   try {
-
-
-    console.log("in apply coupon");
-    const { couponCode, userID } = req.body;
-
-  const user=await User.findOne({_id:userID})
-
+    const { couponCode, userID, initialTotalAmount } = req.body;
+    const user = await User.findOne({ _id: userID });
     let couponApplied = null;
-    let couponDiscount = 0; 
-    const cartItems = await Cart.find({ user: userID });
+    let couponDiscount = 0;
+    const cart = await Cart.find({ user: userID });
+    const coupon = await Coupon.findOne({ code: couponCode });
 
- const coupon = await Coupon.findOne({ code: couponCode });
- 
-     if (coupon) {
-     
+    if (coupon) {
       const currentDate = new Date();
       if (coupon.expiryDate < currentDate) {
-        console.log("Coupon has expired");
         return res.status(400).json({ error: "Coupon has expired" });
       }
-    }
 
-    const productIds = cartItems.reduce((_ids_, _item_) => {
-      const itemProductIds = _item_.cartProducts.map(
-        (_product_) => _product_.product
-      );
-      return [..._ids_, ...itemProductIds];
-    }, []);
-    const products = await Product.find({ _id: { $in: productIds } });
+      const couponExist = await User.findOne({
+        _id: userID,
+        usedCoupons: { $in: [coupon._id] },
+      });
 
-    let totalAmount = 0;
+      if (couponExist !== null) {
+        return res.status(400).json({ error: "Coupon Already Used" });
+      }
 
-    const cartWithProductDetails = await Promise.all(
-      cartItems.map(async (_cartItem_) => {
-        let totalAmountPerCart = 0;
-
-        const cartProducts = await Promise.all(
-          _cartItem_.cartProducts.map(async (_product_) => {
-            const productDetail = products.find((_p_) =>
-              _p_._id.equals(_product_.product)
-            );
-            const productAmount =
-              productDetail.priceAfterDiscount * _product_.quantity;
-            totalAmountPerCart += productAmount;
-            return {
-              ..._product_.toObject(),
-              productDetail: productDetail,
-              productAmount: productAmount,
-            };
-          })
-        );
-
-        totalAmount += totalAmountPerCart;
-
-        return {
-          ..._cartItem_.toObject(),
-          cartProducts,
-          totalAmountPerCart,
-        };
-      })
-    );
-
-    const initialTotalAmount = totalAmount;
-    let newTotalAmount = initialTotalAmount;
-
-   
-    if (coupon) {
-
-const couponExist = await User.findOne({
-  _id: userID,
-  usedCoupons: { $in: [coupon._id] },
-});
-
-console.log("user:" + couponExist);
-
-
-   if (couponExist !== null) {
-     console.log("already used");
-     return res.status(400).json({ error: "Coupon Already Used" });
-   }
-      
-      
-      
       if (coupon.discountType === "percentage") {
         couponDiscount = (coupon.discountValue / 100) * initialTotalAmount;
       } else if (coupon.discountType === "fixed") {
-        if (coupon.minimumOffer < initialTotalAmount) {
+        if (coupon.minimumOffer <= initialTotalAmount) {
           couponDiscount = Math.min(initialTotalAmount, coupon.discountValue);
         } else {
           console.log(
             "Fixed amount is greater than the total. Coupon not applied."
           );
-          return res.status(400).json({ error: "Coupon not applicable" });
+          return res
+            .status(400)
+            .json({ error: "Coupon minimum offer not met" });
         }
       }
 
-      newTotalAmount = initialTotalAmount - couponDiscount;
-
-     
-      cartWithProductDetails.forEach((cartItem) => {
-        cartItem.totalAmountPerCart -= couponDiscount;
-      });
-
-      req.session.couponApplied = coupon._id;
+      const newTotalAmount = initialTotalAmount - couponDiscount;
+      if (newTotalAmount < coupon.minimumOffer) {
+        return res.status(400).json({ error: "Coupon minimum offer not met" });
+      }
 
       await Cart.updateOne(
         { user: userID },
         { cartTotal: newTotalAmount, couponApplied: coupon._id }
       );
+      req.session.couponApplied = coupon._id;
       couponApplied = coupon.toObject();
-      console.log("couponApplied in apply coupon:" + couponApplied);
-      
     } else {
       console.log("No such coupon exists");
       return res.status(400).json({ error: "Coupon Does not exist" });
     }
-    console.log("New total:", newTotalAmount);
 
-    res.json({ newTotalAmount, couponApplied });
-
-
+    console.log("New total:", initialTotalAmount - couponDiscount);
+    res.json({
+      newTotalAmount: initialTotalAmount - couponDiscount,
+      couponApplied,
+    });
   } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ error: error.message });
+    console.error("Error applying coupon:", error);
+    res
+      .status(500)
+      .json({ error: "An unexpected error occurred. Please try again." });
   }
 };
 

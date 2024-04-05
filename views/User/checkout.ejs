@@ -441,9 +441,7 @@
                                                             <td>
                                                                 <%= product.quantity %>
                                                             </td>
-                                                            <td>Rs:<%= product.quantity *
-                                                                    product.productDetail.priceAfterDiscount.toFixed(2)
-                                                                    %> -/
+                                                            <td>Rs: <%= `${(product.quantity * product.productDetail.priceAfterDiscount).toFixed(2)}` %> -/
                                                             </td>
                                                         </tr>
                                                         <% }); %>
@@ -896,36 +894,28 @@
 
 
     <script>
-        function applyCoupon() {
+      function applyCoupon() {
             document.getElementById('couponForm').addEventListener('submit', async function (event) {
                 event.preventDefault();
                 const couponCode = document.getElementById('checkout-discount-input').value;
                 const cashOnDeliveryAlert = document.getElementById('cashOnDeliveryAlert');
                 const userID = "<%= currentUser._id %>";
+                const initialTotalAmount = parseFloat(document.getElementById('totalAmount').innerText);
+
                 try {
                     const response = await fetch('/applyCoupon', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ couponCode, userID, initialTotalAmount: totalAmount })
+                        body: JSON.stringify({ couponCode, userID, initialTotalAmount })
                     });
 
                     if (response.ok) {
                         const data = await response.json();
                         document.getElementById('totalAmount').innerText = data.newTotalAmount.toFixed(2);
-                        const WalletTotal = document.getElementById('walletAmount').innerText
-
 
                         const cashOnDeliveryRadio = document.querySelector('input[name="PaymentType"][value="COD"]');
-                        if (data.newTotalAmount > 1000) {
-                            cashOnDeliveryRadio.disabled = true;
-                            cashOnDeliveryAlert.style.display = 'block';
-                        } else {
-                            cashOnDeliveryRadio.disabled = false;
-                            cashOnDeliveryAlert.style.display = 'none';
-                        }
-
                         if (data.newTotalAmount > 1000) {
                             cashOnDeliveryRadio.disabled = true;
                             cashOnDeliveryAlert.style.display = 'block';
@@ -946,13 +936,6 @@
                             document.getElementById('couponDetailsSection').style.display = 'block';
                             document.getElementById('applyCouponButton').style.display = 'none';
                             document.getElementById('removeCouponButton').style.display = 'block';
-                        } else if (data.error === "Coupon Already Used") {
-                            console.error('Coupon Already Used');
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'Coupon already used.',
-                            });
                         } else {
                             console.error('Failed to apply coupon: No coupon data received');
                             Swal.fire({
@@ -963,19 +946,11 @@
                         }
                     } else if (response.status === 400 && response.headers.get('Content-Type').includes('application/json')) {
                         const data = await response.json();
-                        if (data.error === "Coupon Already Used") {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'Coupon already used.',
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'Failed to apply coupon. Please try again.',
-                            });
-                        }
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: data.error || 'Failed to apply coupon. Please try again.',
+                        });
                     } else {
                         console.error('Failed to apply coupon');
                         Swal.fire({
