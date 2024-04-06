@@ -8,19 +8,31 @@ const offerController = require("../controllers/offerController");
 const loadProducts = async (req, res) => {
   try {
     console.log("in load products");
-   
-    
 
-    const { priceSort, nameSort, selectedCategories, search, page, sortBy } = req.query;
-    console.log("search" + search);
+    const {
+      priceSort,
+      nameSort,
+      selectedCategories,
+      search,
+      page,
+      sortBy,
+      selectedBrand,
+    } = req.query;
+    console.log("selectedBrand" + selectedBrand);
 
-    const limit = 12; 
+    const limit = 12;
     const skip = (page - 1) * limit;
 
     let products;
 
-    if (priceSort || nameSort || selectedCategories || search) {
-      products = await sortProducts(req, res, skip, limit);
+    if (
+      priceSort ||
+      nameSort ||
+      selectedCategories ||
+      search ||
+      selectedBrand
+    ) {
+      products = await sortProducts(req, res, skip, limit, selectedBrand);
     } else {
       products = await Product.find()
         .skip(skip)
@@ -28,13 +40,12 @@ const loadProducts = async (req, res) => {
         .populate("category");
     }
 
-    const totalProducts = await Product.countDocuments(); 
+    const totalProducts = await Product.countDocuments();
 
     const totalPages = Math.ceil(totalProducts / limit);
 
     const categories = await Category.find();
 
-   
     res.render("products", {
       products,
       categories,
@@ -42,6 +53,7 @@ const loadProducts = async (req, res) => {
       currentPage: page,
       sortBy,
       filterByCategory: selectedCategories,
+      selectedBrand,
     });
   } catch (error) {
     console.error(error.message);
@@ -50,13 +62,10 @@ const loadProducts = async (req, res) => {
 };
 
 
-const sortProducts = async (req, res) => {
+
+const sortProducts = async (req, res, skip, limit, selectedBrand) => {
   try {
     const { priceSort, nameSort, selectedCategories, search } = req.query;
-
-    console.log("Name sort:" + nameSort);
-    console.log("Price sort:" + priceSort);
-    console.log("selectedCategories:" + selectedCategories);
 
     let sortObject = {};
 
@@ -66,13 +75,10 @@ const sortProducts = async (req, res) => {
 
     if (nameSort !== "undefined") {
       sortObject.pname = nameSort === "aToZ" ? 1 : -1;
-      console.log(`Name sorting selected: ${nameSort}`);
     }
 
-    
     let filterObject = {};
 
-   
     if (search) {
       filterObject.$or = [
         { pname: { $regex: search, $options: "i" } },
@@ -81,33 +87,27 @@ const sortProducts = async (req, res) => {
       ];
     }
 
+    if (selectedBrand) {
+      filterObject.brand = { $regex: new RegExp(selectedBrand, "i") };
+    }
+
     let query = Product.find(filterObject).populate("category");
 
     if (selectedCategories && selectedCategories.length > 0) {
       const categoryIds = selectedCategories.split(",");
       query = query.find({ category: { $in: categoryIds } });
-      console.log(`selectedCategories selected: ${categoryIds}`);
     }
 
-    
-    const products = await query.sort(sortObject);
+    query = query.sort(sortObject).skip(skip).limit(limit);
 
-    res.json({ products });
-    console.log("Fetch");
+    const products = await query;
+
+    return products;
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
-
-
-
-
-
-
-
-
 
 const loadProduct = async (req, res) => {
   try {

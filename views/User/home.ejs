@@ -1,9 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
-
-<!-- molla/index-12.html  22 Nov 2019 09:58:43 GMT -->
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -22,95 +18,86 @@
     <!-- Main CSS File -->
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/demos/demo-12.css">
+
+    <style>
+    
+.header-right {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.main-nav {
+  flex-grow: 1;
+}
+
+.menu.sf-arrows {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu>li+li {
+    margin-right: 200px;
+}
+</style>
+
+
 </head>
 
 <body>
     <div class="page-wrapper">
         <header class="header header-9">
             <div class="header-middle ">
-                <div class="container">
-                    <div class="header-left">
-                        <button class="mobile-menu-toggler">
-                            <span class="sr-only">Toggle mobile menu</span>
-                            <i class="icon-bars"></i>
-                        </button>
+        <div class="container">
+            <div class="header-left">
+                <button class="mobile-menu-toggler">
+                    <span class="sr-only">Toggle mobile menu</span>
+                    <i class="icon-bars"></i>
+                </button>
+                <a href="#" class="logo mt-2">
+                    <img src="assets\\images\\Logo1.png" alt="OOF Logo" width="50" height="0">
+                </a>
+            </div><!-- End .header-left -->
+            <div class="header-right">
+                <nav class="main-nav d-flex justify-content-center">
+                    <ul class="menu sf-arrows"> <!-- Removed justify-content-center -->
+                        <li class="megamenu-container">
+                            <a href="" class="">Home</a>
+                        </li>
+                        <li>
+                            <a href="/products" class="">Shop</a>
+                        </li>
+                    </ul>
+                </nav><!-- End .main-nav -->
+                <div class="header-search">
+                    <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
+                    <form action="#" method="get">
+                        <div class="header-search-wrapper">
+                            <label for="q" class="sr-only">Search</label>
+                            <input type="search" class="form-control" name="q" id="q" placeholder="Search in..." required>
+                        </div><!-- End .header-search-wrapper -->
+                    </form>
+                </div><!-- End .header-search -->
+                <a href="/wishlist" class="wishlist-link">
+                    <i class="icon-heart-o"></i>
+                </a>
+                <div class=" cart-dropdown">
+                    <a href="/cart" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false"
+                        data-display="static">
+                        <i class="icon-shopping-cart"></i>
+                    </a>
+                </div>
+                <div class=" cart-dropdown">
+                    <a href="/profile" class="dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false"
+                        data-display="static">
+                        <i class="icon-user"></i>
+                    </a>
+                </div>
+            </div><!-- End .header-right -->
+        </div>
 
-                        <a href="#" class="logo mt-2">
-                            <img src="assets\images\Logo1.png" alt="OOF Logo" width="50"
-                                height="0">
-                        </a>
-                    </div><!-- End .header-left -->
-
-                    <div class="header-right">
-                        <nav class="main-nav">
-                            <ul class="menu sf-arrows">
-                                <li class="megamenu-container">
-                                    <a href="" class="">Home</a>
-
-
-                                </li>
-                                <li>
-                                    <a href="/products" class="">Shop</a>
-
-
-                                </li>
-                                <li>
-                                    <a href="" class="">Product</a>
-
-
-                                </li>
-                                <li>
-                                    <a href="" class="">Pages</a>
-
-
-                                </li>
-                                <li>
-                                    <a href="" class="">Blog</a>
-
-
-                                </li>
-                                <li>
-                                    <a href="" class="">Elements</a>
-
-
-                                </li>
-                            </ul><!-- End .menu -->
-                        </nav><!-- End .main-nav -->
-
-                        <div class="header-search">
-                            <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
-                            <form action="#" method="get">
-                                <div class="header-search-wrapper">
-                                    <label for="q" class="sr-only">Search</label>
-                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search in..."
-                                        required>
-                                </div><!-- End .header-search-wrapper -->
-                            </form>
-                        </div><!-- End .header-search -->
-
-                        <a href="/wishlist" class="wishlist-link">
-                            <i class="icon-heart-o"></i>
-                        </a>
-
-                        <div class=" cart-dropdown">
-                            <a href="/cart" class="dropdown-toggle" role="button" 
-                                aria-haspopup="true" aria-expanded="false" data-display="static">
-                                <i class="icon-shopping-cart"></i>
-                            </a>
-                        </div>
-
-                           <div class=" cart-dropdown">
-                            <a href="/profile" class="dropdown-toggle" role="button"  aria-haspopup="true" aria-expanded="false"
-                                data-display="static">
-                                <i class="icon-user"></i>
-                            
-                            </a>
-                            </div>
-                       
-
-                        </div><!-- End .header-right -->
-                    </div><!-- End .container -->
-                </div><!-- End .header-middle -->
+                </div>
         </header><!-- End .header -->
 
         <main class="main">
@@ -191,7 +178,7 @@
                 <div class="container">
                     <div class="heading text-center mb-4">
                         <h2 class="title">Recent Arrivals</h2><!-- End .title -->
-                        <p class="title-desc">Aliquam tincidunt mauris eurisus</p><!-- End .title-desc -->
+                        <p class="title-desc">The Newest items </p><!-- End .title-desc -->
                     </div><!-- End .heading -->
 
                     <div class="owl-carousel owl-simple" data-toggle="owl" data-owl-options='{
@@ -219,45 +206,36 @@
                             }
                         }'>
 
-                <% products.slice(0, 4).forEach(product=> { %>
-                    <% if (product.is_listed==="1" ) { %>
-                        <div class="product product-4">
-                            <div class="card card-product-grid">
-                                <a href="/products/<%= product._id %>"" class="image-wrap">
-                                    <img src="/productAssets/<%= product.images[0] %>" alt="Product image" class="product-image" style="height: 270px;width: 320px;" >
-                                </a>
-                
-                                <div class="product-action-vertical">
-                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable">
-                                        <span>add to wishlist</span>
-                                    </a>
-                                </div><!-- End .product-action -->
-                
-                                <div class="product-action">
-                                    <a href="#" class="btn-product btn-cart">
-                                        <span>add to cart</span>
-                                    </a>
-                                </div><!-- End .product-action -->
-                            </div>
-                
-                            <div class="product-body">
-                                <div class="product-cat">
-                                    <a href="#">
-                                        <%= product.brand %>
-                                    </a>
-                                </div><!-- End .product-cat -->
-                                <h3 class="product-title">
-                                    <a href="<%= product.productURL %>">
-                                        <%= product.pname %> <!-- Corrected property name -->
-                                    </a>
-                                </h3><!-- End .product-title -->
-                                <div class="product-price">
-                                    <%= product.price %>
-                                </div><!-- End .product-price -->
-                            </div><!-- End .product-body -->
-                        </div><!-- End .product -->
-                        <% } %>
-                            <% }) %>
+        <%  for (let i = products.length - 1; i >= Math.max(0, products.length - 4); i--) { const product=products[i]; if (product.is_listed==="1" ) { %>
+            <div class="product product-4">
+                <div class="card card-product-grid">
+                    <a href="/products/<%= product._id %>" class="image-wrap">
+                        <img src="/productAssets/<%= product.images[0] %>" alt="Product image" class="product-image"
+                            style="height: 270px;width: 320px;">
+                    </a>
+                    <div class="product-action-vertical">
+                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable">
+                            <span>add to wishlist</span>
+                        </a>
+                    </div><!-- End .product-action -->
+                </div>
+                <div class="product-body">
+                    <div class="product-cat">
+                        <a href="#">
+                            <%= product.brand %>
+                        </a>
+                    </div><!-- End .product-cat -->
+                    <h3 class="product-title">
+                        <a href="<%= product.productURL %>">
+                            <%= product.pname %>
+                        </a>
+                    </h3><!-- End .product-title -->
+                    <div class="product-price">
+                        <%= product.price %>
+                    </div><!-- End .product-price -->
+                </div><!-- End .product-body -->
+            </div><!-- End .product -->
+            <% } } %>
 
 
 
@@ -319,7 +297,7 @@
 
                 <div class="cat-blocks-container row justify-content-between">
                     <div class="col-6 col-sm-4 col-lg-2 mb-4">
-                        <a href="" class="cat-block">
+                        <a href="/products?selectedBrand=Liverpool" class="cat-block">
                             <figure>
                                 <span>
                                     <img src="assets\images\Club-Logos\Liverpool.png" alt="Category image">
@@ -330,7 +308,7 @@
                     </div>
 
                     <div class="col-6 col-sm-4 col-lg-2 mb-4">
-                        <a href="" class="cat-block">
+                        <a href="/products?selectedBrand=Juventus" class="cat-block">
                             <figure>
                                 <span>
                                     <img src="assets\images\Club-Logos\Juve.png" alt="Category image">
@@ -341,7 +319,7 @@
                     </div>
 
                     <div class="col-6 col-sm-4 col-lg-2 mb-4">
-                        <a href="" class="cat-block">
+                        <a href="/products?selectedBrand=Barcelona" class="cat-block">
                             <figure>
                                 <span>
                                     <img src="assets\images\Club-Logos\barca.png" alt="Category image">
@@ -351,7 +329,7 @@
                         </a>
                     </div>
                     <div class="col-6 col-sm-4 col-lg-2 mb-4">
-                        <a href="" class="cat-block">
+                        <a href="/products?selectedBrand=AC Milan" class="cat-block">
                             <figure>
                                 <span>
                                     <img src="assets\images\Club-Logos\ACMilan.png" alt="Category image">
@@ -370,25 +348,11 @@
         <footer class="footer footer-2">
             <div class="footer-bottom">
                 <div class="container">
-                    <p class="footer-copyright">Copyright © 2019 Molla Store. All Rights Reserved.</p>
+                    <p class="footer-copyright">Copyright © 2024 Offside Outfits. All Rights Reserved.</p>
                     <!-- End .footer-copyright -->
-                    <ul class="footer-menu">
-                        <li><a href="#">Terms Of Use</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                    </ul><!-- End .footer-menu -->
+                   
 
-                    <div class="social-icons social-icons-color">
-                        <a href="#" class="social-icon social-facebook" title="Facebook" target="_blank"><i
-                                class="icon-facebook-f"></i></a>
-                        <a href="#" class="social-icon social-twitter" title="Twitter" target="_blank"><i
-                                class="icon-twitter"></i></a>
-                        <a href="#" class="social-icon social-instagram" title="Instagram" target="_blank"><i
-                                class="icon-instagram"></i></a>
-                        <a href="#" class="social-icon social-youtube" title="Youtube" target="_blank"><i
-                                class="icon-youtube"></i></a>
-                        <a href="#" class="social-icon social-pinterest" title="Pinterest" target="_blank"><i
-                                class="icon-pinterest"></i></a>
-                    </div><!-- End .soial-icons -->
+                  
                 </div><!-- End .container -->
             </div><!-- End .footer-bottom -->
         </footer><!-- End .footer -->
