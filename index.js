@@ -41,20 +41,18 @@ const path = require("path");
 const userRoute = require("./routes/userRoute");
 
 app.use("/", userRoute);
-// 
-app.set("views", path.join(__dirname, "views"));
-// 
+
 const adminRoute = require("./routes/adminRoute");
 app.use("/admin", adminRoute);
 
-app.use("/static", express.static(path.join(__dirname, "/public")));
-app.use("/products", express.static(path.join(__dirname, "/public")));
-app.use("/admin/static", express.static(path.join(__dirname, "/public")));
-app.use("/admin/users", express.static(path.join(__dirname, "/public")));
-app.use("/admin/products", express.static(path.join(__dirname, "/public")));
-app.use("/admin", express.static(path.join(__dirname, "/public")));
+app.use("/static", express.static(path.join(__dirname, "public")));
+app.use("/products", express.static(path.join(__dirname, "public")));
+app.use("/admin/static", express.static(path.join(__dirname, "public")));
+app.use("/admin/users", express.static(path.join(__dirname, "public")));
+app.use("/admin/products", express.static(path.join(__dirname, "public")));
+app.use("/admin", express.static(path.join(__dirname, "public")));
 
-app.use(express.static(path.join(__dirname, "/public")));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/static", express.static(path.join(__dirname, "lib")));
 app.use("/static/products", express.static(path.join(__dirname, "lib")));
@@ -63,6 +61,6 @@ app.use(express.static("/public"));
 app.use(express.static("views"));
 app.use(express.static("lib"));
 
-app.listen(process.env.PORT, function () {
+app.listen(3000, function () {
   console.log("Server is Running.... http://localhost:3000/");
 });
