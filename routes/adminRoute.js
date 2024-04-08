@@ -23,6 +23,7 @@ const adminRoute = express();
 adminRoute.use(bodyParser.urlencoded({ extended: true }));
 
 adminRoute.set("view engine", "ejs");
+
 adminRoute.set("views", "./views/Admin");
 
 
