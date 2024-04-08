@@ -9,30 +9,17 @@ const loadProducts = async (req, res) => {
   try {
     console.log("in load products");
 
-    const {
-      priceSort,
-      nameSort,
-      selectedCategories,
-      search,
-      page,
-      sortBy,
-      selectedBrand,
-    } = req.query;
-    console.log("selectedBrand" + selectedBrand);
+    const { priceSort, nameSort, selectedCategories, search, page, sortBy } =
+      req.query;
+    console.log("search" + search);
 
     const limit = 12;
     const skip = (page - 1) * limit;
 
     let products;
 
-    if (
-      priceSort ||
-      nameSort ||
-      selectedCategories ||
-      search ||
-      selectedBrand
-    ) {
-      products = await sortProducts(req, res, skip, limit, selectedBrand);
+    if (priceSort || nameSort || selectedCategories || search) {
+      products = await sortProducts(req, res, skip, limit);
     } else {
       products = await Product.find()
         .skip(skip)
@@ -53,7 +40,6 @@ const loadProducts = async (req, res) => {
       currentPage: page,
       sortBy,
       filterByCategory: selectedCategories,
-      selectedBrand,
     });
   } catch (error) {
     console.error(error.message);
@@ -61,11 +47,13 @@ const loadProducts = async (req, res) => {
   }
 };
 
-
-
-const sortProducts = async (req, res, skip, limit, selectedBrand) => {
+const sortProducts = async (req, res) => {
   try {
     const { priceSort, nameSort, selectedCategories, search } = req.query;
+
+    console.log("Name sort:" + nameSort);
+    console.log("Price sort:" + priceSort);
+    console.log("selectedCategories:" + selectedCategories);
 
     let sortObject = {};
 
@@ -75,6 +63,7 @@ const sortProducts = async (req, res, skip, limit, selectedBrand) => {
 
     if (nameSort !== "undefined") {
       sortObject.pname = nameSort === "aToZ" ? 1 : -1;
+      console.log(`Name sorting selected: ${nameSort}`);
     }
 
     let filterObject = {};
@@ -87,27 +76,24 @@ const sortProducts = async (req, res, skip, limit, selectedBrand) => {
       ];
     }
 
-    if (selectedBrand) {
-      filterObject.brand = { $regex: new RegExp(selectedBrand, "i") };
-    }
-
     let query = Product.find(filterObject).populate("category");
 
     if (selectedCategories && selectedCategories.length > 0) {
       const categoryIds = selectedCategories.split(",");
       query = query.find({ category: { $in: categoryIds } });
+      console.log(`selectedCategories selected: ${categoryIds}`);
     }
 
-    query = query.sort(sortObject).skip(skip).limit(limit);
+    const products = await query.sort(sortObject);
 
-    const products = await query;
-
-    return products;
+    res.json({ products });
+    console.log("Fetch");
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
 
 const loadProduct = async (req, res) => {
   try {

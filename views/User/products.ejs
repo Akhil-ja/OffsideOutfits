@@ -360,7 +360,7 @@
 
 
 <script>
-    
+
     function applyFilter() {
         const applyButton = document.querySelector('button[type="button"][onclick="applyFilters()"]');
         if (applyButton) {
@@ -368,46 +368,49 @@
         }
     }
 
-   
-   function preSelectCategoryAndApplyFilter() {
+
+    function preSelectCategoryAndApplyFilter() {
         const urlParams = new URLSearchParams(window.location.search);
         const selectedCategory = urlParams.get('category');
-        console.log("selectedCategory: " + selectedCategory); 
+        console.log("selectedCategory: " + selectedCategory); // Log the selected category
         if (selectedCategory) {
             const categoryCheckbox = document.getElementById(selectedCategory);
-            console.log("categoryCheckbox: ", categoryCheckbox); 
+            console.log("categoryCheckbox: ", categoryCheckbox); // Log the checkbox element
             if (categoryCheckbox) {
                 categoryCheckbox.checked = true;
-                console.log("Checkbox checked: ", categoryCheckbox.checked); 
+                console.log("Checkbox checked: ", categoryCheckbox.checked); // Log whether checkbox is checked
                 applyFilter();
             }
         }
     }
 
 
-   
+
     window.onload = preSelectCategoryAndApplyFilter;
 </script>
 
 
 
-    <script>
-        function getElementValue(id) {
-            const element = document.getElementById(id);
-            return element ? element.value : null;
-        }
+<script>
+    function getElementValue(id) {
+        const element = document.getElementById(id);
+        return element ? element.value : null;
+    }
 
-        function updateCartCount(count) {
-            const cartCountElement = document.getElementById('cart-count');
-            if (cartCountElement) {
-                cartCountElement.textContent = count;
-            }
+    function updateCartCount(count) {
+        const cartCountElement = document.getElementById('cart-count');
+        if (cartCountElement) {
+            cartCountElement.textContent = count;
         }
+    }
 
-    </script>
+</script>
 
 
 <script>
+
+
+
 
     document.getElementById("searchInput").addEventListener("keypress", function (event) {
         if (event.key === "Enter") {
@@ -416,7 +419,7 @@
         }
     });
 
-   function applyFilters(page = 1, totalPages) {
+    function applyFilters(page = 1, totalPages) {
         const form = document.getElementById("filterForm");
         const formData = new FormData(form);
 
@@ -431,8 +434,6 @@
 
         const selectedCategories = Array.from(document.querySelectorAll('input[name="category-filter"]:checked')).map(checkbox => checkbox.value);
 
-        const selectedBrand = document.getElementById("brand-filter").value;
-
         const searchParams = new URLSearchParams(formData).toString();
 
         if (page > totalPages) {
@@ -440,7 +441,7 @@
             return;
         }
 
-        fetch(`/products?priceSort=${priceSort}&nameSort=${nameSort}&selectedCategories=${selectedCategories.join(',')}&search=${search}&page=${page}&selectedBrand=${selectedBrand}`)
+     fetch(`/products?priceSort=${priceSort}&nameSort=${nameSort}&selectedCategories=${selectedCategories.join(',')}&search=${search}&page=${page}`)
             .then(response => response.json())
             .then(data => {
                 if (data.products.length === 0) {
@@ -454,27 +455,27 @@
                             const productItem = document.createElement('div');
                             productItem.classList.add('col-6', 'col-md-4', 'col-lg-4', 'col-xl-3', 'col-xxl-2', 'product-item');
                             productItem.innerHTML = `
-                    <div class="product">
-                        <div class="card card-product-grid">
-                            <a href="/products/${updatedProduct._id}">
-                                <img src="/productAssets/${updatedProduct.images[0]}" alt="Product image" class="product-image" style="height: 280px; width: 285px;">
-                            </a>
-                            <div class="product-action-vertical">
-                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                        <div class="product">
+                            <div class="card card-product-grid">
+                                <a href="/products/${updatedProduct._id}">
+                                    <img src="/productAssets/${updatedProduct.images[0]}" alt="Product image" class="product-image" style="height: 280px; width: 285px;">
+                                </a>
+                                <div class="product-action-vertical">
+                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable" onclick="addToWishlist('${updatedProduct._id}')"><span>Add to wishlist</span></a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="product-body">
-                            <div class="product-cat">
-                                <a href="#">${updatedProduct.brand}</a>
+                            <div class="product-body">
+                                <div class="product-cat">
+                                    <a href="#">${updatedProduct.brand}</a>
+                                </div>
+                                <h3 class="product-title">
+                                    <a href="/product/${updatedProduct._id}">${updatedProduct.pname}</a>
+                                </h3>
+                                <div class="product-price">
+                                    ${updatedProduct.priceAfterDiscount !== updatedProduct.price ? `<span class="strike-price">Rs: ${updatedProduct.price.toFixed(2)}</span> Rs: ${updatedProduct.priceAfterDiscount.toFixed(2)}` : `Rs: ${updatedProduct.price.toFixed(2)}`}
+                                </div>
                             </div>
-                            <h3 class="product-title">
-                                <a href="/product/${updatedProduct._id}">${updatedProduct.pname}</a>
-                            </h3>
-                            <div class="product-price">
-                                ${updatedProduct.priceAfterDiscount !== updatedProduct.price ? `<span class="strike-price">Rs: ${updatedProduct.price.toFixed(2)}</span> Rs: ${updatedProduct.priceAfterDiscount.toFixed(2)}` : `Rs: ${updatedProduct.price.toFixed(2)}`}
-                            </div>
-                        </div>
-                    </div>`;
+                        </div>`;
                             productsContainer.appendChild(productItem);
                         }
                     });
@@ -493,46 +494,46 @@
 </script>
 
 
-    <script>
-            function addToWishlist(productId) {
-                fetch('/addToWishlist', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ productId }),
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        const notyf = new Notyf();
+<script>
+    function addToWishlist(productId) {
+        fetch('/addToWishlist', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ productId }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                const notyf = new Notyf();
 
-                        if (data.success) {
-                            console.log('Product added to wishlist:', data.wishlist);
-                            new Noty({
-                                type: 'success',
-                                text: 'Product added to Wishlist',
-                                timeout: 2000,
-                                layout: 'topRight',
-                            }).show();
-                        } else {
-                            if (data.error === "Product already in wishlist") {
-                                console.log('Product already in wishlist:', data.error);
-                                new Noty({
-                                    type: 'warning',
-                                    text: 'Product already in Wishlist',
-                                    timeout: 2000,
-                                    layout: 'topRight',
-                                }).show();
-                            } else {
-                                console.error('Error adding product to wishlist:', data.error);
-                            }
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error adding product to wishlist:', error);
-                    });
+                if (data.success) {
+                    console.log('Product added to wishlist:', data.wishlist);
+                    new Noty({
+                        type: 'success',
+                        text: 'Product added to Wishlist',
+                        timeout: 2000,
+                        layout: 'topRight',
+                    }).show();
+                } else {
+                    if (data.error === "Product already in wishlist") {
+                        console.log('Product already in wishlist:', data.error);
+                        new Noty({
+                            type: 'warning',
+                            text: 'Product already in Wishlist',
+                            timeout: 2000,
+                            layout: 'topRight',
+                        }).show();
+                    } else {
+                        console.error('Error adding product to wishlist:', data.error);
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error adding product to wishlist:', error);
+            });
     }
-    </script>
+</script>
 
 
 
