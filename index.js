@@ -41,9 +41,9 @@ const path = require("path");
 const userRoute = require("./routes/userRoute");
 
 app.use("/", userRoute);
-
-
-
+// 
+app.set("views", path.join(__dirname, "views"));
+// 
 const adminRoute = require("./routes/adminRoute");
 app.use("/admin", adminRoute);
 
