@@ -47,14 +47,14 @@ app.use("/", userRoute);
 const adminRoute = require("./routes/adminRoute");
 app.use("/admin", adminRoute);
 
-app.use("/static", express.static(path.join(__dirname, "public")));
-app.use("/products", express.static(path.join(__dirname, "public")));
-app.use("/admin/static", express.static(path.join(__dirname, "public")));
-app.use("/admin/users", express.static(path.join(__dirname, "public")));
-app.use("/admin/products", express.static(path.join(__dirname, "public")));
-app.use("/admin", express.static(path.join(__dirname, "public")));
+app.use("/static", express.static(path.join(__dirname, "/public")));
+app.use("/products", express.static(path.join(__dirname, "/public")));
+app.use("/admin/static", express.static(path.join(__dirname, "/public")));
+app.use("/admin/users", express.static(path.join(__dirname, "/public")));
+app.use("/admin/products", express.static(path.join(__dirname, "/public")));
+app.use("/admin", express.static(path.join(__dirname, "/public")));
 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "/public")));
 
 app.use("/static", express.static(path.join(__dirname, "lib")));
 app.use("/static/products", express.static(path.join(__dirname, "lib")));
