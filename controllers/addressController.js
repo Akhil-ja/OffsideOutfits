@@ -86,9 +86,7 @@ const edit_Address = async (req, res) => {
       { new: true }
     );
 
-    if (!result) {
-      console.log("Address not found or not updated");
-    }
+   
 
     res.redirect("/profile?selected=Address");
   } catch (error) {

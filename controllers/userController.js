@@ -494,7 +494,7 @@ const changePassword = async (req, res) => {
 
 const editUserDetails = async (req, res) => {
   try {
-    console.log("in edit user details");
+   
     const { userID, name, phone } = req.body;
     
 
@@ -525,14 +525,14 @@ const sendMailForgotPassword=async(req,res)=>{
      } 
 
     const {email}=req.body;
-    console.log("email:" + email);
+  
 
     const user = await User.findOne({ email: email });
 
      req.session.forgotPasswordUser = user._id;
 
 
-    console.log("user:" + user);
+   
 
     if (!user) {
       return res.render("loginRegister", {
@@ -542,11 +542,11 @@ const sendMailForgotPassword=async(req,res)=>{
 
     const otp= await generateRandomCode();
 
-     console.log("OTP:" + otp);
+
 
      req.session.forgotPasswordOTP = otp;
 
-     console.log("OTP stored in session:", otp);
+    
 
     const subject = "This is the code for Verifying Email";
    
@@ -605,7 +605,7 @@ const viewChangePassword=async(req,res)=>{
 
 const ChangeForgotPassword = async (req, res) => {
   try {
-    console.log("in Change Password");
+   
     const { newPassword } = req.body;
 
     const userID = req.session.forgotPasswordUser;

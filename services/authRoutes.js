@@ -40,8 +40,7 @@ const isAdminLogin = (req, res, next) => {
   if (token) {
     jwt.verify(token, "secret", (err, decodedToken) => {
       if (err) {
-      
-        res.redirect("/admin/login");
+       res.redirect("/admin/login");
       } else {
        
         next();

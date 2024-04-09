@@ -37,8 +37,7 @@ const loadAdminLog = async (req, res) => {
   if (jwtCookie) {
     return res.redirect("/admin/dashboard");
   }
-  
-    res.render("login", { errorMessage });
+      res.render("login", { errorMessage });
   } catch (error) {
     console.log(error.message);
   }
@@ -56,19 +55,18 @@ const adminLogin = async (req, res) => {
     if (userData) {
       const passwordMatch = await bcrypt.compare(password, userData.password);
 
-      console.log(password);
-      console.log(userData.password);
+     
 
       if (passwordMatch && userData.is_admin === "1") {
         const userID = userData._id;
-        console.log(userData.name);
+      
 
         const token = authRoutes.createToken(userID);
         res.cookie("jwt", token, {
           httpOnly: true,
           maxAge: authRoutes.maxAge * 1000,
         });
-        console.log(token);
+       
 
         res.redirect("/admin/products");
       } else if (userData.is_admin === "0") {
@@ -92,7 +90,7 @@ const adminLogin = async (req, res) => {
 const adminLogout= async(req,res)=>{
   try {
     res.cookie('jwt','',{maxAge:1});
-    console.log("Admin logout");
+  
     res.redirect("/admin/login")
   } catch (error) {
     console.log(error.message);
@@ -151,7 +149,7 @@ const viewsalesReport = async (req, res) => {
 const updateProductPriceAfterDiscount = async () => {
   try {
     const products = await Product.find();
-console.log("updateProductPriceAfterDiscount");
+
     for (const product of products) {
       const discountedPrice =
         product.price - (product.price * product.discountPercentage) / 100;
@@ -165,7 +163,7 @@ console.log("updateProductPriceAfterDiscount");
 
 const loadAdminProducts = async (req, res) => {
   try {
-console.log("loadAdminProducts");
+
     updateProductPriceAfterDiscount();
     const itemsPerPage = 6;
     const currentPage = parseInt(req.query.page) || 1;
@@ -273,20 +271,19 @@ const filterOrdersByDate = async (req, res) => {
 const editproductImagePOST = async (req, res) => {
   try {
 
-    console.log("hello in image edit");
-    console.log(req.file);
+   
+    
     const image = req.body.imagename;
     const index = parseInt(req.body.index);
     const productID = req.body.productID;
-    console.log(image, index, productID);
-
+   
     if (image) {
       const productDetails = await Product.findOne({ _id: productID });
-      console.log(productDetails.images);
+     
       productDetails.images.splice(index, 1, image);
-      console.log(productDetails.images);
+    
       await productDetails.save();
-      console.log(productDetails.images);
+    
       res.json({ status: "okay" });
     } else {
       res.json({ status: "oops" });
