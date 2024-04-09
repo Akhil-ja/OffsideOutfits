@@ -439,7 +439,7 @@
             return;
         }
 
-     fetch(`/products?priceSort=${priceSort}&nameSort=${nameSort}&selectedCategories=${selectedCategories.join(',')}&search=${search}&page=${page}`)
+ fetch(`/products?priceSort=${priceSort}&nameSort=${nameSort}&selectedCategories=${selectedCategories.join(',')}&search=${search}&page=${page}`)
             .then(response => response.json())
             .then(data => {
                 if (data.products.length === 0) {
@@ -480,6 +480,7 @@
                 }
             })
             .catch(error => console.error('Error:', error));
+
     }
 </script>
 
