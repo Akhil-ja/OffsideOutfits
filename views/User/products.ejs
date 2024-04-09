@@ -145,50 +145,51 @@
                     </div>
 
 
-                    <div class="products">
-                        <div class="row">
-                        <% for (let i=0; i < products.length; i++) { %>
-                            <% const product=products[i]; %>
-                                <% if (product.is_listed==="1" ) { %>
-                                    <div class="col-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
-                                        <div class="product">
-                                            <div class="card card-product-grid">
-                                                <a href="/products/<%= product._id %>">
-                                                    <img src="/productAssets/<%= product.images[0] %>" alt="Product image" class="product-image"
-                                                        style="height: 280px;width: 285px;">
+                <div class="products">
+                    <div class="row">
+                        <% products.forEach(product=> { %>
+                            <% if (product.is_listed==="1" ) { %>
+                                <div class="col-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
+                                    <div class="product">
+                                        <div class="card card-product-grid">
+                                            <a href="/products/<%= product._id %>">
+                                                <img src="/productAssets/<%= product.images[0] %>" alt="Product image"
+                                                    class="product-image" style="height: 280px;width: 285px;">
+                                            </a>
+                                            <div class="product-action-vertical">
+                                                <a href="#" class="btn-product-icon btn-wishlist btn-expandable"
+                                                    onclick="addToWishlist('<%= product._id %>')">
+                                                    <span>add to wishlist</span>
                                                 </a>
-                                                <div class="product-action-vertical">
-                                                    <a href="#" class="btn-product-icon btn-wishlist btn-expandable"
-                                                        onclick="addToWishlist('<%= product._id %>')"><span>add to wishlist</span></a>
-                                                </div>
                                             </div>
-                                            <div class="product-body">
-                                                <div class="product-cat">
-                                                    <a href="#">
-                                                        <%= product.brand %>
-                                                    </a>
-                                                </div>
-                                                <h3 class="product-title">
-                                                    <a href="/product/<%= product._id %>">
-                                                        <%= product.pname %>
-                                                    </a>
-                                                </h3>
-                                                <div class="product-price">
-                                                    <% if (product.priceAfterDiscount !==product.price) { %>
-                                                        <del>Rs:<%= product.price %></del>
-                                                        <pre>  </pre> Rs:<%= product.priceAfterDiscount.toFixed(2) %>
-                                                            <% } else { %>
-                                                                Rs:<%= product.price %>
-                                                                    <% } %>
-                                                </div>
+                                        </div>
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <a href="#">
+                                                    <%= product.brand %>
+                                                </a>
+                                            </div>
+                                            <h3 class="product-title">
+                                                <a href="/product/<%= product._id %>">
+                                                    <%= product.pname %>
+                                                </a>
+                                            </h3>
+                                            <div class="product-price">
+                                                <% if (product.priceAfterDiscount !==product.price) { %>
+                                                    <del>Rs:<%= product.price %></del>
+                                                    <pre>  </pre> Rs:<%= product.priceAfterDiscount.toFixed(2) %>
+                                                        <% } else { %>
+                                                            Rs:<%= product.price %>
+                                                                <% } %>
                                             </div>
                                         </div>
                                     </div>
-                                    <% } %>
-                                        <% } %>
+                                </div>
+                                <% } %>
+                                    <% }); %>
+                    </div><!-- End .row -->
+                </div>
 
-                        </div><!-- End .row -->
-                    </div>
 
 
 
@@ -442,14 +443,12 @@
  fetch(`/products?priceSort=${priceSort}&nameSort=${nameSort}&selectedCategories=${selectedCategories.join(',')}&search=${search}&page=${page}`)
             .then(response => response.json())
             .then(data => {
+                const productsContainer = document.querySelector('.products .row');
+                productsContainer.innerHTML = '';
                 if (data.products.length === 0) {
-                    const productsContainer = document.querySelector('.products .row');
                     productsContainer.innerHTML = '<p>No products found</p>';
                 } else {
-                    const productsContainer = document.querySelector('.products .row');
-                    productsContainer.innerHTML = '';
-                    for (let i = 0; i < data.products.length; i++) {
-                        const updatedProduct = data.products[i];
+                    data.products.forEach(updatedProduct => {
                         if (updatedProduct.is_listed === "1") {
                             const productItem = document.createElement('div');
                             productItem.classList.add('col-6', 'col-md-4', 'col-lg-4', 'col-xl-3', 'col-xxl-2', 'product-item');
@@ -477,10 +476,11 @@
                         </div>`;
                             productsContainer.appendChild(productItem);
                         }
-                    }
+                    });
                 }
             })
             .catch(error => console.error('Error:', error));
+
 
     }
 </script>
