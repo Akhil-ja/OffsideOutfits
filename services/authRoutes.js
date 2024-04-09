@@ -20,10 +20,10 @@ const isLogin = (req, res, next) => {
                   if (token) {
                     jwt.verify(token, "secret", (err, decodedToken) => {
                     if (err) {
-                        console.log(err.message);
+                      
                         res.redirect("/register");
                     } else {
-                        console.log(decodedToken);
+                       
                         next();
                     }
                     });
@@ -40,10 +40,10 @@ const isAdminLogin = (req, res, next) => {
   if (token) {
     jwt.verify(token, "secret", (err, decodedToken) => {
       if (err) {
-        console.log(err.message);
+      
         res.redirect("/admin/login");
       } else {
-        console.log(decodedToken);
+       
         next();
       }
     });
@@ -58,7 +58,7 @@ const isAdminLogin = (req, res, next) => {
     if (token) {
         jwt.verify(token, "secret", async (err, decodedToken) => {
         if (err) {
-            console.log("Error:", err.message);
+           
              res.locals.currentUser = null;
             next();
         } else {
@@ -67,7 +67,7 @@ const isAdminLogin = (req, res, next) => {
             res.locals.currentUser = user;
             next();
             } catch (userError) {
-            console.log("User Error:", userError.message);
+          
                res.locals.currentUser = null;
             next();
             }
@@ -75,7 +75,7 @@ const isAdminLogin = (req, res, next) => {
         });
     } else {
          res.locals.currentUser = null;
-        console.log("No token found");
+       
         next();
     }
     };
@@ -87,7 +87,7 @@ const isAdminLogin = (req, res, next) => {
     
         jwt.verify(token, "secret", async (err, decodedToken) => {
           if (err) {
-            console.log("Error:", err.message);
+           
             next();
           } else {
             try {
@@ -98,7 +98,7 @@ const isAdminLogin = (req, res, next) => {
              }
               next();
             } catch (userError) {
-              console.log("User Error:", userError.message);
+           
               res.locals.currentUser = null;
               next();
             }
