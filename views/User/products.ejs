@@ -448,7 +448,8 @@
                 } else {
                     const productsContainer = document.querySelector('.products .row');
                     productsContainer.innerHTML = '';
-                    data.products.forEach(updatedProduct => {
+                    for (let i = 0; i < data.products.length; i++) {
+                        const updatedProduct = data.products[i];
                         if (updatedProduct.is_listed === "1") {
                             const productItem = document.createElement('div');
                             productItem.classList.add('col-6', 'col-md-4', 'col-lg-4', 'col-xl-3', 'col-xxl-2', 'product-item');
@@ -476,7 +477,7 @@
                         </div>`;
                             productsContainer.appendChild(productItem);
                         }
-                    });
+                    }
                 }
             })
             .catch(error => console.error('Error:', error));
