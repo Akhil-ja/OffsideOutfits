@@ -7,11 +7,11 @@ const offerController = require("../controllers/offerController");
 
 const loadProducts = async (req, res) => {
   try {
-    console.log("in load products");
+  
 
     const { priceSort, nameSort, selectedCategories, search, page, sortBy } =
       req.query;
-    console.log("search" + search);
+ 
 
     const limit = 12;
     const skip = (page - 1) * limit;
@@ -51,9 +51,7 @@ const sortProducts = async (req, res) => {
   try {
     const { priceSort, nameSort, selectedCategories, search } = req.query;
 
-    console.log("Name sort:" + nameSort);
-    console.log("Price sort:" + priceSort);
-    console.log("selectedCategories:" + selectedCategories);
+  
 
     let sortObject = {};
 
@@ -63,7 +61,7 @@ const sortProducts = async (req, res) => {
 
     if (nameSort !== "undefined") {
       sortObject.pname = nameSort === "aToZ" ? 1 : -1;
-      console.log(`Name sorting selected: ${nameSort}`);
+     
     }
 
     let filterObject = {};
@@ -81,13 +79,13 @@ const sortProducts = async (req, res) => {
     if (selectedCategories && selectedCategories.length > 0) {
       const categoryIds = selectedCategories.split(",");
       query = query.find({ category: { $in: categoryIds } });
-      console.log(`selectedCategories selected: ${categoryIds}`);
+     
     }
 
     const products = await query.sort(sortObject);
 
     res.json({ products });
-    console.log("Fetch");
+  
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: "Internal Server Error" });
@@ -139,7 +137,7 @@ const add_Product = async (req, res) => {
     });
 
     await newProduct.save();
-    console.log(newProduct);
+   
     res.redirect("/admin/products");
   } catch (error) {
     console.error(error);
@@ -176,7 +174,7 @@ const deleteProduct = async (req, res) => {
 
 const editProduct = async (req, res) => {
   try {
-    console.log("Edit product");
+  
     const id = req.query.id;
     const product = await Product.findById(id).populate("category");
 
@@ -231,7 +229,7 @@ const edit_product = async (req, res) => {
 
 const addProduct = async (req, res) => {
   try {
-    console.log("product");
+   
     const categories = await getCategories();
     const itemsPerPage = 10;
     const currentPage = parseInt(req.query.page, 10) || 1;

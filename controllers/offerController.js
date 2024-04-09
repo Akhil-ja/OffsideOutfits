@@ -74,7 +74,7 @@ const ReferalOffer = async (req, res) => {
 
 const addCategoryOffer = async (req, res) => {
   try {
-    console.log("in add category");
+  
     const {
       title,
       description,
@@ -186,10 +186,9 @@ const toggleReferalStatus = async (req, res) => {
 
 const toggleStatus = async (req, res) => {
   try {
-    console.log("in toggle");
-    console.log("toggle status");
+   
     const { offerId } = req.body;
-    console.log("offerId:" + offerId);
+   
 
     const offer = await Offer.findById(offerId)
       .populate({
@@ -202,7 +201,7 @@ const toggleStatus = async (req, res) => {
       });
 
     offer.isActive = !offer.isActive;
-    console.log("status changes");
+    
     await offer.save();
 
     if (offer.isActive) await applyActiveOffersToProducts(offerId);
@@ -217,7 +216,7 @@ const toggleStatus = async (req, res) => {
 
 const applyActiveOffersToProducts = async (offerId) => {
   try {
-    console.log("in apply offer");
+  
     const offer = await Offer.findById(offerId)
       .populate({
         path: "productOffer.products",
@@ -265,7 +264,7 @@ const applyActiveOffersToProducts = async (offerId) => {
       );
     }
     await updateProductDiscount();
-    console.log("Active offers applied to products successfully.");
+  
   } catch (error) {
     console.error("Error applying active offers to products:", error);
   }
@@ -273,7 +272,7 @@ const applyActiveOffersToProducts = async (offerId) => {
 
 const removeInactiveOffersFromProducts = async (offerId) => {
   try {
-    console.log("Removing inactive offer from products...");
+   
     const offer = await Offer.findById(offerId)
       .populate({
         path: "productOffer.products",
@@ -313,7 +312,7 @@ const removeInactiveOffersFromProducts = async (offerId) => {
       );
     }
     await updateProductDiscount();
-    console.log(" offers removed from products successfully.");
+   
   } catch (error) {
     console.error("Error removing inactive offers from products:", error);
   }

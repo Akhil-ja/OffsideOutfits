@@ -23,15 +23,13 @@ const razorpay = new RazorPay({
 
 const createOrders = async (req, res) => {
   try {
-    console.log("create order");
+   
 
     const userID = req.session.userID;
     const selectedAddress = req.session.selectedAddress;
     const paymentType = req.session.paymentType;
    
-    console.log("userid:" + userID);
-    console.log("address:" + selectedAddress);
-    console.log("paymenntType:" + paymentType);
+   
 
 
     let orderAddress = "";
@@ -52,7 +50,7 @@ const createOrders = async (req, res) => {
         (addr) => addr._id.toString() === selectedAddress
       );
 
-      console.log("orderAddress:" + orderAddress);
+   
 
       if (orderAddress) {
        
@@ -66,9 +64,6 @@ const createOrders = async (req, res) => {
         }));
 
         
-orderProducts.forEach((orderProduct) => {
-  console.log("size:" + orderProduct.size);
-});
 
         
         try {
@@ -187,15 +182,13 @@ await User.updateOne(
 
 const createPendingOrders=async(req,res)=>{
  try {
-   console.log("create order");
+  
 
    const userID = req.session.userID;
    const selectedAddress = req.session.selectedAddress;
    const paymentType = req.session.paymentType;
 
-   console.log("userid:" + userID);
-   console.log("address:" + selectedAddress);
-   console.log("paymenntType:" + paymentType);
+  
 
    let orderAddress = "";
 
@@ -215,7 +208,7 @@ const createPendingOrders=async(req,res)=>{
        (addr) => addr._id.toString() === selectedAddress
      );
 
-     console.log("orderAddress:" + orderAddress);
+    
 
      if (orderAddress) {
        const totalAmount = cart.cartTotal;
@@ -227,9 +220,7 @@ const createPendingOrders=async(req,res)=>{
          size: cartProduct.size,
        }));
 
-       orderProducts.forEach((orderProduct) => {
-         console.log("size:" + orderProduct.size);
-       });
+     
 
        try {
          for (const orderProduct of orderProducts) {
@@ -344,7 +335,7 @@ const viewOrders = async (req, res) => {
       .exec()
       
 
-    console.log("All orders>>>>>>>>>" + AllOrders);
+   
     res.render("orders", { AllOrders });
   } catch (error) {
     console.error(error.message);
@@ -354,7 +345,7 @@ const viewOrders = async (req, res) => {
 
 const getOrderDetails = async (req, res) => {
   try {
-    console.log("getOrderDetails");
+  
     const orderId = req.query.orderID;
     const orderDetails = await Orders.findById(orderId)
       .populate({
@@ -527,8 +518,7 @@ const UpdateOrderStatus=async(req,res)=>{
      const orderId = req.query.orderId;
      const newStatus = req.query.status;
 
-     console.log("in order update");
-     console.log("orderId" + orderId);
+   
      const allowedStatusValues = [
        "pending",
        "completed",
@@ -561,14 +551,9 @@ const UpdateOrderStatus=async(req,res)=>{
 
 const cancelOrder = async (req, res) => {
   try {
-    console.log("in cancel order");
+  
     const orderId = req.query.orderId;
     const userID = res.locals.currentUser._id;
-    console.log("userID:" + userID);
-    console.log("Cancelling order with ID: " + orderId);
-
-
-
 
     const updatedOrder = await Orders.findByIdAndUpdate(
       orderId,
@@ -584,16 +569,10 @@ const cancelOrder = async (req, res) => {
         model: "Product",
       });
 
-    console.log("Updated order:", updatedOrder);
 
     for (const product of updatedOrder.products) {
       const productId = product.product._id;
       const quantityOrdered = product.quantity;
-
-      console.log(
-        `Updating product stock for product ID ${productId} with quantity ${quantityOrdered}`
-      );
-
       await Product.findByIdAndUpdate(
         productId,
         { $inc: { "sizes.$[size].quantity": quantityOrdered } },
@@ -624,8 +603,7 @@ const cancelOrder = async (req, res) => {
       await userWallet.save();
     }
 
-    console.log("Order cancellation successful");
-
+   
     
     if (req.xhr) {
       return res.status(200).json({ message: "Order cancelled successfully" });
@@ -648,14 +626,11 @@ const cancelOrder = async (req, res) => {
 
 const returnOrder = async (req, res) => {
   try {
-    console.log("in return order");
+   
     const orderId = req.body.orderId; 
     const userID = res.locals.currentUser._id;
 
-    console.log("return reason:" + req.body.reason);
-
-    console.log("Returning order with ID:", orderId);
-    console.log("User ID:", userID);
+ 
 
    
     const updatedOrder = await Orders.findByIdAndUpdate(
@@ -672,16 +647,11 @@ const returnOrder = async (req, res) => {
         model: "Product",
       });
 
-    console.log("Updated order:", updatedOrder);
 
     
     for (const product of updatedOrder.products) {
       const productId = product.product._id;
       const quantityReturned = product.quantity;
-
-      console.log(
-        `Increasing product stock for product ID ${productId} with quantity ${quantityReturned}`
-      );
 
       await Product.findByIdAndUpdate(
         productId,
@@ -710,10 +680,7 @@ const returnOrder = async (req, res) => {
     });
 
     await userWallet.save();
-
-    console.log("Order return successful");
-
-   
+ 
      return res.status(200).json({ message: "Order returb successfully" });
    
     
@@ -729,10 +696,10 @@ const returnOrder = async (req, res) => {
 
 const Payment = async (req, res) => {
   try {
-    console.log("in paymenty");
+  
     const { userID, selectedAddress, paymentType } = req.body;
 
-    console.log("Order Log:", { userID, selectedAddress, paymentType });
+  
 
     req.session = req.session || {};
 
@@ -742,7 +709,6 @@ const Payment = async (req, res) => {
 
     req.session.save();
 
-    console.log("session address in payment:" + req.session.selectedAddress);
 
     const cart = await Cart.findOne({ user: userID }).populate({
       path: "cartProducts.product",
@@ -755,7 +721,7 @@ const Payment = async (req, res) => {
 
     let orderProducts = [];
     let total = cart.cartTotal.toFixed(2);
-    console.log(typeof cart.cartTotal);
+    
     let orderAddress = "";
 
     if (orderDocument) {
@@ -763,7 +729,7 @@ const Payment = async (req, res) => {
         (addr) => addr._id.toString() === selectedAddress
       );
 
-      console.log("The address:" + orderAddress);
+     
 
       if (orderAddress) {
         orderProducts = cart.cartProducts.map((cartProduct) => ({
@@ -773,7 +739,7 @@ const Payment = async (req, res) => {
           size: cartProduct.size,
         }));
 
-        console.log("ordered products:", orderProducts);
+   
 
         for (const orderProduct of orderProducts) {
           const product = orderProduct.product;
@@ -795,17 +761,17 @@ const Payment = async (req, res) => {
       }
     }
 
-    console.log("entering razorpay");
+  
 
     if (paymentType === "RazorPay") {
-      console.log("entered razorpay");
+     
       const options = {
         amount: total * 100,
         currency: "INR",
         receipt: "razorUser@gmail.com",
       };
 
-      console.log("options", options);
+   
 
       razorpay.orders.create(options, async (err, order) => {
         if (err) {
@@ -853,7 +819,7 @@ const Payment = async (req, res) => {
         });
       }
     } else {
-      console.log("else");
+     
       try {
         const redirectURL = "/place-order";
         return res.status(303).json({
@@ -885,7 +851,7 @@ const pendingPayment = async (req,res) => {
 
     const {orderID}=req.body
 
-    console.log("orderID:" + orderID);
+  
      const order = await Orders.findOne({ _id: orderID }).populate(
        "products.product"
      );
@@ -945,11 +911,11 @@ const pendingPayment = async (req,res) => {
 const completePayment=async(req,res)=>{
   try {
 
-    console.log("in completePayment");
+   
     
     const orderID = req.query.orderID;
 
-    console.log("orderID:" + orderID);
+  
 
 const order = await Orders.findOne({ _id:orderID }).populate("products.product");
 
@@ -992,13 +958,13 @@ const loadInvoice = async (req, res) => {
   try {
     const orderId = req.query.orderID; 
 
-    console.log("orderId:" + orderId);
+
     const order = await Orders.findOne({ _id: orderId }).populate(
       "products.product"
     );
 
 
-    console.log("order:" + order);
+
 
     if (!order) {
       return res.status(404).send("Order not found");

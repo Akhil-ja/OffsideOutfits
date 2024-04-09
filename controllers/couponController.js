@@ -22,7 +22,7 @@ const viewCoupons = async (req, res) => {
       }
     );
 
-    console.log("Number of coupons updated:", updateResult.nModified);
+ 
 
     
     const totalCoupons = await Coupon.countDocuments({
@@ -119,7 +119,7 @@ const editCouponStatus = async (req, res) => {
   try {
    
      const { couponID } = req.query;
-      console.log("couponID:"+couponID);
+   
     const coupon = await Coupon.findById(couponID);
 
     if (!coupon) {

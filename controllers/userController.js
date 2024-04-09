@@ -46,7 +46,7 @@ const loadlogin = async (req, res) => {
    setInterval(() => {
      req.session.tempUserDetails.otp = null;
      req.session.save();
-     console.log("OTP null");
+   
    }, 60*1000*5);
  };
 
@@ -54,7 +54,7 @@ const loadlogin = async (req, res) => {
 const initialSignUp = async (req, res) => {
   try {
 
-    console.log("in initial signup");
+   
     const referralCode = req.body.referralCode;
 
        let referredUser = null;
@@ -69,7 +69,7 @@ const initialSignUp = async (req, res) => {
        if (referredUser) {
          console.log("Referral code is valid");
        } else {
-         console.log("Referral code is invalid");
+        
          return res.render("loginRegister", {
            errorMessage:
              "Referral code is invalid.",
@@ -78,7 +78,7 @@ const initialSignUp = async (req, res) => {
       
       referredUser = referredUser._id;
 
-console.log("referal user:" + referredUser);
+
 
     
     }
@@ -108,15 +108,15 @@ console.log("referal user:" + referredUser);
     req.session.save();
     if (req.session.tempUserDetails) {
       const subject = "Welcome to Offside Outfits";
-      console.log("OTP:" + randomCode);
+   
       const text = `Your verification code is: ${randomCode}`;
       await sendEmail(req.body.email, subject, text);
       otpNull(req, res);
-      console.log(req.session.tempUserDetails);
+    
       res.render("OTPpage", { errorMessage: null });
       res.cookie("jwt", "", { maxAge: 1 });
     } else {
-      console.log("Registration not successful");
+  
     }
   } catch (error) {
     console.log(error.message);
@@ -131,11 +131,11 @@ const resentOTP = async (req, res) => {
   req.session.save();
 
   const subject = "Welcome to Offside Outfits";
-  console.log("New OTP:" + randomCode);
+ 
   const text = `Your verification code is: ${randomCode}`;
   await sendEmail(req.session.tempUserDetails.email, subject, text);
     otpNull(req, res);
-  console.log(req.session.tempUserDetails);
+
 };
 
 
@@ -248,7 +248,7 @@ const verifyLogin = async (req, res) => {
           res.status(200).json({ errorMessage: "Account is Blocked" });
         } else {
           const userID = userData._id;
-          console.log(userData.name);
+         
 
           const token = authRoutes.createToken(userID);
 
@@ -310,8 +310,7 @@ const loadProfile = async (req, res) => {
       .exec();
 
     let pageinfo = selectedValue;
-    console.log(pageinfo);
-    console.log(userID);
+  
 
     
     const page = parseInt(req.query.page) || 1; 
@@ -455,10 +454,6 @@ const changePassword = async (req, res) => {
   try {
     const { userID, oldPassword, newPassword, confirmNewPassword } = req.body;
 
-    console.log("User ID:", userID);
-    console.log("Old Password:", oldPassword);
-    console.log("New Password:", newPassword);
-    console.log("Confirm New Password:", confirmNewPassword);
 
     
     if (newPassword !== confirmNewPassword) {
@@ -644,7 +639,7 @@ const resendForgotOTP = async (req, res) => {
     const email = user.email;
     const otp = await generateRandomCode();
     req.session.forgotPasswordOTP = otp;
-    console.log("OTP stored in session:", otp);
+   
     const subject = "This is the code for Verifying Email";
     const text = `Your verification code is: ${otp}`;
     await sendEmail(email, subject, text);

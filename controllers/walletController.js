@@ -23,7 +23,7 @@ const addToWallet = async (req, res) => {
   try {
    const amount = req.body.amount
 
-   console.log("amount:" + amount);
+
 
     const options = {
       amount: amount * 100,
@@ -40,8 +40,7 @@ const addToWallet = async (req, res) => {
       }
 
       const orderID = order.id;
-      console.log("orderID");
-
+     
       return res.status(200).json({
         success: true,
         msg: "Order created successfully",

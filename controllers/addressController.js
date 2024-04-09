@@ -56,13 +56,12 @@ const add_Address = async (req, res, next) => {
 const editAddress = async (req, res) => {
   try {
     const addressId = req.params.addressId;
-    console.log("object_id:" + addressId);
-    const addressDetails = await Address.findOne(
+       const addressDetails = await Address.findOne(
       { "address._id": addressId },
       { "address.$": 1 }
     );
 
-    console.log("Address======" + addressDetails);
+   
 
     if (!addressDetails) {
       console.error("Address not found for ID:", addressId);
@@ -79,7 +78,7 @@ const edit_Address = async (req, res) => {
   try {
     const addressId = req.query.addressId;
     const updatedAddressData = req.body;
-    console.log("updated" + updatedAddressData);
+   
 
     const result = await Address.findOneAndUpdate(
       { "address._id": addressId },
@@ -99,10 +98,10 @@ const edit_Address = async (req, res) => {
 
 const setDefault = async (req, res) => {
   try {
-    console.log("default add");
+    
     const { addressId } = req.params;
 
-    console.log(addressId);
+   
 
     const matchingAddress = await Address.findOneAndUpdate(
       { "address._id": addressId },
@@ -110,7 +109,7 @@ const setDefault = async (req, res) => {
       { new: true }
     );
 
-    console.log(matchingAddress);
+    
 
     if (matchingAddress) {
       res.json({
@@ -129,15 +128,13 @@ const setDefault = async (req, res) => {
 const deleteAddress=async(req,res)=>{
   try {
 
-    console.log("in delete add");
+   
 
     const userId=res.locals.currentUser._id;
 
      const addressId = req.query.addressId;
 
-     console.log("user id:" + userId);
-
-     console.log("address id:"+addressId);
+     
 
     const updatedUser = await Address.findOneAndUpdate(
       { user: userId },

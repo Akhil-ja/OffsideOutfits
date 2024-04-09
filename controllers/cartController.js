@@ -9,7 +9,7 @@ const Order=require("../models/ordersModel")
 
 const loadCart = async (req, res) => {
   try {
-    console.log("in cart");
+  
 
     const currentUser = res.locals.currentUser._id;
 
@@ -17,10 +17,10 @@ const loadCart = async (req, res) => {
 
     const cartItems = await Cart.findOne({ user: currentUser });
 
-    console.log("cart items", cartItems);
+  
 
     if (!cartItems || cartItems.cartProducts.length === 0) {
-      console.log("Cart is empty");
+     
       return res.render("cart", { cartItems: [] });
     }
 
@@ -41,7 +41,7 @@ const loadCart = async (req, res) => {
       }),
     };
 
-    console.log("cart Items", cartWithProductDetails);
+  
 
     res.render("cart", { cartItems: [cartWithProductDetails] });
   } catch (error) {
@@ -128,7 +128,7 @@ await cart.save();
 const cartQuantity = async (req, res) => {
   const { cartId, productId, newQuantity } = req.body;
 
-  console.log("in cart quantity");
+
 
   try {
     let cart = await Cart.findById(cartId).populate({
@@ -161,7 +161,7 @@ const cartQuantity = async (req, res) => {
       }
     }
 
-    console.log(`Stock for ${selectedSize}: ${availableStock}`);
+   
 
     if (newQuantity > productInCart.quantity && newQuantity > availableStock) {
       return res.status(400).json({
@@ -456,11 +456,11 @@ const Applycoupon = async (req, res) => {
       req.session.couponApplied = coupon._id;
       couponApplied = coupon.toObject();
     } else {
-      console.log("No such coupon exists");
+    
       return res.status(400).json({ error: "Coupon Does not exist" });
     }
 
-    console.log("New total:", initialTotalAmount - couponDiscount);
+  
     res.json({
       newTotalAmount: initialTotalAmount - couponDiscount,
       couponApplied,

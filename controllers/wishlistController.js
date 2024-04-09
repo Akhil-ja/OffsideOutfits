@@ -9,13 +9,13 @@ const Wishlist=require("../models/wishlistModel")
 
 
 const addToWishlist = async (req, res) => {
-  console.log("in add to wishlist");
+
 
   const { productId } = req.body;
-  console.log("Product ID:" + productId);
+
 
   const userId = res.locals.currentUser._id;
-  console.log("userid:" + userId);
+
 
   try {
     const existingWishlist = await Wishlist.findOne({
@@ -24,7 +24,7 @@ const addToWishlist = async (req, res) => {
     });
 
     if (existingWishlist) {
-      console.log("Already exists in wishlist");
+   
       return res
         .status(400)
         .json({ success: false, error: "Product already in wishlist" });
@@ -73,12 +73,12 @@ const viewWishlist = async (req, res) => {
 
 const removeFromwishlist=async(req,res)=>{
 
-console.log("in remove wihlist");
+
      const {  productId } = req.body;
 
-     console.log(req.body);
+    
 const userId = res.locals.currentUser._id;
-console.log("userId:" + userId);
+
 
      try {
        const wishlist = await Wishlist.findOne({ user: userId }).populate({
