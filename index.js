@@ -17,8 +17,6 @@ app.use(function (req, res, next) {
   next();
 });
 
-
-
 app.use(nocache());
 
 app.use(
@@ -26,16 +24,23 @@ app.use(
     secret: "your-secret-key",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }, 
+    cookie: { secure: false },
   })
 );
 
+const cors = require("cors");
+
+app.use(
+  cors({
+    origin: ["https://offsideoutfit.vercel.app"],
+    methods: ["POST", "GET"],
+    credentials: true,
+  })
+);
 
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-
 
 const path = require("path");
 const userRoute = require("./routes/userRoute");
@@ -61,6 +66,6 @@ app.use(express.static("public"));
 app.use(express.static("views"));
 app.use(express.static("lib"));
 
-app.listen(3000, function () {
-  console.log("Server is Running.... http://localhost:3000/");
+app.listen(4000, function () {
+  console.log("Server is Running.... http://localhost:4000/");
 });
