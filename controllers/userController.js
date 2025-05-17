@@ -326,9 +326,7 @@ const loadProfile = async (req, res) => {
 
     const orderCount = await Orders.countDocuments({ user: userID });
 
-    if (!matchingAddress) {
-      console.error("Address not found for user:", userID);
-    }
+    
 
    
     const totalPages = Math.ceil(orderCount / perPage);

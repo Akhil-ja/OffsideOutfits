@@ -17,10 +17,10 @@ const createToken = (id) => {
 const isLogin = (req, res, next) => {
 
                const token = req.cookies.jwt;
+
                   if (token) {
                     jwt.verify(token, "secret", (err, decodedToken) => {
-                    if (err) {
-                      
+                    if (err) {                    
                         res.redirect("/register");
                     } else {
                        
@@ -30,6 +30,7 @@ const isLogin = (req, res, next) => {
                 } else {
                     res.redirect("/register");
                 }
+
 };
 
 
@@ -52,7 +53,7 @@ const isAdminLogin = (req, res, next) => {
 };
 
 
-    const checkUser = async (req, res, next) => {
+const checkUser = async (req, res, next) => {
     const token = req.cookies.jwt;
     if (token) {
         jwt.verify(token, "secret", async (err, decodedToken) => {
@@ -66,15 +67,13 @@ const isAdminLogin = (req, res, next) => {
             res.locals.currentUser = user;
             next();
             } catch (userError) {
-          
                res.locals.currentUser = null;
             next();
             }
         }
         });
     } else {
-         res.locals.currentUser = null;
-       
+         res.locals.currentUser = null;   
         next();
     }
     };
