@@ -81,7 +81,12 @@ userRoute.get(
   productController.loadProducts
 );
 
-userRoute.get("/cart", authRoutes.isLogin, cartController.loadCart);
+userRoute.get(
+  "/cart",
+  authRoutes.isLogin,
+  authRoutes.isBlocked,
+  cartController.loadCart
+);
 
 userRoute.get(
   "/products/:productId",
@@ -89,25 +94,52 @@ userRoute.get(
   productController.loadProduct
 );
 
-userRoute.get("/checkOut", authRoutes.isLogin, cartController.loadCheckout);
+userRoute.get(
+  "/checkOut",
+  authRoutes.isLogin,
+  authRoutes.isBlocked,
+  cartController.loadCheckout
+);
 
-userRoute.get("/profile", authRoutes.isLogin, userController.loadProfile);
+userRoute.get(
+  "/profile",
+  authRoutes.isLogin,
+  authRoutes.isBlocked,
+  userController.loadProfile
+);
 
 userRoute.get("/logout", userController.userLogout);
 
 
-userRoute.get("/add-address",authRoutes.isLogin, addressController.addAddress);
-userRoute.post("/add-address",authRoutes.isLogin, addressController.add_Address);
+userRoute.get(
+  "/add-address",
+  authRoutes.isLogin,
+  authRoutes.isBlocked,
+  addressController.addAddress
+);
+
+userRoute.post(
+  "/add-address",
+  authRoutes.isLogin,
+  authRoutes.isBlocked,
+  addressController.add_Address
+);
 
 
 userRoute.get(
   "/edit-address?:addressId",
   authRoutes.isLogin,
+  authRoutes.isBlocked,
   addressController.editAddress
 );
 
 
-userRoute.post("/edit-address", authRoutes.isLogin, addressController.edit_Address);
+userRoute.post(
+  "/edit-address",
+  authRoutes.isLogin,
+  authRoutes.isBlocked,
+  addressController.edit_Address
+);
 userRoute.post("/set-default-address/:addressId", addressController.setDefault);
 
 
@@ -146,6 +178,7 @@ userRoute.get("/completePayment", orderController.completePayment);
 userRoute.get(
   "/order-details",
   authRoutes.isLogin,
+  authRoutes.isBlocked,
   orderController.getOrderDetails
 );
 
@@ -171,7 +204,12 @@ userRoute.post("/applyCoupon", cartController.Applycoupon);
 
 userRoute.post("/addToWishlist", wishlistController.addToWishlist);
 
-userRoute.get("/wishlist", wishlistController.viewWishlist);
+userRoute.get(
+  "/wishlist",
+  authRoutes.isLogin,
+  authRoutes.isBlocked,
+  wishlistController.viewWishlist
+);
 
 
 userRoute.post("/addToWallet",walletController.addToWallet);
@@ -180,6 +218,11 @@ userRoute.post("/remove-from-wishlist", wishlistController.removeFromwishlist);
 
 userRoute.get("/wallet/add",walletController.addMoney);
 
-userRoute.get("/walletHistory", walletController.ViewWalletHistory);
+userRoute.get(
+  "/walletHistory",
+  authRoutes.isLogin,
+  authRoutes.isBlocked,
+  walletController.ViewWalletHistory
+);
 
 module.exports= userRoute;
