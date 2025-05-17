@@ -3,7 +3,7 @@
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-3.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:32 GMT -->
 
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <title>OOF Dashboard</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="description" content="" />
@@ -24,12 +24,12 @@
             display: flex;
             flex-wrap: wrap;
         }
-    
+
         .image-item {
             flex: 0 0 33.33%;
             padding: 0 10px;
         }
-    
+
         .image-item .mb-3 {
             margin-bottom: 0;
         }
@@ -60,25 +60,25 @@
                     <a class="menu-link" href="/admin/products"> <i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Products</span>
                     </a>
-        
+
                 </li>
-        
+
                 <li class="menu-item">
                     <a class="menu-link" href="/admin/users"> <i class="icon material-icons md-person"></i>
                         <span class="text">Users</span>
                     </a>
                 </li>
-        
+
                 <li class="menu-item">
                     <a class="menu-link" href="/admin/category"> <i class="icon material-icons md-stars"></i>
                         <span class="text">category</span> </a>
                 </li>
-        
+
                 <li class="menu-item  ">
                     <a class="menu-link" href="/admin/orders"> <i class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Orders</span>
                     </a>
-        
+
                 </li>
                 <li class="menu-item active">
                     <a class="menu-link" href="/admin/coupons"> <i class="icon material-icons md-local_offer"></i>
@@ -90,14 +90,14 @@
                         <span class="text">Offers</span>
                     </a>
                 </li>
-        
+
                 <br>
         </nav>
     </aside>
     <main class="main-wrap">
         <header class="main-header navbar">
             <div class="col-search">
-                 
+
             </div>
             <div class="col-nav">
 
@@ -108,7 +108,7 @@
                             aria-expanded="false"> <img class="img-xs rounded-circle"
                                 src="/admin-assets/imgs/people/User-logo.png" alt="User"></a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                             
+
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item text-danger" href="/admin/logout"><i
                                     class="material-icons md-exit_to_app"></i>Logout</a>
@@ -117,200 +117,201 @@
                 </ul>
             </div>
         </header>
-<form action="/admin/products/edit-product?id=<%= product._id %>" id="productForm" method="post">
+        <form action="/admin/products/edit-product?id=<%= product._id %>" id="productForm" method="post">
 
-    <section class="content-main">
-        <div class="row">
-            <div class="col-9">
-                <div class="content-header">
+            <section class="content-main">
+                <div class="row">
+                    <div class="col-9">
+                        <div class="content-header">
 
-                    <h2 class="content-title">Edit Product</h2>
-                    <p id="main-error" class="text-centre" style="color: red;"></p>
+                            <h2 class="content-title">Edit Product</h2>
+                            <p id="main-error" class="text-centre" style="color: red;"></p>
 
-                    <div>
+                            <div>
 
-                        <button type="button" onclick="submitForm(this)" class="btn btn-md rounded font-sm hover-up">
-                            EDIT
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="mb-4">
-                            <label for="product_title" class="form-label">Product title</label>
-                            <input type="text" placeholder="Type here" class="form-control" id="ProductName" name="ProductName"
-                                value="<%=product.pname%>" required />
-                        </div>
-                        <div class="row gx-3"></div>
-
-                        <div class="mb-4">
-                            <label for="product_brand" class="form-label">Brand</label>
-                            <input type="text" placeholder="Type here" class="form-control" id="ProductBrand" name="ProductBrand"
-                                value="<%=product.brand%>" required />
+                                <button type="button" onclick="submitForm(this)"
+                                    class="btn btn-md rounded font-sm hover-up">
+                                    EDIT
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- card end// -->
-                <div class="card mb-4">
-                    <div class="card-body">
+                    <div class="col-lg-6">
                         <div class="card mb-4">
                             <div class="card-body">
-                                <div>
-                                    <label class="form-label">Description</label>
-                                    <textarea placeholder="Type here" class="form-control" id="ProductDetails" name="ProductDetails"
-                                        rows="4"><%=product.description%></textarea>
+                                <div class="mb-4">
+                                    <label for="product_title" class="form-label">Product title</label>
+                                    <input type="text" placeholder="Type here" class="form-control" id="ProductName"
+                                        name="ProductName" value="<%=product.pname%>" required />
                                 </div>
+                                <div class="row gx-3"></div>
 
+                                <div class="mb-4">
+                                    <label for="product_brand" class="form-label">Brand</label>
+                                    <input type="text" placeholder="Type here" class="form-control" id="ProductBrand"
+                                        name="ProductBrand" value="<%=product.brand%>" required />
+                                </div>
                             </div>
                         </div>
-
-                    </div>
-                </div>
-                <!-- card end// -->
-        <div class="card-body">
-                                <div class="row gap-3 justify-content-center mb-40">
-                                    <% for (let i=0; i < product.images.length; i++) { %>
-                                        <div class="col-2 mb-30 mt-30"
-                                            style="position: relative; width: 200px; height: 200px; background-color: rgba(220, 220, 220, 0);" >
-                                            <img src="/productAssets/<%= product.images[i] %>" alt="Product Image" 
-                                                style="width: 100%; height: 100%; object-fit: fill;" >
-                                            <button class="custom-button3 btn btn-sm font-sm btn-light rounded"
-                                                style="position: absolute; bottom: -40px; right: 50px; align-items: center;"
-                                                onclick=" replace(event , '<%= i %>' , '<%= product._id %>'); document.getElementById('fileInput<%= i %>').click();">Replace
-                                                Image</button>
-                                            <input type="file" id="fileInput<%= i %>" accept=".png, .jpeg, .jpg"
-                                                style="display: none;" name="ProductImage" id="images" >
+                        <!-- card end// -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <div>
+                                            <label class="form-label">Description</label>
+                                            <textarea placeholder="Type here" class="form-control" id="ProductDetails"
+                                                name="ProductDetails" rows="4"><%=product.description%></textarea>
                                         </div>
-                                        
-                                        <% } %>
-                                        
+
+                                    </div>
                                 </div>
+
                             </div>
-
-
-                <!-- Other form fields -->
-
-
-
-                <!-- card end// -->
-            </div>
-            <div class="col-lg-3">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="mb-4">
-                            <p id="productPriceError" class="error-message" style="color: red;"></p>
-
-                            <label class="form-label">Price</label>
-                            <input type="text" placeholder="Type here" name="ProductPrice" id="productPrice"
-                                value="<%=product.price%>" class="form-control" required />
-
                         </div>
+                        <!-- card end// -->
+                        <div class="card-body">
+                            <div class="row gap-3 justify-content-center mb-40">
+                                <% for (let i=0; i < product.images.length; i++) { %>
+                                    <div class="col-2 mb-30 mt-30"
+                                        style="position: relative; width: 200px; height: 200px; background-color: rgba(220, 220, 220, 0);">
+                                        <img src="/productAssets/<%= product.images[i] %>" alt="Product Image"
+                                            style="width: 100%; height: 100%; object-fit: fill;">
+                                        <button class="custom-button3 btn btn-sm font-sm btn-light rounded"
+                                            style="position: absolute; bottom: -40px; right: 50px; align-items: center;"
+                                            onclick=" replace(event , '<%= i %>' , '<%= product._id %>'); document.getElementById('fileInput<%= i %>').click();">Replace
+                                            Image</button>
+                                        <input type="file" id="fileInput<%= i %>" accept=".png, .jpeg, .jpg"
+                                            style="display: none;" name="ProductImage" id="images">
+                                    </div>
 
-                        <!-- Status -->
-                        <h5 class="mb-3">Status</h5>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="listed" id="status1" value="0"
-                                <%=product.is_listed==="0" ? 'checked' : '' %>>
-                            <label class="form-check-label" for="status1">Draft</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="listed" id="status2" value="1"
-                                <%=product.is_listed==="1" ? 'checked' : '' %>>
-                            <label class="form-check-label" for="status2">Published</label>
-                        </div>
+                                    <% } %>
 
-                        <br>
-
-                        <!-- Categories -->
-                        <h5 class="mb-3">Categories</h5>
-
-
-                        <% categories.forEach(category=> { %>
-                            <div class="form-check">
-
-                                <%if(product.category.cName===category.cName){%>
-                                    <input class="form-check-input" type="radio" checked="" name="productCategory"
-                                        value="<%= category._id %>">
-                                    <label class="form-check-label">
-                                        <%= category.cName %>
-                                    </label>
-                                    <%}else{%>
-                                        <input class="form-check-input" type="radio" name="productCategory"
-                                            value="<%= category._id %>">
-                                        <label class="form-check-label">
-                                            <%= category.cName %>
-                                        </label>
-                                        <%}%>
                             </div>
-                            <% }); %>
+                        </div>
 
 
+                        <!-- Other form fields -->
+
+
+
+                        <!-- card end// -->
                     </div>
-                </div>
-            </div>
+                    <div class="col-lg-3">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="mb-4">
+                                    <p id="productPriceError" class="error-message" style="color: red;"></p>
 
-            <div class="card">
-                <div class="card-body" style="display: flex;flex-direction: column;flex-wrap: wrap;">
-                    <label class="form-label">Sizes and Stock</label>
+                                    <label class="form-label">Price</label>
+                                    <input type="text" placeholder="Type here" name="ProductPrice" id="productPrice"
+                                        value="<%=product.price%>" class="form-control" required />
 
-                    <div class="row gx-3">
-                        <div class="col-md-4 mb-2">
-                            <label for="size_xs" class="form-label">XS</label>
-                            <input type="number" placeholder="Stock" id="size_xs" class="form-control"
-                                style="width: 6rem;" name="sizes[XS]" value="<%= product.sizes[0].quantity%>"
-                                oninput="validateStock('size_xs', 'size_xsError')">
-                            <span id="size_xsError" class="text-danger"></span>
+                                </div>
 
+                                <!-- Status -->
+                                <h5 class="mb-3">Status</h5>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="listed" id="status1" value="0"
+                                        <%=product.is_listed==="0" ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="status1">Draft</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="listed" id="status2" value="1"
+                                        <%=product.is_listed==="1" ? 'checked' : '' %>>
+                                    <label class="form-check-label" for="status2">Published</label>
+                                </div>
+
+                                <br>
+
+                                <!-- Categories -->
+                                <h5 class="mb-3">Categories</h5>
+
+
+                                <% categories.forEach(category=> { %>
+                                    <div class="form-check">
+
+                                        <%if(product.category.cName===category.cName){%>
+                                            <input class="form-check-input" type="radio" checked=""
+                                                name="productCategory" value="<%= category._id %>">
+                                            <label class="form-check-label">
+                                                <%= category.cName %>
+                                            </label>
+                                            <%}else{%>
+                                                <input class="form-check-input" type="radio" name="productCategory"
+                                                    value="<%= category._id %>">
+                                                <label class="form-check-label">
+                                                    <%= category.cName %>
+                                                </label>
+                                                <%}%>
+                                    </div>
+                                    <% }); %>
+
+
+                            </div>
                         </div>
-
-                        <div class="col-md-4 mb-2">
-                            <label for="size_s" class="form-label">S</label>
-                            <input type="number" placeholder="Stock" id="size_s" class="form-control"
-                                style="width: 6rem;" name="sizes[S]" value="<%= product.sizes[1].quantity%>"
-                                oninput="validateStock('size_s', 'size_sError')">
-                            <span id="size_sError" class="text-danger"></span>
-                        </div>
-
-                        <div class="col-md-4 mb-2">
-                            <label for="size_m" class="form-label">M</label>
-                            <input type="number" placeholder="Stock" id="size_m" class="form-control"
-                                style="width: 6rem;" name="sizes[M]" value="<%= product.sizes[2].quantity%>"
-                                oninput="validateStock('size_m', 'size_mError')">
-                            <span id="size_mError" class="text-danger"></span>
-                        </div>
-
-                        <div class="col-md-4 mb-2">
-                            <label for="size_l" class="form-label">L</label>
-                            <input type="number" placeholder="Stock" id="size_l" class="form-control"
-                                style="width: 6rem;" name="sizes[L]" value="<%= product.sizes[3].quantity%>"
-                                oninput="validateStock('size_l', 'size_lError')">
-                            <span id="size_lError" class="text-danger"></span>
-                        </div>
-
-                        <div class="col-md-4 mb-2">
-                            <label for="size_xl" class="form-label">XL</label>
-                            <input type="number" placeholder="Stock" id="size_xl" class="form-control"
-                                style="width: 6rem;" name="sizes[XL]" value="<%= product.sizes[4].quantity%>"
-                                oninput="validateStock('size_xl', 'size_xlError')">
-                            <span id="size_xlError" class="text-danger"></span>
-                        </div>
-
-                        <div class="col-md-4 mb-2">
-                            <label for="size_xxl" class="form-label">XXL</label>
-                            <input type="number" placeholder="Stock" id="size_xxl" class="form-control"
-                                style="width: 6rem;" name="sizes[XXL]" value="<%= product.sizes[5].quantity%>"
-                                oninput="validateStock('size_xxl', 'size_xxlError')" maxlength="1">
-                            <span id="size_xxlError" class="text-danger"></span>
-                        </div>
-                        <!-- Add more size fields as needed -->
                     </div>
-                </div>
-            </div>
 
-    </section>
-</form>
+                    <div class="card">
+                        <div class="card-body" style="display: flex;flex-direction: column;flex-wrap: wrap;">
+                            <label class="form-label">Sizes and Stock</label>
+
+                            <div class="row gx-3">
+                                <div class="col-md-4 mb-2">
+                                    <label for="size_xs" class="form-label">XS</label>
+                                    <input type="number" placeholder="Stock" id="size_xs" class="form-control"
+                                        style="width: 6rem;" name="sizes[XS]" value="<%= product.sizes[0].quantity%>"
+                                        oninput="validateStock('size_xs', 'size_xsError')">
+                                    <span id="size_xsError" class="text-danger"></span>
+
+                                </div>
+
+                                <div class="col-md-4 mb-2">
+                                    <label for="size_s" class="form-label">S</label>
+                                    <input type="number" placeholder="Stock" id="size_s" class="form-control"
+                                        style="width: 6rem;" name="sizes[S]" value="<%= product.sizes[1].quantity%>"
+                                        oninput="validateStock('size_s', 'size_sError')">
+                                    <span id="size_sError" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-4 mb-2">
+                                    <label for="size_m" class="form-label">M</label>
+                                    <input type="number" placeholder="Stock" id="size_m" class="form-control"
+                                        style="width: 6rem;" name="sizes[M]" value="<%= product.sizes[2].quantity%>"
+                                        oninput="validateStock('size_m', 'size_mError')">
+                                    <span id="size_mError" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-4 mb-2">
+                                    <label for="size_l" class="form-label">L</label>
+                                    <input type="number" placeholder="Stock" id="size_l" class="form-control"
+                                        style="width: 6rem;" name="sizes[L]" value="<%= product.sizes[3].quantity%>"
+                                        oninput="validateStock('size_l', 'size_lError')">
+                                    <span id="size_lError" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-4 mb-2">
+                                    <label for="size_xl" class="form-label">XL</label>
+                                    <input type="number" placeholder="Stock" id="size_xl" class="form-control"
+                                        style="width: 6rem;" name="sizes[XL]" value="<%= product.sizes[4].quantity%>"
+                                        oninput="validateStock('size_xl', 'size_xlError')">
+                                    <span id="size_xlError" class="text-danger"></span>
+                                </div>
+
+                                <div class="col-md-4 mb-2">
+                                    <label for="size_xxl" class="form-label">XXL</label>
+                                    <input type="number" placeholder="Stock" id="size_xxl" class="form-control"
+                                        style="width: 6rem;" name="sizes[XXL]" value="<%= product.sizes[5].quantity%>"
+                                        oninput="validateStock('size_xxl', 'size_xxlError')" maxlength="1">
+                                    <span id="size_xxlError" class="text-danger"></span>
+                                </div>
+                                <!-- Add more size fields as needed -->
+                            </div>
+                        </div>
+                    </div>
+
+            </section>
+        </form>
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
                 <div class="col-sm-6">
@@ -332,14 +333,14 @@
     <script src="/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
     <!-- Main Script -->
     <script src="/admin-assets/js/main.js" type="text/javascript"></script>
-    
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 
 
 
-  
+
 
     <script>
         function getElementValue(id) {
@@ -364,25 +365,25 @@
         }
 
 
-    function validateStock(id) {
-        const stockInput = document.getElementById(id);
-        const errorId = id + 'Error';
-        const errorElement = document.getElementById(errorId);
+        function validateStock(id) {
+            const stockInput = document.getElementById(id);
+            const errorId = id + 'Error';
+            const errorElement = document.getElementById(errorId);
 
-        if (stockInput.value.trim() === '') {
-            errorElement.innerText = 'Stock is required.';
-            return false;
-        } else if (parseInt(stockInput.value) < 0 ) {  
-            errorElement.innerText = 'Stock should not be negative.';
-            return false;
-        } else if (parseInt(stockInput.value) > 1000) {
-            errorElement.innerText = 'Stock should be less than or equal to 1000.';
-            return false;
-        } else {
-            errorElement.innerText = '';
-            return true;
+            if (stockInput.value.trim() === '') {
+                errorElement.innerText = 'Stock is required.';
+                return false;
+            } else if (parseInt(stockInput.value) < 0) {
+                errorElement.innerText = 'Stock should not be negative.';
+                return false;
+            } else if (parseInt(stockInput.value) > 1000) {
+                errorElement.innerText = 'Stock should be less than or equal to 1000.';
+                return false;
+            } else {
+                errorElement.innerText = '';
+                return true;
+            }
         }
-    }
 
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -406,7 +407,7 @@
             });
 
             priceInput.addEventListener('input', function () {
-               validateInput('productPrice', /^\d+(\.\d{1,2})?$/, 'productPriceError', 'Price');
+                validateInput('productPrice', /^\d+(\.\d{1,2})?$/, 'productPriceError', 'Price');
 
             });
 
@@ -443,52 +444,69 @@
 
     </script>
 
-<script>
-    function replace(event, index, productID) {
-        event.preventDefault();
-        let fileInput = event.target.nextElementSibling;
-        fileInput.onchange = function () {
-            let file = this.files[0];
-            if (file) {
-                let img = event.target.previousElementSibling;
-                img.src = URL.createObjectURL(file);
-                const imagename = file.name;
+    <script>
+        // Fixed frontend JavaScript function for image replacement
+        function replace(event, index, productID) {
+            event.preventDefault();
 
-                if (imagename && index && productID) {
-                    $.ajax({
-                        url: "/admin/products/editproductImagePOST",
-                        method: "post",
-                        data: {
-                            imagename,
-                            index,
-                            productID
-                        },
-                        success: (response) => {
-                            if (response.status === "okay") {
-                               
-                                Toastify({
-                                    text: "Image successfully saved",
-                                    duration: 2500,
-                                    close: true,
-                                    backgroundColor: "green",
-                                }).showToast();
-                            } else if (response.status === "oops") {
-                                
-                                Toastify({
-                                    text: "Oops! Network is busy. Please refresh.",
-                                    duration: 3500,
-                                    close: true,
-                                    backgroundColor: "red",
-                                }).showToast();
-                            }
+            // Get the file input element that's next to the button
+            const fileInput = event.target.nextElementSibling;
+
+            fileInput.onchange = function () {
+                const file = this.files[0];
+                if (!file) return;
+
+                // Update the image preview
+                const img = event.target.previousElementSibling;
+                img.src = URL.createObjectURL(file);
+
+                // Create FormData to send the file
+                const formData = new FormData();
+                formData.append('ProductImage', file);
+                formData.append('index', index);
+                formData.append('productID', productID);
+
+                // Send the file to the server using AJAX
+                $.ajax({
+                    url: "/admin/products/editproductImagePOST",
+                    method: "POST",
+                    data: formData,
+                    contentType: false, // Important for FormData
+                    processData: false, // Important for FormData
+                    success: (response) => {
+                        if (response.status === "okay") {
+                            Toastify({
+                                text: "Image successfully saved",
+                                duration: 2500,
+                                close: true,
+                                backgroundColor: "green",
+                            }).showToast();
+                        } else {
+                            Toastify({
+                                text: response.message || "Failed to update image. Please try again.",
+                                duration: 3500,
+                                close: true,
+                                backgroundColor: "red",
+                            }).showToast();
                         }
-                    })
-                }
-            }
+                    },
+                    error: (xhr, status, error) => {
+                        Toastify({
+                            text: "Server error occurred. Please try again later.",
+                            duration: 3500,
+                            close: true,
+                            backgroundColor: "red",
+                        }).showToast();
+                        console.error("Error uploading image:", error);
+                    }
+                });
+            };
+
+            fileInput.click();
         }
-    }
-</script>
+    </script>
 
 
 </body>
+
 </html>

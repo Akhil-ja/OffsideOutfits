@@ -6,17 +6,8 @@ const Product = require("../models/productModel");
 const ExcelJS = require("exceljs");
 const PDFDocument = require("pdfkit");
 
-
-
-
-
-const Category=require("../models/categoryModel");
+const Category = require("../models/categoryModel");
 const ordersModel = require("../models/ordersModel");
-
-
-
-
-
 
 const securePassword = async (password) => {
   try {
@@ -31,44 +22,35 @@ const loadAdminLog = async (req, res) => {
   try {
     const errorMessage = req.query.error || req.session.errorMessage;
     req.session.errorMessage = null;
-  
 
-  const jwtCookie = req.cookies.jwt;
-  if (jwtCookie) {
-    return res.redirect("/admin/dashboard");
-  }
-      res.render("login", { errorMessage });
+    const jwtCookie = req.cookies.jwt;
+    if (jwtCookie) {
+      return res.redirect("/admin/dashboard");
+    }
+    res.render("login", { errorMessage });
   } catch (error) {
     console.log(error.message);
   }
 };
 
-
-
 const adminLogin = async (req, res) => {
   try {
-  
-
     const { email, password } = req.body;
     const userData = await User.findOne({ email: email });
 
     if (userData) {
       const passwordMatch = await bcrypt.compare(password, userData.password);
 
-     
-
       if (passwordMatch && userData.is_admin === "1") {
         const userID = userData._id;
-      
 
         const token = authRoutes.createToken(userID);
         res.cookie("jwt", token, {
           httpOnly: true,
           maxAge: authRoutes.maxAge * 1000,
         });
-       
 
-        res.redirect("/admin/products");
+        res.redirect("/admin/dashboard");
       } else if (userData.is_admin === "0") {
         res.render("login", {
           errorMessage: "You do not have permission to access the admin panel.",
@@ -86,19 +68,15 @@ const adminLogin = async (req, res) => {
   }
 };
 
-
-const adminLogout= async(req,res)=>{
+const adminLogout = async (req, res) => {
   try {
-    res.cookie('jwt','',{maxAge:1});
-  
-    res.redirect("/admin/login")
+    res.cookie("jwt", "", { maxAge: 1 });
+
+    res.redirect("/admin/login");
   } catch (error) {
     console.log(error.message);
   }
-}
-
-
-
+};
 
 const viewsalesReport = async (req, res) => {
   try {
@@ -163,7 +141,6 @@ const updateProductPriceAfterDiscount = async () => {
 
 const loadAdminProducts = async (req, res) => {
   try {
-
     updateProductPriceAfterDiscount();
     const itemsPerPage = 6;
     const currentPage = parseInt(req.query.page) || 1;
@@ -178,14 +155,11 @@ const loadAdminProducts = async (req, res) => {
 
     const skipCount = (currentPage - 1) * itemsPerPage;
 
- const products = await Product.find()
-   .populate("category")
-   .sort({ createdAt: -1 })
-   .skip(skipCount)
-   .limit(itemsPerPage);
-
-
-    
+    const products = await Product.find()
+      .populate("category")
+      .sort({ createdAt: -1 })
+      .skip(skipCount)
+      .limit(itemsPerPage);
 
     res.render("products", {
       products,
@@ -199,18 +173,9 @@ const loadAdminProducts = async (req, res) => {
   }
 };
 
-
-
-
-
-
-
-
-
-
 const filterOrdersByDate = async (req, res) => {
   try {
-      let query = { status: "delivered" };
+    let query = { status: "delivered" };
     const { startDate, endDate, timeFilter } = req.query;
 
     if (startDate && endDate) {
@@ -270,29 +235,52 @@ const filterOrdersByDate = async (req, res) => {
 
 const editproductImagePOST = async (req, res) => {
   try {
-
-   
-    
-    const image = req.body.imagename;
+    const uploadedFile = req.file;
     const index = parseInt(req.body.index);
     const productID = req.body.productID;
-   
-    if (image) {
-      const productDetails = await Product.findOne({ _id: productID });
-     
+
+    if (uploadedFile) {
+      const productDetails = await Product.findById(productID);
+      if (!productDetails) {
+        return res.json({ status: "oops", message: "Product not found" });
+      }
+
+      const image = uploadedFile.filename;
+
       productDetails.images.splice(index, 1, image);
-    
       await productDetails.save();
-    
-      res.json({ status: "okay" });
+
+      return res.json({
+        status: "okay",
+        message: "Image successfully updated",
+        filename: image,
+      });
+    } else if (req.body.imagename) {
+      const image = req.body.imagename;
+      const productDetails = await Product.findById(productID);
+
+      if (!productDetails) {
+        return res.json({ status: "oops", message: "Product not found" });
+      }
+
+      productDetails.images.splice(index, 1, image);
+      await productDetails.save();
+
+      return res.json({ status: "okay" });
     } else {
-      res.json({ status: "oops" });
+      return res.json({
+        status: "oops",
+        message: "No image was uploaded",
+      });
     }
   } catch (error) {
-    console.log(error);
+    console.error("Error updating product image:", error);
+    return res.status(500).json({
+      status: "oops",
+      message: "Server error occurred",
+    });
   }
 };
-
 
 const viewDashboard = async (req, res) => {
   try {
@@ -312,14 +300,13 @@ const viewDashboard = async (req, res) => {
     const topProducts = await Product.find().sort({ popularity: -1 }).limit(10);
 
     const topCategories = await Product.aggregate([
-     
       {
         $group: {
           _id: "$category",
           totalPopularity: { $sum: "$popularity" },
         },
       },
-     
+
       { $sort: { totalPopularity: -1 } },
     ]);
 
@@ -331,24 +318,20 @@ const viewDashboard = async (req, res) => {
       categoryMap.set(category._id.toString(), category);
     });
 
-    
     const sortedCategories = topCategories.map((category) =>
       categoryMap.get(category._id.toString())
     );
 
-    
     const topBrands = await Product.aggregate([
       {
         $group: {
-          _id: "$brand", 
-          totalPopularity: { $sum: "$popularity" }, 
+          _id: "$brand",
+          totalPopularity: { $sum: "$popularity" },
         },
       },
-      { $sort: { totalPopularity: -1 } }, 
-      { $limit: 10 }, 
+      { $sort: { totalPopularity: -1 } },
+      { $limit: 10 },
     ]);
-
-    
 
     res.render("dashboard", {
       daily,
@@ -371,11 +354,8 @@ const viewDashboard = async (req, res) => {
   }
 };
 
-
-
 async function calculateTotalRevenue() {
   try {
-  
     const orders = await ordersModel.find();
     let totalRevenue = 0;
     orders.forEach((order) => {
@@ -405,20 +385,17 @@ async function orderPieChart() {
   return { statuses, counts };
 }
 
-
 async function salesReport(date) {
   try {
     const currentDate = new Date();
     let startDate, endDate;
 
     if (date === 1) {
-      
       startDate = new Date(currentDate);
       startDate.setHours(0, 0, 0, 0);
       endDate = new Date(currentDate);
       endDate.setHours(23, 59, 59, 999);
     } else {
-      
       startDate = new Date(currentDate);
       startDate.setDate(currentDate.getDate() - date);
       startDate.setHours(0, 0, 0, 0);

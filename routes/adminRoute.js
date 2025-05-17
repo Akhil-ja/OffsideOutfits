@@ -9,14 +9,7 @@ const productController = require("../controllers/productController");
 const orderController = require("../controllers/orderController");
 const userController = require("../controllers/userController");
 const couponController = require("../controllers/couponController");
-const offerController=require("../controllers/offerController")
-
-
-
-
-
-
-
+const offerController = require("../controllers/offerController");
 
 const adminRoute = express();
 
@@ -26,15 +19,7 @@ adminRoute.set("view engine", "ejs");
 
 adminRoute.set("views", "./views/Admin");
 
-
-
-
-
-
-
-
 adminRoute.get("*", authRoutes.checkUser);
-
 
 adminRoute.get("/login", adminController.loadAdminLog);
 adminRoute.post("/login", adminController.adminLogin);
@@ -45,12 +30,7 @@ adminRoute.get(
   adminController.loadAdminProducts
 );
 adminRoute.get("/users", authRoutes.isAdminLogin, userController.loadUsers);
-adminRoute.get(
-  "/users/edit",
-  authRoutes.isAdminLogin,
-  userController.editUser
-);
-
+adminRoute.get("/users/edit", authRoutes.isAdminLogin, userController.editUser);
 
 adminRoute.get(
   "/products/add-product",
@@ -64,13 +44,11 @@ adminRoute.get(
   productController.editProduct
 );
 
-
 adminRoute.get(
   "/category",
   authRoutes.isAdminLogin,
   categoryController.viewCategory
 );
-
 
 adminRoute.post("/users/edit", userController.edit_User);
 
@@ -86,10 +64,6 @@ adminRoute.get(
   categoryController.deleteCategory
 );
 
-
-
-
-
 // const storage = multer.diskStorage({
 //   destination: (req, file, cb) => {
 //     cb(null, "./public/productAssets/");
@@ -104,34 +78,24 @@ adminRoute.get(
 
 // const upload = multer({ storage: storage });
 
-
-
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./public/productAssets");
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname); 
+    cb(null, file.originalname);
   },
 });
 
 const upload = multer({ storage: storage });
 
-
-
-
-
 adminRoute.post("/products/edit-product", productController.edit_product);
 
-
-
-  adminRoute.post(
-    "/add-product",
-    upload.array("ProductImage", 4),
-    productController.add_Product
-  );
-
-
+adminRoute.post(
+  "/add-product",
+  upload.array("ProductImage", 4),
+  productController.add_Product
+);
 
 adminRoute.post(
   "/products/edit-product",
@@ -139,21 +103,15 @@ adminRoute.post(
   productController.edit_product
 );
 
-
-
 adminRoute.post(
   "/products/editproductImagePOST",
   upload.single("ProductImage"),
   adminController.editproductImagePOST
 );
 
-
 adminRoute.post("/category", categoryController.createCategory);
 
-
-adminRoute.get(
-  "/logout",authRoutes.isAdminLogin,  adminController.adminLogout
-);
+adminRoute.get("/logout", authRoutes.isAdminLogin, adminController.adminLogout);
 
 adminRoute.get(
   "/orders",
@@ -201,8 +159,6 @@ adminRoute.post("/editCoupon", couponController.editCoupon);
 
 adminRoute.get("/offers", authRoutes.isAdminLogin, offerController.viewOffers);
 
-
-
 adminRoute.get(
   "/categoryOffer",
   authRoutes.isAdminLogin,
@@ -246,8 +202,5 @@ adminRoute.get(
 );
 
 adminRoute.post("/salesReport", adminController.filterOrdersByDate);
-
-
-
 
 module.exports = adminRoute;
